@@ -38,6 +38,6 @@ Execute the script:
 ## Interacting with ElephantSQL
 With an ElephantSQL account, you can:
 
-- **Manage Multiple Databases: Create, manage, and delete PostgreSQL instances.
-- **SQL Browser: Directly run SQL commands on your database using the browser-based UI.
-- **Monitoring & Analytics: View metrics related to your database's performance and usage.
+- Manage Multiple Databases: Create, manage, and delete PostgreSQL instances.
+- SQL Browser: Directly run SQL commands on your database using the browser-based UI.
+- Monitoring & Analytics: View metrics related to your database's performance and usage.
