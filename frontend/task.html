@@ -2,20 +2,23 @@
 <html>
 
 <head>
-  <title>Favor Lists</title>
-  <style>
-    .hidden {
-      display: none;
-    }
-  </style>
+  <title>DooleyAFavor</title>
+
+  <!-- Linking the external CSS file -->
+  <link rel="stylesheet" type="text/css" href="styles.css">
+
 </head>
 
 <body>
-<h1>Favor Lists</h1>
+<h1><span class="blue">Dooley</span><span class="yellow">A</span><span class="blue">Favor</span></h1>
 
-<div>
-  <button onclick="toggleView('GetAFavor')">Get A Favor</button>
-  <button onclick="toggleView('DoAFavor')">Do A Favor</button>
+<div class="switch">
+    <label>
+        <span class="text">Get A Favor</span> <!-- Text for the off state -->
+        <input type="checkbox" onchange="toggleView(this.checked)">
+        <span class="slider"></span>
+        <span class="text">Do A Favor</span> <!-- Text for the on state -->
+    </label>
 </div>
 
 <div id="GetAFavor">
@@ -51,14 +54,14 @@
 </div>
 
 <script>
-  function toggleView(view) {
-    if (view === 'GetAFavor') {
-      document.getElementById('GetAFavor').style.display = 'block';
-      document.getElementById('DoAFavor').style.display = 'none';
-    } else {
-      document.getElementById('DoAFavor').style.display = 'block';
-      document.getElementById('GetAFavor').style.display = 'none';
-    }
+  function toggleView(isChecked) {
+      if (isChecked) {
+          document.getElementById('GetAFavor').style.display = 'none';
+          document.getElementById('DoAFavor').style.display = 'block';
+      } else {
+          document.getElementById('GetAFavor').style.display = 'block';
+          document.getElementById('DoAFavor').style.display = 'none';
+      }
   }
 
   function addTask(listType) {
