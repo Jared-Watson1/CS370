@@ -1,0 +1,8 @@
+body {
+  background-color: #123abc; /* This is light gray */
+}
+
+.hidden {
+  display: none;
+}
+
