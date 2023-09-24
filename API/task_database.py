@@ -23,10 +23,25 @@ def createTable():
         task_name VARCHAR(255) NOT NULL,
         description TEXT,
         date_posted DATE NOT NULL,
-        task_owner VARCHAR(255) NOT NULL
+        task_owner VARCHAR(255) NOT NULL 
+        FOREIGN KEY (task_owner) REFERENCES users(user_id)
     );
     """
 
+    create_user_query = """
+    CREATE TABLE users (
+        user_id SERIAL PRIMARY KEY,
+        user_name VARCHAR(255) NOT NULL,
+    );
+    """
+
+    create_ratings_query = """
+    CREATE TABLE users (
+        rater_id INT FOREIGN KEY REFERENCES users(user_id),
+        rated_id INT FOREIGN KEY REFERENCES users(user_id),
+        rate_description VARCHAR(255),
+    );
+    """
     try:
         cursor.execute(create_table_query)
         conn.commit()
