@@ -74,7 +74,7 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(100%);
+    transform: translateX(95%);
 }
 /* Center-align the main content */
 .container {
