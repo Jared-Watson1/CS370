@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task List</title>
+</head>
+<body>
+    <h1>Task List</h1>
+
+    <form id="taskForm">
+        <label for="taskTitle">Title:</label>
+        <input type="text" id="taskTitle" placeholder="Enter task title" required>
+        <br>
+        <label for="taskDescription">Description:</label>
+        <textarea id="taskDescription" placeholder="Enter task description" required></textarea>
+        <br>
+        <button type="button" onclick="addTask()">Add Task</button>
+    </form>
+
+    <ul id="taskList">
+        <!-- Tasks will be added here dynamically -->
+    </ul>
+
+    <script>
+        function addTask() {
+            var taskTitleInput = document.getElementById("taskTitle");
+            var taskDescriptionInput = document.getElementById("taskDescription");
+            var taskList = document.getElementById("taskList");
+
+            var taskTitle = taskTitleInput.value.trim();
+            var taskDescription = taskDescriptionInput.value.trim();
+
+            if (taskTitle !== "" && taskDescription !== "") {
+                var taskItem = document.createElement("li");
+                taskItem.innerHTML = `<strong>${taskTitle}</strong>: ${taskDescription} <button onclick="removeTask(this)">Remove</button>`;
+                taskList.appendChild(taskItem);
+
+                // Clear input fields
+                taskTitleInput.value = "";
+                taskDescriptionInput.value = "";
+            }
+        }
+
+        function removeTask(button) {
+            var taskList = document.getElementById("taskList");
+            var taskItem = button.parentNode;
+            taskList.removeChild(taskItem);
+        }
+    </script>
+</body>
+</html>
