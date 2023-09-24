@@ -15,7 +15,8 @@ The script uses the `psycopg2` library to connect to the PostgreSQL database and
 1. **Python**: Ensure you have Python installed.
 2. **psycopg2**: Install the psycopg2 library using pip:
    ```bash
-   pip install psycopg2'''
+   pip install psycopg2
+   ```
 3. dotenv: Install the python-dotenv library to use environment variables:
     ```bash
     pip install python-dotenv
@@ -37,6 +38,6 @@ Execute the script:
 ## Interacting with ElephantSQL
 With an ElephantSQL account, you can:
 
--**Manage Multiple Databases: Create, manage, and delete PostgreSQL instances.
--**SQL Browser: Directly run SQL commands on your database using the browser-based UI.
--**Monitoring & Analytics: View metrics related to your database's performance and usage.
+- **Manage Multiple Databases: Create, manage, and delete PostgreSQL instances.
+- **SQL Browser: Directly run SQL commands on your database using the browser-based UI.
+- **Monitoring & Analytics: View metrics related to your database's performance and usage.
