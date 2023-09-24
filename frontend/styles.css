@@ -7,13 +7,75 @@ body {
 
 /* Style the header */
 h1 {
-  background-color: #333;
-  color: #fff;
+  background-color: rgba(1, 33, 105, 0.12);
+  color: rgba(1, 33, 105, 0.12);
   text-align: center;
   padding: 10px 0;
   font-style: italic;
 }
+.blue {
+  color: rgba(23, 80, 157);
+}
 
+.yellow {
+  color: rgba(232, 167, 19);
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 500px;
+    height: 34px;
+}
+
+.switch label span.text {
+    position: absolute;
+    width: 50%;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 34px; /* Same as the height of the slider */
+    z-index: 2;
+}
+
+.switch label span.text:first-child {
+    left: 0;
+    color: #999999;
+}
+
+.switch label span.text:last-child {
+    right: 0;
+    color: #465739; /* White text color */
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    z-index: 1;
+}
+
+input:checked + .slider {
+    background-color: rgba(23, 80, 157);
+}
+
+input:checked + .slider:before {
+    transform: translateX(100%);
+}
 /* Center-align the main content */
 .container {
   max-width: 800px;
