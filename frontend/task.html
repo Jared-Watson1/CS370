@@ -1,50 +1,91 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Task List</title>
+  <title>Favor Lists</title>
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Task List</h1>
+<h1>Favor Lists</h1>
 
-    <form id="taskForm">
-        <label for="taskTitle">Title:</label>
-        <input type="text" id="taskTitle" placeholder="Enter task title" required>
-        <br>
-        <label for="taskDescription">Description:</label>
-        <textarea id="taskDescription" placeholder="Enter task description" required></textarea>
-        <br>
-        <button type="button" onclick="addTask()">Add Task</button>
-    </form>
+<div>
+  <button onclick="toggleView('GetAFavor')">Get A Favor</button>
+  <button onclick="toggleView('DoAFavor')">Do A Favor</button>
+</div>
 
-    <ul id="taskList">
-        <!-- Tasks will be added here dynamically -->
-    </ul>
+<div id="GetAFavor">
+  <h2>Get A Favor</h2>
+  <form id="getTaskForm">
+    <label for="getTaskTitle">Title:</label>
+    <input type="text" id="getTaskTitle" placeholder="Enter task title" required>
+    <br>
+    <label for="getTaskDescription">Description:</label>
+    <textarea id="getTaskDescription" placeholder="Enter task description" required></textarea>
+    <br>
+    <button type="button" onclick="addTask('GetAFavor')">Add Task</button>
+  </form>
+  <ul id="getTaskList">
+    <!-- Tasks will be added here dynamically -->
+  </ul>
+</div>
 
-    <script>
-        function addTask() {
-            var taskTitleInput = document.getElementById("taskTitle");
-            var taskDescriptionInput = document.getElementById("taskDescription");
-            var taskList = document.getElementById("taskList");
+<div id="DoAFavor" class="hidden">
+  <h2>Do A Favor</h2>
+  <form id="doTaskForm">
+    <label for="doTaskTitle">Title:</label>
+    <input type="text" id="doTaskTitle" placeholder="Enter task title" required>
+    <br>
+    <label for="doTaskDescription">Description:</label>
+    <textarea id="doTaskDescription" placeholder="Enter task description" required></textarea>
+    <br>
+    <button type="button" onclick="addTask('DoAFavor')">Add Task</button>
+  </form>
+  <ul id="doTaskList">
+    <!-- Tasks will be added here dynamically -->
+  </ul>
+</div>
 
-            var taskTitle = taskTitleInput.value.trim();
-            var taskDescription = taskDescriptionInput.value.trim();
+<script>
+  function toggleView(view) {
+    if (view === 'GetAFavor') {
+      document.getElementById('GetAFavor').style.display = 'block';
+      document.getElementById('DoAFavor').style.display = 'none';
+    } else {
+      document.getElementById('DoAFavor').style.display = 'block';
+      document.getElementById('GetAFavor').style.display = 'none';
+    }
+  }
 
-            if (taskTitle !== "" && taskDescription !== "") {
-                var taskItem = document.createElement("li");
-                taskItem.innerHTML = `<strong>${taskTitle}</strong>: ${taskDescription} <button onclick="removeTask(this)">Remove</button>`;
-                taskList.appendChild(taskItem);
+  function addTask(listType) {
+    var taskTitleInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskTitle' : 'doTaskTitle');
+    var taskDescriptionInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskDescription' : 'doTaskDescription');
+    var taskList = document.getElementById(listType === 'GetAFavor' ? 'getTaskList' : 'doTaskList');
 
-                // Clear input fields
-                taskTitleInput.value = "";
-                taskDescriptionInput.value = "";
-            }
-        }
+    var taskTitle = taskTitleInput.value.trim();
+    var taskDescription = taskDescriptionInput.value.trim();
 
-        function removeTask(button) {
-            var taskList = document.getElementById("taskList");
-            var taskItem = button.parentNode;
-            taskList.removeChild(taskItem);
-        }
-    </script>
+    if (taskTitle !== "" && taskDescription !== "") {
+      var taskItem = document.createElement("li");
+      taskItem.innerHTML = `<strong>${taskTitle}</strong>: ${taskDescription} <button onclick="removeTask(this, '${listType}')">Remove</button>`;
+      taskList.appendChild(taskItem);
+
+      // Clear input fields
+      taskTitleInput.value = "";
+      taskDescriptionInput.value = "";
+    }
+  }
+
+  function removeTask(button, listType) {
+    var taskList = document.getElementById(listType === 'GetAFavor' ? 'getTaskList' : 'doTaskList');
+    var taskItem = button.parentNode;
+    taskList.removeChild(taskItem);
+  }
+</script>
 </body>
+
 </html>
