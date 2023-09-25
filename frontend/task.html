@@ -10,35 +10,49 @@
 </head>
 
 <body>
-<h1><span class="blue">Dooley</span><span class="yellow">A</span><span class="blue">Favor</span></h1>
-
-<div class="switch">
-    <label>
+<div class="header-container">
+    <h1><span class="blue">Dooley</span><span class="yellow">A</span><span class="blue">Favor</span></h1>
+    <div class="switch">
+      <label>
         <span class="text">Get A Favor</span> <!-- Text for the off state -->
         <input type="checkbox" onchange="toggleView(this.checked)">
         <span class="slider"></span>
         <span class="text">Do A Favor</span> <!-- Text for the on state -->
-    </label>
-</div>
-
+      </label>
+    </div>
+  </div>
 <div id="GetAFavor">
-  <h2>Get A Favor</h2>
-  <form id="getTaskForm">
+  <form id="getTaskForm" onsubmit="event.preventDefault(); addTask('GetAFavor');">
     <label for="getTaskTitle">Title:</label>
-    <input type="text" id="getTaskTitle" placeholder="Enter task title" required>
+    <input type="text" id="getTaskTitle" required>
     <br>
     <label for="getTaskDescription">Description:</label>
-    <textarea id="getTaskDescription" placeholder="Enter task description" required></textarea>
+    <textarea id="getTaskDescription" required></textarea>
     <br>
-    <button type="button" onclick="addTask('GetAFavor')">Add Task</button>
+    <label for="getTaskRestaurant">Restaurant:</label>
+    <input type="text" id="getTaskRestaurant" required>
+    <br>
+    <label for="getTaskPrice">Price:</label>
+    <input type="text" id="getTaskPrice" required>
+    <br>
+    <label for="getTaskPaymentMethod">Payment Method:</label>
+    <select id="getTaskPaymentMethod" required>
+      <option value="PayPal">PayPal</option>
+      <option value="Venmo">Venmo</option>
+      <option value="Face-to-face">Face-to-face</option>
+    </select>
+    <br>
+    <hr>
+    <button type="submit">Add Task</button>
+    <button type="submit">Schedule Task</button>
   </form>
   <ul id="getTaskList">
     <!-- Tasks will be added here dynamically -->
   </ul>
 </div>
 
+
 <div id="DoAFavor" class="hidden">
-  <h2>Do A Favor</h2>
   <form id="doTaskForm">
     <label for="doTaskTitle">Title:</label>
     <input type="text" id="doTaskTitle" placeholder="Enter task title" required>
@@ -64,24 +78,48 @@
       }
   }
 
-  function addTask(listType) {
-    var taskTitleInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskTitle' : 'doTaskTitle');
-    var taskDescriptionInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskDescription' : 'doTaskDescription');
-    var taskList = document.getElementById(listType === 'GetAFavor' ? 'getTaskList' : 'doTaskList');
+function addTask(listType) {
+  var taskTitleInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskTitle' : 'doTaskTitle');
+  var taskDescriptionInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskDescription' : 'doTaskDescription');
+  var taskList = document.getElementById(listType === 'GetAFavor' ? 'getTaskList' : 'doTaskList');
 
-    var taskTitle = taskTitleInput.value.trim();
-    var taskDescription = taskDescriptionInput.value.trim();
+  var taskTitle = taskTitleInput.value.trim();
+  var taskDescription = taskDescriptionInput.value.trim();
 
-    if (taskTitle !== "" && taskDescription !== "") {
-      var taskItem = document.createElement("li");
-      taskItem.innerHTML = `<strong>${taskTitle}</strong>: ${taskDescription} <button onclick="removeTask(this, '${listType}')">Remove</button>`;
-      taskList.appendChild(taskItem);
+  if (listType === 'GetAFavor') {
+    var taskRestaurantInput = document.getElementById('getTaskRestaurant');
+    var taskPriceInput = document.getElementById('getTaskPrice');
+    var taskPaymentMethodInput = document.getElementById('getTaskPaymentMethod');
 
-      // Clear input fields
-      taskTitleInput.value = "";
-      taskDescriptionInput.value = "";
+    var taskRestaurant = taskRestaurantInput.value.trim();
+    var taskPrice = taskPriceInput.value.trim();
+    var taskPaymentMethod = taskPaymentMethodInput.value;
+  }
+
+  if (taskTitle !== "" && taskDescription !== "" && (listType === 'DoAFavor' || (taskRestaurant !== "" && taskPrice !== ""))) {
+    var taskItem = document.createElement("li");
+    taskItem.innerHTML = `<strong>${taskTitle}</strong>: ${taskDescription}`;
+
+    if (listType === 'GetAFavor') {
+      taskItem.innerHTML += ` <br> Restaurant: ${taskRestaurant} <br> Price: ${taskPrice} <br> Payment Method: ${taskPaymentMethod}`;
+    }
+
+    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Remove Order</button>`;
+    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Track Order</button>`;
+    taskList.appendChild(taskItem);
+
+    // Clear input fields
+    taskTitleInput.value = "";
+    taskDescriptionInput.value = "";
+
+    if (listType === 'GetAFavor') {
+      taskRestaurantInput.value = "";
+      taskPriceInput.value = "";
+      taskPaymentMethodInput.value = "";
     }
   }
+}
+
 
   function removeTask(button, listType) {
     var taskList = document.getElementById(listType === 'GetAFavor' ? 'getTaskList' : 'doTaskList');
