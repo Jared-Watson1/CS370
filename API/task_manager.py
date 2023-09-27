@@ -26,3 +26,45 @@ def add_task_endpoint():
         return jsonify({"message": "Task added successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/get_tasks', methods=['GET'])
+def get_tasks_endpoint():
+    tasks = get_all_tasks()
+    return jsonify({"tasks": tasks})
+
+
+def get_all_tasks():
+
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+
+    # SQL statement to retrieve all tasks
+    select_all_tasks_query = "SELECT * FROM tasks;"
+
+    result_tasks = []
+
+    try:
+        cursor.execute(select_all_tasks_query)
+        tasks = cursor.fetchall()
+
+        for task in tasks:
+            task_data = {
+                "task_id": task[0],
+                "task_name": task[1],
+                "description": task[2],
+                "date_posted": str(task[3]),
+                "task_owner": task[4]
+            }
+            result_tasks.append(task_data)
+
+    except Exception as err:
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
+
+    return result_tasks
+
+# print(get_all_tasks())
