@@ -15,11 +15,15 @@ def add_task_endpoint():
     data = request.get_json()
 
     # Extract task details from the incoming JSON data
-    task_name = data.get('task_name')
-    description = data.get('description')
-    date_posted = datetime.strptime(data.get('date_posted'), '%Y-%m-%d').date()
-    task_owner = data.get('task_owner')
-
+    try:
+        task_name = data.get('task_name')
+        description = data.get('description')
+        date_posted = datetime.strptime(
+            data.get('date_posted'), '%Y-%m-%d').date()
+        task_owner = data.get('task_owner')
+    except Exception as e:
+        print("Error: might of missed task attributes: " + str(e))
+    
     try:
         # Use the add_task function to add the task to the database
         add_task(task_name, description, date_posted, task_owner)
@@ -67,4 +71,7 @@ def get_all_tasks():
 
     return result_tasks
 
-# print(get_all_tasks())
+
+if __name__ == "__main__":
+    app.run()
+    # print(get_all_tasks())
