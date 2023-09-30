@@ -215,7 +215,6 @@ pycparser==2.21
 pycryptodome==3.17
 pycryptodomex==3.17
 pydantic==1.10.8
-pygame==2.1.2
 Pygments==2.14.0
 pyinstaller==5.1
 pyinstaller-hooks-contrib==2022.6
