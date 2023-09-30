@@ -12,7 +12,7 @@ The Task Manager API allows users to interact with tasks in a database. It's bui
 
 ## API Endpoints 
 ### API Base URL 
-`https://task-manager-0-94114aee724a.herokuapp.com/`
+```https://task-manager-0-94114aee724a.herokuapp.com/```
 ### Add a Task
 
 - **Endpoint**: `/add_task`
