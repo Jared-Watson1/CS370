@@ -1,5 +1,3 @@
 build:
   run:
-    dir: API
-    script:
-      - echo "Navigate to API directory before building."
+    - ./heroku_build.sh
