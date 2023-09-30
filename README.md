@@ -10,8 +10,9 @@ The Task Manager API allows users to interact with tasks in a database. It's bui
 4. The `Procfile` informs Heroku how to run the application.
 5. The application binds to a port specified by the `PORT` environment variable, which is automatically set by Heroku.
 
-## API Endpoints `https://task-manager-0-94114aee724a.herokuapp.com/`
+## API Endpoints 
 ### API Base URL 
+`https://task-manager-0-94114aee724a.herokuapp.com/`
 ### Add a Task
 
 - **Endpoint**: `/add_task`
