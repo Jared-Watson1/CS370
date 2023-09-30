@@ -1,1 +1,2 @@
 web: python API/task_manager.py
+heroku buildpacks:set heroku/python
