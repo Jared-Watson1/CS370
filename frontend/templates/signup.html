@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Signup</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
 </head>
 <body>
     <div class="header-container">
@@ -11,15 +11,19 @@
 
     <h2>Signup</h2>
     <form id="signupForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" placeholder="Enter username" required><br><br>
+        <label for="username">Email:</label>
+        <input type="text" id="username" placeholder="Enter username (emory.edu)" required><br><br>
         
         <label for="password">Password:</label>
         <input type="password" id="password" placeholder="Enter password" required><br><br>
+
+        <label for="password">Confirm Password:</label>
+        <input type="password" id="password2" placeholder="Enter password" required><br><br>
         
         <input type="button" value="Signup" onclick="signup()">
+        
     </form>
     
-    <script src = "signup.js"></script>
+    <script src = "../scripts/signup.js"></script>
 </body>
 </html>
