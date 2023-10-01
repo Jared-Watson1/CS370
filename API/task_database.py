@@ -28,20 +28,6 @@ def createTable():
     );
     """
 
-    create_user_query = """
-    CREATE TABLE users (
-        user_id SERIAL PRIMARY KEY,
-        user_name VARCHAR(255) NOT NULL,
-    );
-    """
-
-    create_ratings_query = """
-    CREATE TABLE users (
-        rater_id INT FOREIGN KEY REFERENCES users(user_id),
-        rated_id INT FOREIGN KEY REFERENCES users(user_id),
-        rate_description VARCHAR(255),
-    );
-    """
     try:
         cursor.execute(create_table_query)
         conn.commit()
@@ -78,7 +64,8 @@ def add_task(task_name, description, date_posted, task_owner):
         cursor.close()
         conn.close()
 
-def get_all_tasks():
+# tester function to see all tasks 
+def get_all_tasks_tester():
     
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -109,5 +96,5 @@ def get_all_tasks():
 
 
 # Example task
-# add_task("Sample Task", "This is a description for the sample task.",
-#          date.today(), "John Doe")
+# add_task("Sample Task2", "This is a description for the sample task2.",
+#          date.today(), "John Doe2")
