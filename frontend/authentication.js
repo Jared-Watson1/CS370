@@ -1,9 +1,7 @@
-document.getElementById("loginButton").addEventListener("click", function() {
-    // redirect to login page
-    window.location.href = "login.html";
-});
-
-document.getElementById("signupButton").addEventListener("click", function() {
-    // redirect to signup page 
-    window.location.href = "signup.html"; 
-});
+function login() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    // will actually be functional in the future.
+    alert("Login Successful!\nUsername: " + username + "\nPassword: " + password);
+    window.location.href = "task.html"; // take you to main page after success
+}
