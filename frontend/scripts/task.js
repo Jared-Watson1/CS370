@@ -2,6 +2,7 @@ var map;
 var directionsService;
 var directionsRenderer;
 var autocomplete1, autocomplete2;
+var sharedTaskList = [];
 
 window.onload = initMap;
 function loadApiKey(callback) {
@@ -117,9 +118,11 @@ function updateMap() {
       if (isChecked) {
           document.getElementById('GetAFavor').style.display = 'none';
           document.getElementById('DoAFavor').style.display = 'block';
+          renderSharedTaskList();
       } else {
           document.getElementById('GetAFavor').style.display = 'block';
           document.getElementById('DoAFavor').style.display = 'none';
+          renderSharedTaskList();
       }
   }
 
@@ -147,6 +150,7 @@ function addTask(listType) {
 
     if (listType === 'GetAFavor') {
       taskItem.innerHTML += ` <br> Restaurant: ${taskRestaurant} <br> Price: ${taskPrice} <br> Payment Method: ${taskPaymentMethod}`;
+      sharedTaskList.push({ title: taskTitle, description: taskDescription, Restaurant: taskRestaurant, Price: taskPrice, Payment_Method: taskPaymentMethod });
     }
 
     taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Remove Order</button>`;
@@ -166,8 +170,105 @@ function addTask(listType) {
 }
 
 
-function removeTask(button, listType) {
+  function removeTask(button, listType) {
     var taskList = document.getElementById(listType === 'GetAFavor' ? 'getTaskList' : 'doTaskList');
     var taskItem = button.parentNode;
     taskList.removeChild(taskItem);
+
+    if (listType === 'GetAFavor') {
+      // Remove the task from the sharedTaskList
+      var taskText = taskItem.textContent.split(":");
+      var taskTitle = taskText[0].trim();
+      sharedTaskList = sharedTaskList.filter(task => task.title !== taskTitle);
+
+      // Update the availableList
+      renderSharedTaskList();
+    }
   }
+  
+function renderSharedTaskList() {
+  var sharedList = document.getElementById('sharedTaskList');
+  sharedList.innerHTML = "";
+
+  for (var i = 0; i < sharedTaskList.length; i++) {
+    var taskItem = document.createElement("li");
+    taskItem.innerHTML = `<strong>${sharedTaskList[i].title}</strong>: ${sharedTaskList[i].description}`;
+    taskItem.innerHTML += ` <br> Restaurant: ${sharedTaskList[i].Restaurant} <br> Price: ${sharedTaskList[i].Price} <br> Payment Method: ${sharedTaskList[i].Payment_Method}`;
+    taskItem.innerHTML += ` <button onclick="takeTask(this, '${sharedTaskList[i].title}', '${sharedTaskList[i].description}', '${sharedTaskList[i].Restaurant}', '${sharedTaskList[i].Price}', '${sharedTaskList[i].Payment_Method}')">Take Task</button>`;
+    sharedList.appendChild(taskItem);
+  }
+}
+
+function takeTask(button, title, description, restaurant, price, paymentMethod){
+  var takenTaskList = document.getElementById('doTaskList');
+  var taskItem = document.createElement("li");
+  taskItem.innerHTML = `<strong>${title}</strong>: ${description} <br> Restaurant: ${restaurant} <br> Price: ${price} <br> Payment Method: ${paymentMethod}`;
+  var dropButton = document.createElement("button");
+  dropButton.textContent = "Drop Task";
+  dropButton.addEventListener("click", function() {
+    dropTask(title, description, restaurant, price, paymentMethod);
+    // Remove the task item from the takenTaskList
+    takenTaskList.removeChild(taskItem);
+  });
+  taskItem.appendChild(dropButton);
+  takenTaskList.appendChild(taskItem);
+
+  // Remove the taken task from the sharedTaskList
+  sharedTaskList = sharedTaskList.filter(task => task.title !== title);
+
+  // Remove the taken task from the sharedTaskList displayed in the DoAFavor page
+  var sharedTaskListElement = document.getElementById('sharedTaskList');
+  var taskItems = sharedTaskListElement.getElementsByTagName('li');
+  for (var i = 0; i < taskItems.length; i++) {
+    if (taskItems[i].textContent.includes(title)) {
+      sharedTaskListElement.removeChild(taskItems[i]);
+      break;
+    }
+  }
+
+  // Remove the taken task from the getTaskList displayed in the GetAFavor page
+  var getTaskList = document.getElementById('getTaskList');
+  var taskItemsGet = getTaskList.getElementsByTagName('li');
+  for (var i = 0; i < taskItemsGet.length; i++) {
+    if (taskItemsGet[i].textContent.includes(title)) {
+      getTaskList.removeChild(taskItemsGet[i]);
+      break;
+    }
+  }
+
+  renderSharedTaskList();
+}
+
+function dropTask(title, description, restaurant, price, paymentMethod) {
+  var sharedTaskListElement = document.getElementById('sharedTaskList');
+  var taskItem = document.createElement("li");
+  taskItem.innerHTML = `<strong>${title}</strong>: ${description} <br> Restaurant: ${restaurant} <br> Price: ${price} <br> Payment Method: ${paymentMethod}`;
+  var takeButton = document.createElement("button");
+  takeButton.textContent = "Take Task";
+  takeButton.addEventListener("click", function() {
+    takeTask(takeButton, title, description, restaurant, price, paymentMethod);
+    sharedTaskListElement.removeChild(taskItem);
+  });
+  taskItem.appendChild(takeButton);
+  sharedTaskListElement.appendChild(taskItem);
+
+  // Add the task back to the sharedTaskList
+  sharedTaskList.push({ title, description, Restaurant: restaurant, Price: price, Payment_Method: paymentMethod });
+
+  // Add the task back to the getTaskList in the GetAFavor page
+  var getTaskList = document.getElementById('getTaskList');
+  var taskItemGet = document.createElement("li");
+  taskItemGet.innerHTML = `<strong>${title}</strong>: ${description} <br> Restaurant: ${restaurant} <br> Price: ${price} <br> Payment Method: ${paymentMethod}`;
+  var removeButton = document.createElement("button");
+  removeButton.textContent = "Remove Order";
+  removeButton.addEventListener("click", function() {
+    removeTask(removeButton, 'GetAFavor');
+  });
+  var trackButton = document.createElement("button");
+  trackButton.textContent = "Track Order";
+  taskItemGet.appendChild(removeButton);
+  taskItemGet.appendChild(trackButton);
+  getTaskList.appendChild(taskItemGet);
+  
+  renderSharedTaskList();
+}
