@@ -6,7 +6,7 @@ var autocomplete1, autocomplete2;
 window.onload = initMap;
 function loadApiKey(callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'api-keys.txt', true);
+    xhr.open('GET', '../api-keys.txt', true);
 
     xhr.onload = function () {
       if (xhr.status === 200) {
