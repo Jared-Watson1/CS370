@@ -23,7 +23,7 @@ def add_task_endpoint():
         task_owner = data.get('task_owner')
     except Exception as e:
         print("Error: might of missed task attributes: " + str(e))
-    
+
     try:
         # Use the add_task function to add the task to the database
         add_task(task_name, description, date_posted, task_owner)
@@ -70,6 +70,34 @@ def get_all_tasks():
         conn.close()
 
     return result_tasks
+
+
+@app.route('/clear_tasks', methods=['DELETE'])
+def clear_tasks_endpoint():
+    try:
+        clear_all_tasks()
+        return jsonify({"message": "All tasks cleared successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+def clear_all_tasks():
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+
+    # SQL statement to delete all tasks
+    delete_all_tasks_query = "DELETE FROM tasks;"
+
+    try:
+        cursor.execute(delete_all_tasks_query)
+        conn.commit()  # Commit the transaction
+    except Exception as err:
+        conn.rollback()  # Rollback in case of error
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
 
 
 port = int(os.environ.get("PORT", 5000))
