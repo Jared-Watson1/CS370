@@ -2,7 +2,6 @@ function login() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     // will actually be functional in the future.
-    if (username)
     alert("Login Successful!\nUsername: " + username + "\nPassword: " + password);
-    window.location.href = "task.html"; // take you to main page after success
+    window.location.href = "../templates/task.html"; // take you to main page after success
 }
