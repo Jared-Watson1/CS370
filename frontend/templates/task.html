@@ -75,18 +75,33 @@
 
 
 <div id="DoAFavor" class="hidden">
+    <div class="angled-container">
+      <div class="left padded" style="flex: 1;">
+        <div style="height: 100%;">
   <form id="doTaskForm">
-    <label for="doTaskTitle">Title:</label>
-    <input type="text" id="doTaskTitle" placeholder="Enter task title" required>
-    <br>
-    <label for="doTaskDescription">Description:</label>
-    <textarea id="doTaskDescription" placeholder="Enter task description" required></textarea>
-    <br>
-    <button type="button" onclick="addTask('DoAFavor')">Add Task</button>
+    <label for="doTaskList">avaliable task:</label>
   </form>
+  <ul id="sharedTaskList">
+    <!-- Tasks will be added here dynamically -->
+  </ul>
+  <form id="doTaskForm">
+    <label for="doTaskTitle">taken task:</label>
+  </form>
+  
+
+  
   <ul id="doTaskList">
     <!-- Tasks will be added here dynamically -->
   </ul>
+  
+          </div>
+      </div>
+
+      <div class="right padded" style="flex: 1;">
+    <!-- Right Content --><div id="map" style="height: 100%; width: 100%;"></div>
+      </div>
+
+   </div>
 </div>
 
 </body>
