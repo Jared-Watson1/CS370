@@ -19,6 +19,7 @@ h1 {
   text-align: left;
   padding: 10px;
   font-style: italic;
+    font-weight: bold;
 }
 .blue {
   color: rgba(23, 80, 157);
@@ -77,7 +78,7 @@ h1 {
 }
 
 input:checked + .slider {
-    background-color: rgba(23, 80, 157);
+    background-color: rgba(53, 100, 177);
 }
 
 input:checked + .slider:before {
