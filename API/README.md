@@ -90,9 +90,9 @@ https://task-manager-0-94114aee724a.herokuapp.com
     "description": "This is a sample task for demonstration purposes.",
     "date_posted": "2023-09-30",
     "task_owner": "John Doe"
-}
+} 
 ```
-** Response:
+**Response**:
 ```json
 {
     "message": "Task added successfully!"
@@ -101,7 +101,7 @@ https://task-manager-0-94114aee724a.herokuapp.com
 ## Get All Tasks
 Endpoint: /get_tasks
 Method: GET
-** Response**:
+**Response**:
 ```json
 {
     "tasks": [
@@ -119,7 +119,7 @@ Method: GET
 ## Making Requests
 You can interact with the API using tools like curl or Postman. Here are some examples using curl:
 
-Add a Task
+**Add a Task**
 ```bash
 curl -X POST https://task-manager-0-94114aee724a.herokuapp.com/add_task \
 -H "Content-Type: application/json" \
@@ -130,7 +130,7 @@ curl -X POST https://task-manager-0-94114aee724a.herokuapp.com/add_task \
     "task_owner": "John Doe"
 }'
 ```
-Get All Tasks
+**Get All Tasks**
 ```bash
 curl https://task-manager-0-94114aee724a.herokuapp.com/get_tasks
 ```
