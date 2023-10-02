@@ -72,7 +72,9 @@ The Task Manager API allows users to interact with tasks in a database. It's bui
 
 ## API Endpoints 
 ### API Base URL 
-```https://task-manager-0-94114aee724a.herokuapp.com/```
+```bash
+https://task-manager-0-94114aee724a.herokuapp.com
+```
 ### Add a Task
 
 - **Endpoint**: `/add_task`
@@ -88,16 +90,16 @@ The Task Manager API allows users to interact with tasks in a database. It's bui
     "task_owner": "John Doe"
 }
 ```
-**Response**:
+** Response:
 ```json
 {
     "message": "Task added successfully!"
 }
 ```
-##Get All Tasks
+## Get All Tasks
 Endpoint: /get_tasks
 Method: GET
-**Response**:
+** Response**:
 ```json
 {
     "tasks": [
@@ -112,7 +114,7 @@ Method: GET
     ]
 }
 ```
-##Making Requests
+## Making Requests
 You can interact with the API using tools like curl or Postman. Here are some examples using curl:
 
 Add a Task
