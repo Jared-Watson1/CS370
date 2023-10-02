@@ -58,6 +58,8 @@ With an ElephantSQL account, you can:
 - SQL Browser: Directly run SQL commands on your database using the browser-based UI.
 - Monitoring & Analytics: View metrics related to your database's performance and usage.
 
+---
+
 # Task Manager API
 
 The Task Manager API allows users to interact with tasks in a database. It's built with Flask and is hosted on Heroku.
@@ -132,3 +134,5 @@ Get All Tasks
 ```bash
 curl https://task-manager-0-94114aee724a.herokuapp.com/get_tasks
 ```
+
+---
