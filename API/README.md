@@ -1,3 +1,19 @@
+# Table of Contents
+1. [Task Database with ElephantSQL](#task-database-with-elephantsql)
+   - [Code Overview](#code-overview)
+   - [Prerequisites](#prerequisites)
+   - [Setup](#setup)
+   - [Interacting with ElephantSQL](#interacting-with-elephantsql)
+2. [Task Manager API](#task-manager-api)
+   - [Setting up the API on Heroku](#setting-up-the-api-on-heroku)
+   - [API Endpoints](#api-endpoints)
+      - [API Base URL](#api-base-url)
+      - [Add a Task](#add-a-task)
+      - [Get All Tasks](#get-all-tasks)
+   - [Making Requests](#making-requests)
+
+---
+
 # Task Database with ElephantSQL
 
 This repository contains a Python script `task_database.py` which sets up and interacts with a PostgreSQL database hosted on [ElephantSQL](https://www.elephantsql.com/).
