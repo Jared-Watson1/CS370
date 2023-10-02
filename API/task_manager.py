@@ -3,7 +3,7 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from task_database import add_task
+from task_database import add_task, clear_all_tasks
 load_dotenv()
 DATABASE_URL = os.getenv("TASK_DB_URL")
 
@@ -72,32 +72,13 @@ def get_all_tasks():
     return result_tasks
 
 
-@app.route('/clear_tasks', methods=['DELETE'])
+@app.route('/DANGER_clear_tasks', methods=['DELETE'])
 def clear_tasks_endpoint():
     try:
         clear_all_tasks()
         return jsonify({"message": "All tasks cleared successfully!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-def clear_all_tasks():
-    # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor()
-
-    # SQL statement to delete all tasks
-    delete_all_tasks_query = "DELETE FROM tasks;"
-
-    try:
-        cursor.execute(delete_all_tasks_query)
-        conn.commit()  # Commit the transaction
-    except Exception as err:
-        conn.rollback()  # Rollback in case of error
-        print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
 
 
 port = int(os.environ.get("PORT", 5000))
