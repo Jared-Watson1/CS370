@@ -27,7 +27,8 @@ h2 {
 
   text-align: left;
   padding: 10px;
-  font-style: italic;
+  margin-left: 20px;
+  font-style: bold;
 }
 .blue {
   color: rgba(23, 80, 157);
@@ -154,6 +155,32 @@ form {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#signupForm {
+  width: 50%;
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-left: 20px;
+}
+
+#signupForm input[type="button"] { /* for "login" or "signup" button */
+  width: 100%;
+  height: 40px; 
+  font-size: 18px; 
+}
+
+#underPassword {
+  margin-left: 260px;
+  margin-top: -30px;
+  font-size: 12px; 
+}
+
+#signupText {
+  margin-left: 65px;
+  font-size: 14px;
 }
 
 label {

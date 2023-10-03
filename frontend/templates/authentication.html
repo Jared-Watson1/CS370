@@ -10,18 +10,19 @@
           <h1><span class="blue">Dooley</span><span class="yellow">A</span><span class="blue">Favor</span></h1>
       </div>
   
-      <h2>Welcome!</h2> 
+      <h2>Welcome</h2> 
       <form id="signupForm">
           <label for="username">Username:</label>
           <input type="text" id="username" placeholder="Enter username" required><br><br>
           
           <label for="password">Password:</label>
           <input type="password" id="password" placeholder="Enter password" required><br><br>
-          
+          <p id = "underPassword"><a href="../templates/forgot_password.html">Forgot Password?</a></p> 
+
           <input type="button" value="Login" onclick="login()">
+          <p id = "signupText"> Don't have an account? <a href="../templates/signup.html">Sign up</a></p> 
       </form>
       
-      <p>Don't have an account? <a href="../templates/signup.html">Sign up</a></p> 
       <!-- sign up hyperlink that takes you to signup.html -->
       
       <script src = "../scripts/authentication.js"></script>
