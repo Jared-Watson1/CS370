@@ -6,7 +6,7 @@ import json
 load_dotenv()
 BASE_URL = os.getenv("API_BASE_URL")
 
-
+# test add_task endpoint
 def add_task(task_name, description, date_posted, task_owner):
     endpoint = f'{BASE_URL}/add_task'
     payload = {
@@ -22,7 +22,7 @@ def add_task(task_name, description, date_posted, task_owner):
     else:
         print(f"Failed to add task. Reason: {response.text}")
 
-
+# test get_tasks endpoint
 def get_tasks():
     endpoint = f'{BASE_URL}/get_tasks'
     response = requests.get(endpoint)

@@ -9,7 +9,7 @@ DATABASE_URL = os.getenv("TASK_DB_URL")
 
 app = Flask(__name__)
 
-
+# TASK END POINTS
 @app.route('/add_task', methods=['POST'])
 def add_task_endpoint():
     data = request.get_json()
@@ -80,6 +80,8 @@ def clear_tasks_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# USER ENDPOINTS
 
 port = int(os.environ.get("PORT", 5000))
 if __name__ == "__main__":
