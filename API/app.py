@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from task_database import add_task, clear_all_tasks
-from user_database import addUser
+from user_database import addUser, getAllUsers
 load_dotenv()
 DATABASE_URL = os.getenv("DB_URL")
 
@@ -109,7 +109,30 @@ def add_user_endpoint():
         return jsonify({"error": response_message}), 400
 
 
-port = int(os.environ.get("PORT", 5001))
+@app.route('/get_all_users', methods=['GET'])
+def get_all_users_endpoint():
+    try:
+        users_data = getAllUsers()
+
+        # Format the users data into a list of dictionaries for JSON representation
+        users_list = []
+        for user in users_data:
+            user_dict = {
+                "user_id": user[0],
+                "username": user[1],
+                "email": user[2],
+                "phone_number": user[3],
+                "rating_sum": user[4],
+                "num_reviews": user[5]
+            }
+            users_list.append(user_dict)
+
+        return jsonify({"users": users_list}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+port = int(os.environ.get("PORT", 5000))
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # print(get_all_tasks())
