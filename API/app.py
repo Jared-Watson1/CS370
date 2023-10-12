@@ -4,12 +4,15 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from task_database import add_task, clear_all_tasks
+from user_database import addUser
 load_dotenv()
-DATABASE_URL = os.getenv("TASK_DB_URL")
+DATABASE_URL = os.getenv("DB_URL")
 
 app = Flask(__name__)
 
 # TASK END POINTS
+
+
 @app.route('/add_task', methods=['POST'])
 def add_task_endpoint():
     data = request.get_json()
@@ -81,9 +84,32 @@ def clear_tasks_endpoint():
         return jsonify({"error": str(e)}), 500
 
 
-# USER ENDPOINTS
+###                 USER ENDPOINTS              ###
 
-port = int(os.environ.get("PORT", 5000))
+
+@app.route('/add_user', methods=['POST'])
+def add_user_endpoint():
+    data = request.get_json()
+
+    # Extract user details from the incoming JSON data
+    try:
+        username = data.get('username')
+        email = data.get('email')
+        phone_number = data.get('phone_number')
+    except Exception as e:
+        return jsonify({"error": "Might have missed user attributes: " + str(e)}), 400
+
+    # Use the addUser function to add the user to the database
+    response_message = addUser(username, email, phone_number)
+
+    # Check the response to determine the status code
+    if "successfully" in response_message:
+        return jsonify({"message": response_message}), 200
+    else:
+        return jsonify({"error": response_message}), 400
+
+
+port = int(os.environ.get("PORT", 5001))
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # print(get_all_tasks())

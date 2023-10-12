@@ -7,7 +7,7 @@ from datetime import date
 
 load_dotenv()
 # connecting URL for database
-DATABASE_URL = os.getenv("TASK_DB_URL")
+DATABASE_URL = os.getenv("DB_URL")
 
 # Create table for tasks
 
