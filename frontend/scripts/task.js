@@ -3,37 +3,34 @@ var directionsService;
 var directionsRenderer;
 var autocomplete1, autocomplete2;
 var sharedTaskList = [];
+let globalApiKey;
+
+// Fetch the API key on page load
+fetch('/api/data')
+    .then(response => response.json())
+    .then(data => {
+        if (data && data.apiKey) {
+            globalApiKey = data.apiKey;
+            loadScriptWithApiKey(globalApiKey);  // Load the Google Maps script using the API key
+        } else {
+            console.error('Error loading API key: Key not found in response.');
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
 
 window.onload = initMap;
-function loadApiKey(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '../api-keys.txt', true);
 
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        // Parse the API key from the text file content
-        var apiKey = xhr.responseText.match(/API_KEY\s*=\s*(\S+)/)[1];
-        callback(apiKey);
-      } else {
-        console.error('Error loading API key:', xhr.status, xhr.statusText);
-      }
-    };
-
-    xhr.onerror = function () {
-      console.error('Network error while loading API key');
-    };
-
-    xhr.send();
-  }
-
-  // Example of how to use the API key in a URL
-  loadApiKey(function (apiKey) {
+function loadScriptWithApiKey(apiKey) {
     var script = document.createElement('script');
     script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places&region=US&language=en&callback=initMap';
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
-  });
+}
+
+  // Example of how to use the API key in a URL
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 33.7966455, lng: -84.324358 },
