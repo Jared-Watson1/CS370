@@ -33,7 +33,7 @@ function addUser_API(taskType) {
   .then(response => response.json())
   .then(data => {
     // Handle the API response
-    if (data.message === "Task added successfully!") {
+    if (data.message === "User added successfully!") {
       // Clear the form
       document.getElementById('first name').reset();
       document.getElementById('last name').reset();
