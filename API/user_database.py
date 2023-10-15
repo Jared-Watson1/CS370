@@ -25,6 +25,9 @@ def createUserTable():
         user_id VARCHAR(255) PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,    
+        first_name VARCHAR(255),           
+        last_name VARCHAR(255),            
         phone_number VARCHAR(15),
         rating_sum INT DEFAULT 0,
         num_reviews INT DEFAULT 0
@@ -140,3 +143,4 @@ def delete_users_table():
         conn.close()
 
 # delete_users_table()
+# createUserTable()
