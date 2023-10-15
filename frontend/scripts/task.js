@@ -5,6 +5,39 @@ var directionsRenderer;
 var autocomplete1, autocomplete2;
 var sharedTaskList = [];
 let globalApiKey;
+function postTaskToApi(data) {
+  const requestBody = data;
+
+  console.log('Sending:', JSON.stringify(requestBody));  // Log the request payload
+
+  fetch('/add_task', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  })
+  .then(response => {
+    console.log('Received:', response); // Log the response object
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.statusText);
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new TypeError("Oops, we haven't got JSON!");
+    }
+
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);  // Log the parsed data
+  })
+  .catch((error) => {
+    console.error('Error:', error);  // Log any error
+  });
+}
 
 // Fetch the API key on page load
 fetch('/api/data')
@@ -20,21 +53,27 @@ fetch('/api/data')
     .catch(error => {
         console.error('Error fetching data:', error);
     });
-fetch('/tasks')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();  // Parse JSON data
-    })
-    .then(data => {
-        console.log("Tasks fetched from Node.js Server:", data.tasks);  // Log here
 
-        // Here you could update your UI with the tasks data...
-    })
-    .catch(error => {
-        console.error('Error during fetch operation:', error);
-    });
+    fetch('/tasks')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();  // Parse JSON data
+        })
+        .then(data => {
+            console.log("Tasks fetched from Node.js Server:", data.tasks);  // Log here
+
+            // Here you could update your UI with the tasks data...
+        })
+        .catch(error => {
+            console.error('Error during fetch operation:', error);
+        });
+
+
+// Fetch tasks every 1 second (1000 milliseconds)
+
+
 
 window.onload = function() {
     initMap();
@@ -78,6 +117,8 @@ function populateTasks() {
 }
 
 // Call populateTasks on page load or whenever needed.
+
+
 populateTasks();
 
 function loadScriptWithApiKey(apiKey) {
@@ -145,12 +186,12 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     var userPlace = autocomplete1 ? autocomplete1.getPlace() : null;
     var restaurantPlace = autocomplete2 ? autocomplete2.getPlace() : null;
 
-    if (targetMap.userMarker) {
-        targetMap.userMarker.setMap(null);
-    }
-    if (targetMap.restaurantMarker) {
-        targetMap.restaurantMarker.setMap(null);
-    }
+    // if (targetMap.userMarker) {
+    //     targetMap.userMarker.setMap(null);
+    // }
+    // if (targetMap.restaurantMarker) {
+    //     targetMap.restaurantMarker.setMap(null);
+    // }
     if (userPlace && userPlace.place_id && restaurantPlace && restaurantPlace.place_id) {
         directionsService.route({
             origin: { 'placeId': userPlace.place_id },
@@ -218,7 +259,18 @@ function toggleView(isChecked) {
           renderSharedTaskList();
       }
   }
+function getTodayDate() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1;  // January is 0
+    let dd = today.getDate();
 
+    // Pad month and day with zero if below 10
+    mm = mm < 10 ? '0' + mm : mm;
+    dd = dd < 10 ? '0' + dd : dd;
+
+    return yyyy + '-' + mm + '-' + dd;
+}
 function addTask(listType) {
   var taskTitleInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskTitle' : 'doTaskTitle');
   var taskDescriptionInput = document.getElementById(listType === 'GetAFavor' ? 'getTaskDescription' : 'doTaskDescription');
@@ -231,9 +283,18 @@ function addTask(listType) {
     var taskRestaurantInput = document.getElementById('getTaskRestaurant');
     var taskPriceInput = document.getElementById('getTaskPrice');
     var taskPaymentMethodInput = document.getElementById('getTaskPaymentMethod');
+    var taskTitleInput = document.getElementById('getTaskTitle');
     var taskRestaurant = taskRestaurantInput.value.trim();
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;
+    var taskTitle = taskTitleInput.value.trim();
+    const taskData = {
+        "task_name": taskTitle,
+        "description": taskRestaurant,
+        "date_posted": getTodayDate(),
+        "task_owner": "John Doe"
+    };
+    postTaskToApi(taskData);
   }
 
   if (taskTitle !== "" && taskDescription !== "" && (listType === 'DoAFavor' || (taskRestaurant !== "" && taskPrice !== ""))) {
@@ -278,9 +339,10 @@ function addTask(listType) {
     }
   }
   
-function renderSharedTaskList() {
+
+  function renderSharedTaskList() {
   var sharedList = document.getElementById('sharedTaskList');
-  sharedList.innerHTML = "";
+  //sharedList.innerHTML = "";
 
   for (var i = 0; i < sharedTaskList.length; i++) {
     var taskItem = document.createElement("li");

@@ -4,8 +4,13 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+<<<<<<< Updated upstream
  // Verify the API key is being loaded
 
+=======
+console.log('API Key:', process.env.API_KEY); // Verify the API key is being loaded
+app.use(express.json());
+>>>>>>> Stashed changes
 app.use(express.static(__dirname + '/../../frontend'));
 app.use('/static', express.static(__dirname + '/../../frontend/static')); // For static files
 app.use('/templates', express.static(__dirname + '/../../frontend/templates'));
@@ -29,6 +34,24 @@ app.get('/api/data', (req, res) => {
         res.json({ apiKey: process.env.API_KEY });
     } catch (error) {
         console.error('Error sending API key:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+app.post('/add_task', async (req, res) => {
+    try {
+
+        const { task_name, description, date_posted, task_owner} = req.body;
+        const response = await axios.post('https://task-manager-0-94114aee724a.herokuapp.com/add_task', {
+            task_name,
+            description,
+            date_posted,
+            task_owner,
+        });
+        console.log(response.data)
+        res.json(response.data);
+
+    } catch (error) {
+        console.error('Error posting task to Flask API:', error);
         res.status(500).send('Internal Server Error');
     }
 });

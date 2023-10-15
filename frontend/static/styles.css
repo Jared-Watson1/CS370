@@ -102,6 +102,19 @@ h2 {
 * {
     box-sizing: border-box;
 }
+#taskList {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.task-list li {
+    line-height: 0.5;
+    height: auto;  /* Or whatever height you prefer */
+    padding: 5px;  /* Adjust padding as needed */
+    margin-bottom: 5px;  /* Add some space between items */
+    list-style-type: none;  /* Remove bullet points */
+    font-size: 14px;
+}
 .angled-container {
     display: flex;
     height: auto;
