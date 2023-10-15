@@ -36,8 +36,49 @@ fetch('/tasks')
         console.error('Error during fetch operation:', error);
     });
 
+window.onload = function() {
+    initMap();
+    populateTasks();//...
+};
 
-window.onload = initMap;
+function populateTasks() {
+    fetch('/tasks')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();  // Parse JSON data
+        })
+        .then(data => {
+            console.log("Tasks fetched from Node.js Server:", data.tasks);  // Log here
+
+            // Grabbing the taskUl element
+            const taskUl = document.getElementById('taskUl');
+
+            // Iterate through the tasks data and append to the UL
+            data.tasks.forEach(task => {
+                // Create li element
+                const li = document.createElement('li');
+
+                // Add task details to li
+                li.innerHTML = `
+                    <h3>${task.task_name}</h3>
+                    <p>${task.description}</p>
+                    <p>Date Posted: ${task.date_posted}</p>
+                    <p>Task Owner: ${task.task_owner}</p>
+                `;
+
+                // Append li to ul
+                taskUl.appendChild(li);
+            });
+        })
+        .catch(error => {
+            console.error('Error during fetch operation:', error);
+        });
+}
+
+// Call populateTasks on page load or whenever needed.
+populateTasks();
 
 function loadScriptWithApiKey(apiKey) {
     var script = document.createElement('script');
