@@ -4,13 +4,9 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-<<<<<<< Updated upstream
- // Verify the API key is being loaded
 
-=======
-console.log('API Key:', process.env.API_KEY); // Verify the API key is being loaded
+// Verify the API key is being loaded
 app.use(express.json());
->>>>>>> Stashed changes
 app.use(express.static(__dirname + '/../../frontend'));
 app.use('/static', express.static(__dirname + '/../../frontend/static')); // For static files
 app.use('/templates', express.static(__dirname + '/../../frontend/templates'));
