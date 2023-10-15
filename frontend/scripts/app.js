@@ -4,7 +4,7 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-console.log('API Key:', process.env.API_KEY); // Verify the API key is being loaded
+ // Verify the API key is being loaded
 
 app.use(express.static(__dirname + '/../../frontend'));
 app.use('/static', express.static(__dirname + '/../../frontend/static')); // For static files
@@ -16,7 +16,14 @@ app.listen(PORT, () => {
 });
 
 const axios = require('axios');
-
+app.get('/api/link', (req, res) => {
+    try {
+        res.json({ link: process.env.TASK_DB_URL });
+    } catch (error) {
+        console.error('Error sending API key:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 app.get('/api/data', (req, res) => {
     try {
         res.json({ apiKey: process.env.API_KEY });
