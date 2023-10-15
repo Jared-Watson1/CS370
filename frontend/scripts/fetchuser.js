@@ -13,12 +13,12 @@ function addUser_API(taskType) {
 
   // Prepare the request data
   const requestData = {
+    'username': username, 
+    'email': email, 
+    'password': password, 
     "first_name": first_name,
     "last_name": last_name,
     "phone_number": phone_number, 
-    'email': email, 
-    'username': username, 
-    'password': password, 
     // Add other task-related properties here as needed
   };
 
