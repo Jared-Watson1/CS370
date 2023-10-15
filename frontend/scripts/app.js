@@ -70,3 +70,24 @@ const getTasksFromFlaskAPI = async () => {
         return null;
     }
 };
+
+app.post('/add_user', async (req, res) => {
+    try {
+
+        const { username, email, password, firstName, lastName, phoneNumber} = req.body;
+        const response = await axios.post('https://task-manager-0-94114aee724a.herokuapp.com/add_user', {
+            username,
+            email,
+            password,
+            first_name,
+            last_name, 
+            phone_number, 
+        });
+        console.log(response.data)
+        res.json(response.data);
+
+    } catch (error) {
+        console.error('Error posting task to Flask API:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});

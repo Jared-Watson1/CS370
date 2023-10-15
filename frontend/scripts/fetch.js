@@ -29,8 +29,6 @@ function addTask_API(taskType) {
       // Clear the form
       document.getElementById(`${taskType === 'DoAFavor' ? 'doTask' : 'getTask'}Form`).reset();
 
-      // Optionally, you can update the task list on the page by calling a function that fetches and displays tasks.
-      // Example: fetchAndDisplayTasks(taskType);
     } else {
       alert('Failed to add the task. Please try again.');
     }
