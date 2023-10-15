@@ -62,7 +62,17 @@
       </div>
 
       <div class="right padded" style="flex: 1;">
-    <!-- Right Content --><div id="map" style="height: 100%; width: 100%;"></div>
+    <!-- Right Content -->
+          <div id="floating-panel">
+      <b>Mode of Travel: </b>
+      <select id="mode">
+        <option value="DRIVING">Driving</option>
+        <option value="WALKING">Walking</option>
+        <option value="BICYCLING">Bicycling</option>
+        <option value="TRANSIT">Transit</option>
+      </select>
+    </div>
+          <div id="map" style="height: 100%; width: 100%;"></div>
       </div>
 
    </div>
@@ -75,33 +85,22 @@
 
 
 <div id="DoAFavor" class="hidden">
-    <div class="angled-container">
-      <div class="left padded" style="flex: 1;">
-        <div style="height: 100%;">
-  <form id="doTaskForm">
-    <label for="doTaskList">avaliable task:</label>
-  </form>
-  <ul id="sharedTaskList">
-    <!-- Tasks will be added here dynamically -->
-  </ul>
-  <form id="doTaskForm">
-    <label for="doTaskTitle">taken task:</label>
-  </form>
-  
-
-  
-  <ul id="doTaskList">
-    <!-- Tasks will be added here dynamically -->
-  </ul>
-  
-          </div>
+<div class="angled-container">
+    <div class="left padded" style="flex: 1;">
+      <!-- Task List -->
+      <div id="taskList" style="height: 100%; overflow-y: auto;">
+        <h2>Available Tasks</h2>
+        <ul id="taskUl">
+          <!-- Task Items will be appended here through JS -->
+        </ul>
       </div>
+    </div>
 
-      <div class="right padded" style="flex: 1;">
-    <!-- Right Content --><div id="map" style="height: 100%; width: 100%;"></div>
-      </div>
-
-   </div>
+    <div class="right padded" style="flex: 1;">
+      <!-- Map View -->
+      <div id="doAFavorMap" style="height: 100%; width: 100%;"></div>
+    </div>
+  </div>
 </div>
 
 </body>

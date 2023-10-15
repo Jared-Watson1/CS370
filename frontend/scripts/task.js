@@ -1,4 +1,5 @@
 var map;
+var doAFavorMap;
 var directionsService;
 var directionsRenderer;
 var autocomplete1, autocomplete2;
@@ -19,6 +20,22 @@ fetch('/api/data')
     .catch(error => {
         console.error('Error fetching data:', error);
     });
+fetch('/tasks')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();  // Parse JSON data
+    })
+    .then(data => {
+        console.log("Tasks fetched from Node.js Server:", data.tasks);  // Log here
+
+        // Here you could update your UI with the tasks data...
+    })
+    .catch(error => {
+        console.error('Error during fetch operation:', error);
+    });
+
 
 window.onload = initMap;
 
@@ -32,41 +49,72 @@ function loadScriptWithApiKey(apiKey) {
 
   // Example of how to use the API key in a URL
   function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 33.7966455, lng: -84.324358 },
-        zoom: 14.41
-    });
-    directionsService = new google.maps.DirectionsService();
-    directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
+  // First map initialization...
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 33.7966455, lng: -84.324358 },
+    zoom: 14.41
+  });
+  initAutocompleteAndListeners(map, 'getUserLocation', 'getTaskRestaurant');
 
-    // Initialize autocomplete
-    autocomplete1 = new google.maps.places.Autocomplete(
-        document.getElementById('getUserLocation')
-    );
-    autocomplete2 = new google.maps.places.Autocomplete(
-        document.getElementById('getTaskRestaurant')
-    );
+  // Second map initialization...
+  doAFavorMap = new google.maps.Map(document.getElementById('doAFavorMap'), {
+    center: { lat: 33.7966455, lng: -84.324358 },
+    zoom: 14.41
+  });
 
-    // Add listeners for place changed event
-    autocomplete1.addListener('place_changed', updateMap);
-    autocomplete2.addListener('place_changed', updateMap);
+  // Additional code to place markers on doAFavorMap using data from tasks...
+  placeMarkers(doAFavorMap);
 }
+function initAutocompleteAndListeners(targetMap, inputId1, inputId2) {
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({ map: targetMap });
 
-function updateMap() {
-    var userPlace = autocomplete1.getPlace();
-    var restaurantPlace = autocomplete2.getPlace();
-    if (map.userMarker) {
-        map.userMarker.setMap(null);
+  // Initialize autocomplete...
+  const autocomplete1 = new google.maps.places.Autocomplete(
+    document.getElementById(inputId1)
+  );
+  const autocomplete2 = new google.maps.places.Autocomplete(
+    document.getElementById(inputId2)
+  );
+
+  // Add listeners for place changed event...
+  autocomplete1.addListener('place_changed', () => updateMap(targetMap, autocomplete1, autocomplete2,document.getElementById('mode')));
+  autocomplete2.addListener('place_changed', () => updateMap(targetMap, autocomplete1, autocomplete2,document.getElementById('mode')));
+  document.getElementById('mode').addEventListener('change', function () {
+        updateMap(targetMap, autocomplete1, autocomplete2,document.getElementById('mode'));
+        // Ensure that the 'updateMap' function utilizes the newly selected mode of travel.
+    });
+}
+function placeMarkers(targetMap) {
+  // Example data structure for tasks. This might come from your back-end/API...
+  const tasks = [
+    { title: 'Task 1', location: { lat: 33.7966455, lng: -84.324358 } },
+    // ... Other tasks ...
+  ];
+
+  tasks.forEach(task => {
+    new google.maps.Marker({
+      position: task.location,
+      map: targetMap,
+      title: task.title
+    });
+  });
+}
+function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
+    var userPlace = autocomplete1 ? autocomplete1.getPlace() : null;
+    var restaurantPlace = autocomplete2 ? autocomplete2.getPlace() : null;
+
+    if (targetMap.userMarker) {
+        targetMap.userMarker.setMap(null);
     }
-    if (map.restaurantMarker) {
-        map.restaurantMarker.setMap(null);
+    if (targetMap.restaurantMarker) {
+        targetMap.restaurantMarker.setMap(null);
     }
     if (userPlace && userPlace.place_id && restaurantPlace && restaurantPlace.place_id) {
-        // Both locations are filled out, request and display directions
         directionsService.route({
             origin: { 'placeId': userPlace.place_id },
             destination: { 'placeId': restaurantPlace.place_id },
-            travelMode: 'WALKING'
+            travelMode: google.maps.TravelMode[document.getElementById('mode').value],
         }, function (response, status) {
             if (status === 'OK') {
                 directionsRenderer.setDirections(response);
@@ -79,7 +127,7 @@ function updateMap() {
 
                 // Create an InfoWindow to display the walk time
                 map.infoWindow = new google.maps.InfoWindow({
-                    content: "Estimated walk time: " + duration,
+                    content: "Estimated time: " + duration,
                     position: response.routes[0].legs[0].end_location
                 });
 
@@ -89,29 +137,36 @@ function updateMap() {
                 alert("Directions request failed due to " + status);
             }
         });
-    }else {
-        // Only one location is filled out, center map on it and place a marker
+    } else {
+        // Handling when one or none locations are available...
         var location, marker;
+
         if (userPlace && userPlace.geometry) {
             location = userPlace.geometry.location;
         } else if (restaurantPlace && restaurantPlace.geometry) {
             location = restaurantPlace.geometry.location;
         }
+
+        // Additional logic to handle scenario when autocompletes are not provided
+
+
         if (location) {
-            map.setCenter(location);
+            targetMap.setCenter(location);
             marker = new google.maps.Marker({
                 position: location,
-                map: map
+                map: targetMap
             });
             if (userPlace && userPlace.geometry) {
-                map.userMarker = marker;
+                targetMap.userMarker = marker;
             } else {
-                map.restaurantMarker = marker;
+                targetMap.restaurantMarker = marker;
             }
         }
     }
 }
-  function toggleView(isChecked) {
+
+
+function toggleView(isChecked) {
       if (isChecked) {
           document.getElementById('GetAFavor').style.display = 'none';
           document.getElementById('DoAFavor').style.display = 'block';
@@ -135,7 +190,6 @@ function addTask(listType) {
     var taskRestaurantInput = document.getElementById('getTaskRestaurant');
     var taskPriceInput = document.getElementById('getTaskPrice');
     var taskPaymentMethodInput = document.getElementById('getTaskPaymentMethod');
-
     var taskRestaurant = taskRestaurantInput.value.trim();
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;

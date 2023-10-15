@@ -25,4 +25,22 @@ app.get('/api/data', (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+app.get('/tasks', async (req, res) => {
+    const tasks = await getTasksFromFlaskAPI();
 
+    if (!tasks) {
+        return res.status(500).json({ error: "Failed to fetch tasks." });
+    }
+    res.json({ tasks });
+});
+
+const getTasksFromFlaskAPI = async () => {
+    try {
+        const response = await axios.get('https://task-manager-0-94114aee724a.herokuapp.com/get_tasks');
+
+        return response.data.tasks;
+    } catch (error) {
+        console.error('Error fetching tasks from Flask API:', error);
+        return null;
+    }
+};
