@@ -1,3 +1,4 @@
+import bcrypt
 from flask import Flask, request, jsonify
 import psycopg2
 from datetime import datetime
@@ -10,7 +11,8 @@ DATABASE_URL = os.getenv("DB_URL")
 
 app = Flask(__name__)
 
-# TASK END POINTS
+
+###   ---          TASK END POINTS          ---   ###
 
 
 @app.route('/add_task', methods=['POST'])
@@ -84,7 +86,19 @@ def clear_tasks_endpoint():
         return jsonify({"error": str(e)}), 500
 
 
-###                 USER ENDPOINTS              ###
+###   ---              USER ENDPOINTS           ---   ###
+
+
+def hash_password(password: str) -> bytes:
+    """Hashes a password using bcrypt."""
+    salt = bcrypt.gensalt()  # Generate a unique salt
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed
+
+
+def check_password(plain_password: str, hashed_password: bytes) -> bool:
+    """Verifies a password against its hashed version."""
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password)
 
 
 @app.route('/add_user', methods=['POST'])
@@ -96,11 +110,22 @@ def add_user_endpoint():
         username = data.get('username')
         email = data.get('email')
         phone_number = data.get('phone_number')
+        password = data.get('password')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+
+        # Check if mandatory attributes are provided
+        if not (username and email and password):  # Password made mandatory
+            raise ValueError("Missing mandatory user attributes.")
+        
+        hashed_password = hash_password(password)
+
     except Exception as e:
         return jsonify({"error": "Might have missed user attributes: " + str(e)}), 400
 
     # Use the addUser function to add the user to the database
-    response_message = addUser(username, email, phone_number)
+    response_message = addUser(username, email, phone_number,
+                               hashed_password, first_name, last_name)
 
     # Check the response to determine the status code
     if "successfully" in response_message:
@@ -121,9 +146,12 @@ def get_all_users_endpoint():
                 "user_id": user[0],
                 "username": user[1],
                 "email": user[2],
-                "phone_number": user[3],
-                "rating_sum": user[4],
-                "num_reviews": user[5]
+                "password": user[3],
+                "first_name": user[4],
+                "last_name": user[5],
+                "phone_number": user[6],
+                "rating_sum": user[7],
+                "num_reviews": user[8]
             }
             users_list.append(user_dict)
 
