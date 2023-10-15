@@ -52,7 +52,7 @@ def hash_username(username: str) -> str:
     return hashlib.sha256(username.encode()).hexdigest()
 
 
-def addUser(username: str, email: str, phone_number: str):
+def addUser(username: str, email: str, phone_number: str, password: bytes, first_name: str, last_name: str):
     """
     Adds a user to the 'users' table in the database.
     """
@@ -60,16 +60,16 @@ def addUser(username: str, email: str, phone_number: str):
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = conn.cursor()
 
-    user_id = hash_username(username)
+    user_id = hash_username(username)  # Assuming this function is defined somewhere in your code
 
     # SQL statement to insert the user into the users table
     insert_query = """
-    INSERT INTO users (user_id, username, email, phone_number)
-    VALUES (%s, %s, %s, %s);
+    INSERT INTO users (user_id, username, email, password, first_name, last_name, phone_number)
+    VALUES (%s, %s, %s, %s, %s, %s, %s);
     """
 
     try:
-        cursor.execute(insert_query, (user_id, username, email, phone_number))
+        cursor.execute(insert_query, (user_id, username, email, password, first_name, last_name, phone_number))
         conn.commit()
         return f"User '{username}' added successfully!"
     except psycopg2.IntegrityError as e:
