@@ -1,90 +1,94 @@
 function signup() {
-    let password_length = 8
-    var usernameField  = document.getElementById("username");
-    var passwordField  = document.getElementById("password");
-    var password2Field = document.getElementById("password2");
-    var emails = document.getElementById("email");
-    var email  = emails.value;
-    var username  = usernameField.value;
-    var password  = passwordField.value;
-    var password2 = password2Field.value;
-    const first_name = document.getElementById('first name').value.trim();
-    const last_name = document.getElementById('last name').value.trim();
-    const phone_number = document.getElementById('phone number').value.trim();
-    if (password != password2) {
-        alert("Passwords do not match. Please re-enter your passwords");
-        passwordField.value  = "";
-        password2Field.value = "";
-        passwordField.focus(); // put clicker back on password
-    } 
-    else if (password.length < password_length || password2.length < password_length) {
-        alert("Password is too short");
-        passwordField.value  = "";
-        password2Field.value = "";
-        passwordField.focus(); // put clicker back on password
-    } 
-    else if (!email.endsWith("@emory.edu")) {
-        alert("Must have an @emory.edu email");
-        usernameField.value  = "";
-        passwordField.value  = "";
-        password2Field.value = "";
-        usernameField.focus(); // put focus back on the username field
-    }
-    else {
-        alert("Signup Successful!\nUsername: " + username + "\nPassword: " + password);
-        const tasData = {
-            "username":"asfdsafdsa",
-            "email": "safdasfdsa",
-            "phone_number": phone_number,
-            "password": password,
-            "first_name": first_name,
-            "last_name": last_name,
+  let password_length = 8;
+  var usernameField = document.getElementById("username");
+  var passwordField = document.getElementById("password");
+  var password2Field = document.getElementById("password2");
+  var emails = document.getElementById("email");
+  var email = emails.value;
+  var username = usernameField.value;
+  var password = passwordField.value;
+  var password2 = password2Field.value;
+  const first_name = document.getElementById("first name").value.trim();
+  const last_name = document.getElementById("last name").value.trim();
+  const phone_number = document.getElementById("phone number").value.trim();
+  if (password != password2) {
+    alert("Passwords do not match. Please re-enter your passwords");
+    passwordField.value = "";
+    password2Field.value = "";
+    passwordField.focus(); // put clicker back on password
+  } else if (
+    password.length < password_length ||
+    password2.length < password_length
+  ) {
+    alert("Password is too short");
+    passwordField.value = "";
+    password2Field.value = "";
+    passwordField.focus(); // put clicker back on password
+  } else if (!email.endsWith("@emory.edu")) {
+    alert("Must have an @emory.edu email");
+    usernameField.value = "";
+    passwordField.value = "";
+    password2Field.value = "";
+    usernameField.focus(); // put focus back on the username field
+  } else {
+    alert(
+      "Signup Successful!\nUsername: " + username + "\nPassword: " + password
+    );
+    const tasData = {
+      username: "asfdsafdsa",
+      email: "safdasfdsa",
+      phone_number: phone_number,
+      password: password,
+      first_name: first_name,
+      last_name: last_name,
     };
-        postUserToAp(tasData);
-        window.location.href = '../templates/task.html';
-    }
+    postUserToAp(tasData);
+    window.location.href = "../templates/task.html";
+  }
 }
 
-// When the user hits enter and they're inside of the form, it submits the form. 
-document.getElementById("signupForm").addEventListener("keydown", function(event) {
+// When the user hits enter and they're inside of the form, it submits the form.
+document
+  .getElementById("signupForm")
+  .addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
-        signup();
+      signup();
     }
-});
+  });
 // Define the base URL of the API
-const API_BASE_URL = 'https://task-manager-0-94114aee724a.herokuapp.com/';
+const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
 
 // Function to add a user
 function postUserToAp(data) {
   const requestBody = data;
 
-  console.log('Sending:', JSON.stringify(requestBody));  // Log the request payload
+  console.log("Sending:", JSON.stringify(requestBody)); // Log the request payload
 
-  fetch('/add_user', {
-    method: 'POST',
+  fetch("/add_user", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(requestBody),
   })
-  .then(response => {
-    console.log('Received:', response); // Log the response object
+    .then((response) => {
+      console.log("Received:", response); // Log the response object
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok: ' + response.statusText);
-    }
+      if (!response.ok) {
+        throw new Error("Network response was not ok: " + response.statusText);
+      }
 
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      throw new TypeError("Oops, we haven't got JSON!");
-    }
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new TypeError("Oops, we haven't got JSON!");
+      }
 
-    return response.json();
-  })
-  .then(data => {
-    console.log('Success:', data);  // Log the parsed data
-  })
-  .catch((error) => {
-    console.error('Error:', error);  // Log any error
-  });
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Success:", data); // Log the parsed data
+    })
+    .catch((error) => {
+      console.error("Error:", error); // Log any error
+    });
 }
