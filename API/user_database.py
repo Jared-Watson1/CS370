@@ -60,7 +60,7 @@ def addUser(username: str, email: str, phone_number: str, password: bytes, first
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = conn.cursor()
 
-    user_id = hash_username(username)  # Assuming this function is defined somewhere in your code
+    user_id = hash_username(username)
 
     # SQL statement to insert the user into the users table
     insert_query = """
@@ -69,7 +69,8 @@ def addUser(username: str, email: str, phone_number: str, password: bytes, first
     """
 
     try:
-        cursor.execute(insert_query, (user_id, username, email, password, first_name, last_name, phone_number))
+        cursor.execute(insert_query, (user_id, username, email,
+                       password, first_name, last_name, phone_number))
         conn.commit()
         return f"User '{username}' added successfully!"
     except psycopg2.IntegrityError as e:
@@ -119,7 +120,7 @@ def getAllUsers():
 # createUserTable()
 
 
-# DANGER ZONE
+#                                                   DANGER ZONE
 def delete_users_table():
     """Deletes the 'users' table from the database."""
 
@@ -142,5 +143,28 @@ def delete_users_table():
         cursor.close()
         conn.close()
 
+
+def clearUsers():
+    """
+    Deletes all users from the 'users' table in the database.
+    """
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+
+    # SQL statement to delete all rows from the users table
+    delete_query = "DELETE FROM users;"
+
+    try:
+        cursor.execute(delete_query)
+        conn.commit()
+        return "All users deleted successfully!"
+    except Exception as err:
+        return f"Error: {err}"
+    finally:
+        cursor.close()
+        conn.close()
+
 # delete_users_table()
 # createUserTable()
+# clearUsers()

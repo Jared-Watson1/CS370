@@ -1,0 +1,19 @@
+
+
+{
+    
+    "name": "your_project_name",
+    "version": "1.0.0",
+    "description": "A brief description of your project",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "@sendgrid/mail": "^7.4.4"
+    },
+    "author": "Your Name",
+    "license": "ISC"
+  }
+  

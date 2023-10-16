@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from task_database import add_task, clear_all_tasks
-from user_database import addUser, getAllUsers
+from user_database import addUser, getAllUsers, clearUsers
 load_dotenv()
 DATABASE_URL = os.getenv("DB_URL")
 
@@ -158,6 +158,15 @@ def get_all_users_endpoint():
         return jsonify({"users": users_list}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/DANGER_clear_users', methods=['POST'])
+def clear_users_endpoint():
+    response_message = clearUsers()
+    if "successfully" in response_message:
+        return jsonify({"message": response_message}), 200
+    else:
+        return jsonify({"error": response_message}), 500
 
 
 port = int(os.environ.get("PORT", 5000))
