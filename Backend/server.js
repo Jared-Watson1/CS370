@@ -2,7 +2,7 @@ const express = require('express');
 const sendGridMail = require('@sendgrid/mail');
 
 // Use your real SendGrid API Key here
-sendGridMail.setApiKey('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'); 
+sendGridMail.setApiKey('___'); 
 
 const app = express();
 app.use(express.json());
@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
