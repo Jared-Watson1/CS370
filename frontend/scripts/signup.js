@@ -35,8 +35,8 @@ function signup() {
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
     const tasData = {
-      username: "asfdsafdsa",
-      email: "safdasfdsa",
+      username: username,
+      email: email,
       phone_number: phone_number,
       password: password,
       first_name: first_name,
