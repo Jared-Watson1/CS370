@@ -40,7 +40,8 @@ function signup() {
             "first_name": first_name,
             "last_name": last_name,
     };
-        postTaskToAp(tasData);
+        postUserToAp(tasData);
+        window.location.href = '../templates/task.html';
     }
 }
 
@@ -53,8 +54,8 @@ document.getElementById("signupForm").addEventListener("keydown", function(event
 // Define the base URL of the API
 const API_BASE_URL = 'https://task-manager-0-94114aee724a.herokuapp.com/';
 
-// Function to add a task
-function postTaskToAp(data) {
+// Function to add a user
+function postUserToAp(data) {
   const requestBody = data;
 
   console.log('Sending:', JSON.stringify(requestBody));  // Log the request payload
