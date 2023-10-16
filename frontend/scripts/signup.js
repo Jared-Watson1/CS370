@@ -3,10 +3,14 @@ function signup() {
     var usernameField  = document.getElementById("username");
     var passwordField  = document.getElementById("password");
     var password2Field = document.getElementById("password2");
+    var emails = document.getElementById("email");
+    var email  = emails.value;
     var username  = usernameField.value;
     var password  = passwordField.value;
     var password2 = password2Field.value;
-
+    const first_name = document.getElementById('first name').value.trim();
+    const last_name = document.getElementById('last name').value.trim();
+    const phone_number = document.getElementById('phone number').value.trim();
     if (password != password2) {
         alert("Passwords do not match. Please re-enter your passwords");
         passwordField.value  = "";
@@ -19,7 +23,7 @@ function signup() {
         password2Field.value = "";
         passwordField.focus(); // put clicker back on password
     } 
-    else if (!username.endsWith("@emory.edu")) {
+    else if (!email.endsWith("@emory.edu")) {
         alert("Must have an @emory.edu email");
         usernameField.value  = "";
         passwordField.value  = "";
@@ -28,7 +32,15 @@ function signup() {
     }
     else {
         alert("Signup Successful!\nUsername: " + username + "\nPassword: " + password);
-        window.location.href = "task.html"; // take you to main page after success
+        const tasData = {
+            "username":"asfdsafdsa",
+            "email": "safdasfdsa",
+            "phone_number": phone_number,
+            "password": password,
+            "first_name": first_name,
+            "last_name": last_name,
+    };
+        postTaskToAp(tasData);
     }
 }
 
@@ -38,3 +50,40 @@ document.getElementById("signupForm").addEventListener("keydown", function(event
         signup();
     }
 });
+// Define the base URL of the API
+const API_BASE_URL = 'https://task-manager-0-94114aee724a.herokuapp.com/';
+
+// Function to add a task
+function postTaskToAp(data) {
+  const requestBody = data;
+
+  console.log('Sending:', JSON.stringify(requestBody));  // Log the request payload
+
+  fetch('/add_user', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  })
+  .then(response => {
+    console.log('Received:', response); // Log the response object
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ' + response.statusText);
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new TypeError("Oops, we haven't got JSON!");
+    }
+
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);  // Log the parsed data
+  })
+  .catch((error) => {
+    console.error('Error:', error);  // Log any error
+  });
+}

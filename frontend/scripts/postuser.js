@@ -23,7 +23,7 @@ function addUser_API(taskType) {
   };
 
   // Make a POST request to the API to add the user 
-  fetch(`${API_BASE_URL}/add_user`, {
+  fetch(`/add_user`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

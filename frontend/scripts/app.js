@@ -51,6 +51,7 @@ app.post('/add_task', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 app.get('/tasks', async (req, res) => {
     const tasks = await getTasksFromFlaskAPI();
 
@@ -73,15 +74,16 @@ const getTasksFromFlaskAPI = async () => {
 
 app.post('/add_user', async (req, res) => {
     try {
-
-        const { username, email, password, firstName, lastName, phoneNumber} = req.body;
+        console.log("dsafdsa")
+        console.log(req.body)
+        const {username, email, password, first_name, last_name, phone_number} = req.body;
         const response = await axios.post('https://task-manager-0-94114aee724a.herokuapp.com/add_user', {
             username,
             email,
             password,
             first_name,
-            last_name, 
-            phone_number, 
+            last_name,
+            phone_number,
         });
         console.log(response.data)
         res.json(response.data);
