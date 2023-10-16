@@ -3,6 +3,7 @@ function signup() {
   let usernameField = document.getElementById("username");
   let passwordField = document.getElementById("password");
   let password2Field = document.getElementById("password2");
+  let phone_numberField = document.getElementById("phone number")
   let emails = document.getElementById("email");
   let email = emails.value;
   let username = usernameField.value;
@@ -10,27 +11,32 @@ function signup() {
   let password2 = password2Field.value;
   let first_name = document.getElementById("first name").value.trim();
   let last_name = document.getElementById("last name").value.trim();
-  let phone_number = document.getElementById("phone number").value.trim();
+  let phone_number = phone_numberField.value.trim();
 
   if (password != password2) {
     alert("Passwords do not match. Please re-enter your passwords");
     passwordField.value = "";
     password2Field.value = "";
     passwordField.focus(); // put clicker back on password
-  } else if (
-    password.length < password_length ||
-    password2.length < password_length
-  ) {
+  
+  } else if (password.length < password_length || password2.length < password_length) {
     alert("Password is too short");
     passwordField.value = "";
     password2Field.value = "";
     passwordField.focus(); // put clicker back on password
+  
   } else if (!email.endsWith("@emory.edu")) {
     alert("Must have an @emory.edu email");
     usernameField.value = "";
     passwordField.value = "";
     password2Field.value = "";
     usernameField.focus(); // put focus back on the username field
+  
+  } else if (phone_number.length < 10) {
+    alert("Phone number is an invalid length.");
+    phone_numberField.value = "";
+    phone_numberField.focus();
+  
   } else {
     alert(
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
@@ -49,13 +55,17 @@ function signup() {
 }
 
 // When the user hits enter and they're inside of the form, it submits the form.
-document
-  .getElementById("signupForm")
-  .addEventListener("keydown", function (event) {
+document.getElementById("signupForm").addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       signup();
     }
-  });
+});
+
+document.getElementById("personalForm").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    signup();
+  }
+});
 // Define the base URL of the API
 const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
 
