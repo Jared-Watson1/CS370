@@ -1,16 +1,17 @@
 function signup() {
   let password_length = 8;
-  var usernameField = document.getElementById("username");
-  var passwordField = document.getElementById("password");
-  var password2Field = document.getElementById("password2");
-  var emails = document.getElementById("email");
-  var email = emails.value;
-  var username = usernameField.value;
-  var password = passwordField.value;
-  var password2 = password2Field.value;
-  const first_name = document.getElementById("first name").value.trim();
-  const last_name = document.getElementById("last name").value.trim();
-  const phone_number = document.getElementById("phone number").value.trim();
+  let usernameField = document.getElementById("username");
+  let passwordField = document.getElementById("password");
+  let password2Field = document.getElementById("password2");
+  let emails = document.getElementById("email");
+  let email = emails.value;
+  let username = usernameField.value;
+  let password = passwordField.value;
+  let password2 = password2Field.value;
+  let first_name = document.getElementById("first name").value.trim();
+  let last_name = document.getElementById("last name").value.trim();
+  let phone_number = document.getElementById("phone number").value.trim();
+
   if (password != password2) {
     alert("Passwords do not match. Please re-enter your passwords");
     passwordField.value = "";

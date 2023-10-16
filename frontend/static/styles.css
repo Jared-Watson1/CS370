@@ -187,6 +187,28 @@ form {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+#personalForm {
+  width: 50%;
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-left: 20px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: -20px
+}
+.form-group {
+  flex: 0 0 48%; /* Adjust the width of each input field as needed */
+}
+.form-group label {
+  font-size: 14px; /* Adjust the font size as desired */
+  margin-left: 4px;
+}
+
 #signupForm {
   width: 50%;
   max-width: 400px;
