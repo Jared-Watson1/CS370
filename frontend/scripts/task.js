@@ -482,3 +482,30 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
+
+// Define a function to set the active tab based on the current page
+function setActiveTab() {
+  // Get the current URL path (excluding the domain part)
+  var currentUrlPath = window.location.pathname;
+
+  // Get the list of nav links
+  var navLinks = document.querySelectorAll("#myTabs .nav-link");
+
+  // Loop through each nav link and check if its href matches the current URL path
+  for (var i = 0; i < navLinks.length; i++) {
+    var navLink = navLinks[i];
+
+    // Get the href attribute value and remove the domain part
+    var href = navLink.getAttribute("href");
+    var hrefPath = href.substring(href.lastIndexOf("/") + 1);
+
+    // Check if the href path matches the current URL path
+    if (hrefPath === currentUrlPath) {
+      // Add the 'active' class to the matching nav link
+      navLink.classList.add("active");
+    }
+  }
+}
+
+// Call the setActiveTab function when the page loads
+window.onload = setActiveTab;
