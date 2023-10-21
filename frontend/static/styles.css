@@ -46,7 +46,10 @@ h1, .user-location {
   margin: 0 5px;  /* Adjust as needed for spacing */
   display: inline;
 }
-
+#taskUl {
+  height: 625px; /* Set to a height that fits three tasks comfortably */
+  overflow-y: auto; /* Will allow scrolling if there are more tasks than can fit */
+}
 .location-icon i {
   font-size: 1rem;  /* Adjust as needed for icon size */
 }
@@ -66,6 +69,12 @@ h1, .user-location {
 #my-nav{
   border : none !important;
   }
+  #paginationControls {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* optional: to give a little space between buttons */
+    margin-right: 45px;
+}
 .form-section,
 .map-section {
   flex: 1; /* Both sections take up equal width */
