@@ -8,8 +8,76 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px; /* Add padding to make it look nice */
-  background-color: rgba(1, 33, 105, 0.12); /* Set the background color */
+  padding: 0 20px; 
+  background-color: rgba(1, 33, 105, 0.12);
+  font-family: Arial, sans-serif !important;
+  font-weight: bold !important;
+  margin: 0;
+  line-height: 1.2; 
+}
+.nav {
+  list-style-type: none; /* Removes bullet points */
+  padding: 0; /* Removes default padding */
+  margin: 0; /* Removes default margin */
+}
+.angled-container {
+  display: flex;
+}
+h1, .user-location {
+  display: inline;
+}
+.navbar.navbar-default {
+    background-color: #99ccff;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+/* Aligns the nav items to the right */
+}
+.separator, .location-icon, .user-location {
+  margin: 0 5px;  /* Adjust as needed for spacing */
+  display: inline;
+}
+
+.location-icon i {
+  font-size: 1rem;  /* Adjust as needed for icon size */
+}
+.navbar.logo-container {
+  display: flex;
+  align-items: center; /* To vertically align the logo and location */
+}
+.navbar-default .navbar-collapse {
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.user-location {
+  font-size: 16px;
+  color: #333;
+}
+#my-nav{
+  border : none !important;
+  }
+.form-section,
+.map-section {
+  flex: 1; /* Both sections take up equal width */
+  padding: 15px; /* Some padding for spacing */
+}
+
+#map {
+  height: 100%; /* Ensure map takes full height */
+}
+.nav-item, .nav-link {
+  margin: 0;
+  padding: 0;
 }
 #floating-panel {
   position: absolute;
@@ -29,14 +97,22 @@ body {
     margin-right: 10px; /* or any desired space between the elements */
 }
 /* Style the header */
+.nav-link {
+  border: none !important;
+}
 h1 {
     flex: 1;
   color: rgba(1, 33, 105, 0.12);
-
+  margin: 0 0 0px;
+  line-height: 1.2; 
   text-align: left;
-  padding: 10px;
+  padding: 20px;
+  padding-top: 23px; 
   font-style: italic;
-    font-weight: bold;
+
+    font-family: Arial, sans-serif !important;
+  font-weight: bold !important;
+
 }
 h2 {
     flex: 1;

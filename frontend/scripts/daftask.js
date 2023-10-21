@@ -104,10 +104,81 @@ window.onload = function () {
     console.log(location);
     initMap();
   });
-
+  populateTasks();
   setActiveTab;
 }
+function populateTasks() {
+  fetch("/tasks")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json(); // Parse JSON data
+    })
+    .then((data) => {
+      const taskUl = document.getElementById("taskUl");
+      const nextPageBtn = document.getElementById("nextPage");
+      const prevPageBtn = document.getElementById("prevPage");
 
+      console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
+
+      // Grabbing the taskUl element
+      const tasksPerPage = 4;
+      let currentPage = 1;
+
+      // Iterate through the tasks data and append to the UL
+      function displayTasks() {
+        // Clear existing list items
+        while (taskUl.firstChild) {
+            taskUl.removeChild(taskUl.firstChild);
+        }
+    
+        // Calculate the start and end index for slicing tasks data
+        const startIndex = (currentPage - 1) * tasksPerPage;
+        const endIndex = startIndex + tasksPerPage;
+    
+        // Slice the data based on current page and tasks per page
+        const tasksToDisplay = data.tasks.slice(startIndex, endIndex);
+        
+        // Populate the tasks on the page
+        tasksToDisplay.forEach((task) => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item");
+            li.innerHTML = `
+                <h3>${task.task_name}</h3>
+                <p>${task.description}</p>
+
+                <p>${task.task_owner}</p>
+            `;
+            taskUl.appendChild(li);
+        });
+    }
+    
+    // Handle next page click
+    nextPageBtn.addEventListener('click', function() {
+        if (currentPage * tasksPerPage < data.tasks.length) {
+            currentPage++;
+            displayTasks();
+        }
+    });
+    
+    // Handle previous page click
+    prevPageBtn.addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayTasks();
+        }
+    });
+    displayTasks();
+    })
+    .catch((error) => {
+      console.error("Error during fetch operation:", error);
+    });
+}
+
+// Call populateTasks on page load or whenever needed.
+
+populateTasks();
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
@@ -122,12 +193,12 @@ function loadScriptWithApiKey(apiKey) {
 function fetchAddressFromCoordinates(lat, lon) {
   const apiKey = globalApiKey;
   const endpoint = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`;
-  
+  console.log("asfda")
   fetch(endpoint)
     .then(response => response.json())
     .then(data => {
       if (data.results && data.results[0]) {
-        document.getElementById('getUserLocation').value = data.results[0].formatted_address;
+        
         document.querySelector('.user-location').textContent = data.results[0].formatted_address;
       }
     })
@@ -148,12 +219,11 @@ function initMap() {
     center: userLocation,
     zoom: 14.41,
   });
-  initAutocompleteAndListeners(map, "getUserLocation", "getTaskRestaurant");
+
   marker = new google.maps.Marker({
     position: userLocation,
     map: map
   });
-  // Second map initialization...
 }
 function initAutocompleteAndListeners(targetMap, inputId1, inputId2) {
   directionsService = new google.maps.DirectionsService();

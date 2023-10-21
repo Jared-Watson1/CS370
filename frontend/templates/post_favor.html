@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+
   <head>
     <title>Get A Favor - DooleyAFavor</title>
     <!-- Linking the external CSS file -->
@@ -15,28 +15,46 @@
     <!-- Linking the external JS file -->
     <script src="../scripts/task.js"></script>
     <script src="../scripts/fetch.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
   </head>
   <body>
-    <div class="header-container">
-      <h1>
-        <span class="blue">Dooley</span><span class="yellow">A</span
-        ><span class="blue">Favor</span>
-      </h1>
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="post_favor.html">Get A Favor</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="tasks.html">Do A Favor</a>
-        </li>
-      </ul>      
+    
+    <div class="header-container" >
+      <div class="logo-container">
+        <h1>
+            <span class="blue">Dooley</span><span class="yellow">A</span
+            ><span class="blue">Favor</span>
+        </h1>
+        <span class="separator">|</span>
+        <span class="location-icon"><i class="fas fa-map-marker-alt"></i></span>
+        <span class="user-location"></span>
+      </div>
+      <div class="nav-container">
+        <ul class="nav">
+            <li class="nav-item" id="my-nav">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item" id="my-nav">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+        </ul>
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item" id="my-nav">
+                <a class="nav-link active" aria-current="page" href="post_favor.html">Get A Favor</a>
+            </li>
+            <li class="nav-item" id="my-nav">
+                <a class="nav-link" href="tasks.html">Do A Favor</a>
+            </li>
+        </ul>
+    </div>    
     </div>
     <br />
     <!-- Include the content of the Get A Favor section here -->
     <!-- This should include everything from the GetAFavor div -->
     <div id="GetAFavor">
-      <div class="angled-container">
-        <div class="left padded" style="flex: 1">
+      <div class="angled-container d-flex">
+        <div class="left padded form-section" style="flex: 1">
           <div style="height: 100%">
             <form
               id="getTaskForm"
@@ -52,7 +70,7 @@
                   required
                 />
               </div>
-              <br />
+
               <div class="mb-3">
                 <label for="getTaskDescription" class="form-label"
                   >Description:</label
@@ -64,7 +82,7 @@
                   required
                 ></textarea>
               </div>
-              <br />
+
               <div class="mb-3">
                 <label for="getTaskRestaurant" class="form-label"
                   >Restaurant:</label
@@ -78,7 +96,7 @@
                   onchange="updateMap()"
                 />
               </div>
-              <br />
+
               <div class="mb-3">
                 <label for="getUserLocation" class="form-label"
                   >Your location:</label
@@ -92,7 +110,7 @@
                   onchange="updateMap()"
                 />
               </div>
-              <br />
+
               <div class="mb-3">
                 <label for="getTaskPrice" class="form-label">Price:</label>
                 <input
@@ -102,7 +120,7 @@
                   required
                 />
               </div>
-              <br />
+
               <div class="mb-3">
                 <label for="getTaskPaymentMethod" class="form-label"
                   >Payment Method:</label
@@ -113,8 +131,8 @@
                   <option value="Face-to-face">Face-to-face</option>
                 </select>
               </div>
-              <br />
-              <hr />
+
+
               <button
                 type="submit"
                 class="btn btn-primary"
@@ -128,7 +146,7 @@
             </form>
           </div>
         </div>
-        <div class="right padded" style="flex: 1">
+        <div class="right padded map-section" style="flex: 1">
           <div id="floating-panel">
             <b>Mode of Travel:</b>
             <select id="mode" class="form-select">
