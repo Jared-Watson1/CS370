@@ -123,7 +123,7 @@ function populateTasks() {
       console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
 
       // Grabbing the taskUl element
-      const tasksPerPage = 4;
+      const tasksPerPage = 6;
       let currentPage = 1;
 
       // Iterate through the tasks data and append to the UL
