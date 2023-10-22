@@ -320,7 +320,6 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     }
   }
 }
-
 function toggleView(isChecked) {
   if (isChecked) {
     document.getElementById("GetAFavor").style.display = "none";
@@ -412,7 +411,6 @@ function addTask(listType) {
     }
   }
 }
-
 function removeTask(button, listType) {
   var taskList = document.getElementById(
     listType === "GetAFavor" ? "getTaskList" : "doTaskList"
@@ -430,7 +428,6 @@ function removeTask(button, listType) {
     renderSharedTaskList();
   }
 }
-
 function renderSharedTaskList() {
   var sharedList = document.getElementById("sharedTaskList");
   //sharedList.innerHTML = "";
@@ -443,7 +440,6 @@ function renderSharedTaskList() {
     sharedList.appendChild(taskItem);
   }
 }
-
 function takeTask(
   button,
   title,
@@ -490,7 +486,6 @@ function takeTask(
 
   renderSharedTaskList();
 }
-
 function dropTask(title, description, restaurant, price, paymentMethod) {
   var sharedTaskListElement = document.getElementById("sharedTaskList");
   var taskItem = document.createElement("li");

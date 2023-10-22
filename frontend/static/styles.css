@@ -66,9 +66,38 @@ h1, .user-location {
   font-size: 16px;
   color: #333;
 }
+.nav-container1 {
+  border: 1px solid #0844c7; /* Change #000 to any color you desire for the outline */
+  display: inline-block;
+  padding: 2px;
+  border-radius: 5px; /* optional, for rounded corners */
+}
+#greeting {
+  padding-left: 10px;  /* Add padding to the left side */
+  padding-right: 10px; /* Add padding to the right side */
+}
+.nav-link.active {
+  background-color: #ff5733; /* Example: Orange background for active */
+  color: #fff; /* White text for active */
+}
+
+/* Optional: You might want to add some margin to the nav items for spacing */
+.nav-item {
+  margin-right: 5px;
+}
+
+/* Ensure the last item doesn't have extra margin */
+.nav-item:last-child {
+  margin-right: 0;
+}
+
 #my-nav{
   border : none !important;
+  font-weight: lighter !important;
   }
+  #my-nav1{
+    background-color: #99ccff;
+    }
   #paginationControls {
     display: flex;
     justify-content: center;

@@ -61,6 +61,28 @@ app.get('/tasks', async (req, res) => {
     res.json({ tasks });
 });
 
+
+app.get('/get_all_users', async (req, res) => {
+    const users = await getUsersFromFlaskAPI();
+    console.log(users)
+
+    if (!users) {
+        return res.status(500).json({ error: "Failed to fetch users." });
+    }
+    res.json({ users });
+});
+
+const getUsersFromFlaskAPI = async () => {
+    try {
+        const response = await axios.get('https://task-manager-0-94114aee724a.herokuapp.com/get_all_users');
+
+        return response.data.users;
+    } catch (error) {
+        console.error('Error fetching tasks from Flask API:', error);
+        return null;
+    }
+};
+
 const getTasksFromFlaskAPI = async () => {
     try {
         const response = await axios.get('https://task-manager-0-94114aee724a.herokuapp.com/get_tasks');
