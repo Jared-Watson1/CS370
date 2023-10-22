@@ -83,7 +83,7 @@ function postUserToAp(data) {
     body: JSON.stringify(requestBody),
   })
     .then((response) => {
-      console.log("Received:", response); // Log the response object
+      console.log("Received:", response); // Log the response object for debugging purposes 
 
       if (!response.ok) {
         throw new Error("Network response was not ok: " + response.statusText);
