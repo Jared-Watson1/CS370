@@ -113,7 +113,7 @@ def add_user_endpoint():
         password = data.get('password')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
-
+        
         # Check if mandatory attributes are provided
         if not (username and email and password):  # Password made mandatory
             raise ValueError("Missing mandatory user attributes.")

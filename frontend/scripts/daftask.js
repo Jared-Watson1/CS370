@@ -145,9 +145,7 @@ function populateTasks() {
             const li = document.createElement("li");
             li.classList.add("list-group-item");
             li.innerHTML = `
-                <h3>${task.task_name}</h3>
-                <p>${task.description}</p>
-
+                <h4>${task.task_name}</h4>
                 <p>${task.task_owner}</p>
             `;
             taskUl.appendChild(li);
