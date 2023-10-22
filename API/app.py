@@ -4,7 +4,7 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from task_database import add_task, clear_all_tasks
+from task_database import add_task, clear_all_tasks, clear_task_by_name
 from user_database import addUser, getAllUsers, clearUsers
 load_dotenv()
 DATABASE_URL = os.getenv("DB_URL")
