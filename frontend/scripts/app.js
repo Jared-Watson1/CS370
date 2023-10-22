@@ -1,7 +1,7 @@
 require('dotenv').config({ path: '../../.env' });
 const express = require('express');
 const app = express();
-
+const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 
 
@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/../../frontend'));
 app.use('/static', express.static(__dirname + '/../../frontend/static')); // For static files
 app.use('/templates', express.static(__dirname + '/../../frontend/templates'));
-
+app.use(cors());
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

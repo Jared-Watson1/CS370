@@ -135,7 +135,6 @@ function fetchAddressFromCoordinates(lat, lon) {
       console.error('Error fetching address:', error);
     });
 }
-
 // Example of how to use the API key in a URL
 function initMap() {
   if (!userLocation) {
@@ -396,9 +395,7 @@ function addTask(listType) {
       });
     }
 
-    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Remove Order</button>`;
-    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Track Order</button>`;
-    taskList.appendChild(taskItem);
+   
 
     // Clear input fields
     taskTitleInput.value = "";
@@ -525,7 +522,6 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
-
 // Define a function to set the active tab based on the current page
 function setActiveTab() {
   // Get the current URL path (excluding the domain part)
