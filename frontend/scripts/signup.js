@@ -108,6 +108,8 @@ function postUserToAp(data) {
 }
 
 
+// ==================================== //
+
 const nodemailer = require('nodemailer');
 
 function email_verif(user_email) {  
