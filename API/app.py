@@ -4,7 +4,7 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from task_database import add_task, clear_all_tasks
+from task_database import add_task, clear_all_tasks, clear_task_by_name
 from user_database import addUser, getAllUsers, clearUsers
 load_dotenv()
 DATABASE_URL = os.getenv("DB_URL")
@@ -85,6 +85,21 @@ def clear_tasks_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/clear_task', methods=['DELETE'])
+def clear_task_endpoint():
+    #console.log('#####^^^^^^^^^^^^^^^^^^000');
+    data = request.get_json()
+    task_name = data.get('task_name')
+    #task_name='a'
+    #console.log('#####^^^^^^^^^^^^^^^^^^');
+    if not task_name:
+        return jsonify({"error": "Missing 'task_name' parameter"}), 400
+    try:
+        clear_task_by_name(task_name)
+        return jsonify({"message": f"Task '{task_name}' cleared successfully!"}), 200
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "Failed to clear task"}), 500
 
 ###   ---              USER ENDPOINTS           ---   ###
 

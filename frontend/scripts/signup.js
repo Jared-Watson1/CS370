@@ -1,3 +1,5 @@
+import { sendMail } from "../../API/gmail-api/app.mjs";
+
 function signup() {
   let password_length = 8;
   let usernameField = document.getElementById("username");
@@ -41,6 +43,9 @@ function signup() {
     alert(
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
+    <script type = "module" src = "../API/gmail-api/app.js"></script>
+    sendMail(email)
+    window.location.href = "../templates/emailVerification.html"
     const tasData = {
       username: username,
       email: email,
@@ -49,8 +54,9 @@ function signup() {
       first_name: first_name,
       last_name: last_name,
     };
-    postUserToAp(tasData);
-    window.location.href = "../templates/task.html";
+    // postUserToAp(tasData);
+    // window.location.href = "../templates/task.html";
+
   }
 }
 
@@ -83,7 +89,7 @@ function postUserToAp(data) {
     body: JSON.stringify(requestBody),
   })
     .then((response) => {
-      console.log("Received:", response); // Log the response object
+      console.log("Received:", response); // Log the response object for debugging purposes 
 
       if (!response.ok) {
         throw new Error("Network response was not ok: " + response.statusText);

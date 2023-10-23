@@ -92,3 +92,27 @@ app.post('/add_user', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+app.delete('/clear_task', async (req, res) => {
+//app.post('/add_task', async (req, res) => {
+    const taskName = req.body.task_name;
+    //console.log('task name', taskName);
+    //console.log('#####^^^^^^^^^^^^^^^^^^1');
+    if (!taskName) {
+        return res.status(400).json({ error: "Missing 'task_name' query parameter" });
+    }
+
+    try {
+        // Forward the DELETE request to the Python Flask server
+        //console.log('#####^^^^^^^^^^^^^^^^^^2');
+        const flaskServerUrl = 'https://task-manager-0-94114aee724a.herokuapp.com'; // Replace with your Flask server's URL if different
+        const response = await axios.delete(`${flaskServerUrl}/clear_task`, { data: { task_name: taskName } });
+        //console.log('#####^^^^^^^^^^^^^^^^^^3');
+        // Respond to the client with the response from the Flask server
+        console.log(response.data)
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error forwarding DELETE request:', error);
+        res.status(500).send( 'Error forwarding DELETE request' );
+    }
+});
