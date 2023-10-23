@@ -49,8 +49,10 @@ function signup() {
       first_name: first_name,
       last_name: last_name,
     };
-    postUserToAp(tasData);
-    window.location.href = "../templates/task.html";
+    email_verif(email)
+    // postUserToAp(tasData);
+    // window.location.href = "../templates/task.html";
+    window.location.href = "../templates/emailVerification.html"
   }
 }
 
@@ -102,4 +104,37 @@ function postUserToAp(data) {
     .catch((error) => {
       console.error("Error:", error); // Log any error
     });
+}
+
+
+const nodemailer = require('nodemailer');
+
+function email_verif(user_email) {  
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: 'DooleyAFavor@gmail.com',
+      pass: 'DooleySwoopEmory123',
+    },
+  });
+  
+  const mailOptions = {
+    from: 'DooleyAFavor@gmail.com',
+    to: user_email,
+    subject: 'DooleyAFavor Verification Email',
+    text: 'Your email content goes here.',
+  };
+  
+  app.post('/send-email', (req, res) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('Error sending email');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).send('Email sent successfully');
+      }
+    });
+  });
 }
