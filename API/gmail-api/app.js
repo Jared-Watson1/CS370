@@ -10,7 +10,7 @@ const REFRESH_TOKEN = '1//044TjvO5nHGZVCgYIARAAGAQSNwF-L9IrKhH0i0NiVB8FWsuDcYdwh
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
-async function sendMail() {
+async function sendMail(email) {
     try {
         const accessToken = await oAuth2Client.getAccessToken()
         const transport = nodemailer.createTransport({
@@ -27,7 +27,7 @@ async function sendMail() {
     
         const mailOptions = {
             from: 'DooleyAFavor <DooleyAFavor@gmail.com>',
-            to: 'temp@emory.edu',
+            to: email,
             subject: "DooleyAFavor Email Verification",
             text: "Hi dawit verify your email",
         };
@@ -40,4 +40,4 @@ async function sendMail() {
     }
 }
 
-sendMail().then(result => console.log("email sent", result)).catch(error => console.log(error.messsage))
+// sendMail().then(result => console.log("email sent", result)).catch(error => console.log(error.messsage))
