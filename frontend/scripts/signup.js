@@ -1,4 +1,6 @@
-import { sendMail } from "../../API/gmail-api/app.mjs";
+// import { sendMail } from "../../API/gmail-api/app.mjs";
+
+let email;
 
 function signup() {
   let password_length = 8;
@@ -7,7 +9,7 @@ function signup() {
   let password2Field = document.getElementById("password2");
   let phone_numberField = document.getElementById("phone number")
   let emails = document.getElementById("email");
-  let email = emails.value;
+  email = emails.value; // updates global email var to be used for resendEmail
   let username = usernameField.value;
   let password = passwordField.value;
   let password2 = password2Field.value;
@@ -43,8 +45,8 @@ function signup() {
     alert(
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
-    <script type = "module" src = "../API/gmail-api/app.js"></script>
-    sendMail(email)
+    // console.log("here");
+    // sendMail(email)
     window.location.href = "../templates/emailVerification.html"
     const tasData = {
       username: username,
@@ -56,8 +58,11 @@ function signup() {
     };
     // postUserToAp(tasData);
     // window.location.href = "../templates/task.html";
-
   }
+}
+
+function resendEmail() {
+  sendMail(email)
 }
 
 // When the user hits enter and they're inside of the form, it submits the form.
@@ -72,6 +77,8 @@ document.getElementById("personalForm").addEventListener("keydown", function (ev
     signup();
   }
 });
+
+
 // Define the base URL of the API
 const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
 
