@@ -104,14 +104,12 @@ window.onload = function () {
     console.log(location);
     initMap();
   });
-
-<<<<<<< Updated upstream
-  setActiveTab;
+  setActiveTab();
 }
 
-=======
+
       // Grabbing the taskUl element
-      const taskUl = document.getElementById("taskUl");
+      // const taskUl = document.getElementById("taskUl");
 
       // Iterate through the tasks data and append to the UL
     //   data.tasks.forEach((task) => {
@@ -144,8 +142,8 @@ window.onload = function () {
     // .catch((error) => {
     //   console.error("Error during fetch operation:", error);
     // });
-  setActiveTab;
-}
+  // setActiveTab;
+
 
 
 function removeTaskFromApi(taskName) {
@@ -185,7 +183,7 @@ function removeTaskFromApi(taskName) {
       // Handle errors here, such as displaying an error message
     });
 }
->>>>>>> Stashed changes
+
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
