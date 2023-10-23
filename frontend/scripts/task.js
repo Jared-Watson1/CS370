@@ -104,12 +104,12 @@ window.onload = function () {
     console.log(location);
     initMap();
   });
-  setActiveTab();
+
+  setActiveTab;
 }
 
-
       // Grabbing the taskUl element
-      // const taskUl = document.getElementById("taskUl");
+      const taskUl = document.getElementById("taskUl");
 
       // Iterate through the tasks data and append to the UL
     //   data.tasks.forEach((task) => {
@@ -142,8 +142,7 @@ window.onload = function () {
     // .catch((error) => {
     //   console.error("Error during fetch operation:", error);
     // });
-  // setActiveTab;
-
+  setActiveTab;
 
 
 function removeTaskFromApi(taskName) {
@@ -183,7 +182,6 @@ function removeTaskFromApi(taskName) {
       // Handle errors here, such as displaying an error message
     });
 }
-
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
@@ -598,6 +596,10 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
+document.getElementById('profileIcon').addEventListener('click', function() {
+  window.location.href = "../frontend/templates/profile.html"; 
+});
+
 // Define a function to set the active tab based on the current page
 function setActiveTab() {
   // Get the current URL path (excluding the domain part)
