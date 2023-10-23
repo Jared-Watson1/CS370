@@ -52,6 +52,7 @@ function signup() {
     email_verif(email)
     // postUserToAp(tasData);
     // window.location.href = "../templates/task.html";
+
     window.location.href = "../templates/emailVerification.html"
   }
 }
