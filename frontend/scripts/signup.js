@@ -1,4 +1,6 @@
-import { sendMail } from "../API/gmail-api/app.js";
+// import { sendMail } from "../API/gmail-api/app.js";
+const path = require('path');
+const sendMail = require('../../API/gmail-api/app.js');
 
 function signup() {
   let password_length = 8;
