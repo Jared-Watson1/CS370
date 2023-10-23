@@ -1,6 +1,4 @@
-// import { sendMail } from "../API/gmail-api/app.js";
-const path = require('path');
-const sendMail = require('../../API/gmail-api/app.js');
+import { sendMail } from "../../API/gmail-api/app.mjs";
 
 function signup() {
   let password_length = 8;
@@ -45,7 +43,9 @@ function signup() {
     alert(
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
+    <script type = "module" src = "../API/gmail-api/app.js"></script>
     sendMail(email)
+    window.location.href = "../templates/emailVerification.html"
     const tasData = {
       username: username,
       email: email,
@@ -57,7 +57,6 @@ function signup() {
     // postUserToAp(tasData);
     // window.location.href = "../templates/task.html";
 
-    window.location.href = "../templates/emailVerification.html"
   }
 }
 
