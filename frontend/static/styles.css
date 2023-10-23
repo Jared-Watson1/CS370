@@ -433,12 +433,12 @@ li:not(:hover) button[type="button"] {
 
 .profile-icon-link {
   display: inline-block;   /* Display the icon inline with other elements */
-  margin-left: 25px;       /* Add some spacing to the left of the icon */
+  margin-right: 20px;       /* Add some spacing to the left of the icon */
   vertical-align: middle;  /* Vertically align with adjacent text */
   color: inherit;          /* Use inherited color (can be adjusted if needed) */
   text-decoration: none;   /* Remove underline from link */
 }
 
 .profile-icon-link:hover {
-  color: #007BFF;          /* Change color on hover (you can choose any other color) */
+  color: #007bff;          /* Change color on hover (you can choose any other color) */
 }
