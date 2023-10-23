@@ -105,9 +105,87 @@ window.onload = function () {
     initMap();
   });
 
+<<<<<<< Updated upstream
   setActiveTab;
 }
 
+=======
+      // Grabbing the taskUl element
+      const taskUl = document.getElementById("taskUl");
+
+      // Iterate through the tasks data and append to the UL
+    //   data.tasks.forEach((task) => {
+    //     // Create li element
+    //     const li = document.createElement("li");
+    //
+    //     // Add task details to li
+    //     li.innerHTML = `
+    //                 <h3>${task.task_name}</h3>
+    //                 <p>${task.description}</p>
+    //                 <p>Date Posted: ${task.date_posted}</p>
+    //                 <p>Task Owner: ${task.task_owner}</p>
+    //             `;
+    //               // Create a button element
+    //               const button = document.createElement('button');
+    //               button.textContent = 'Take Task';
+    //
+    //               // Add an event listener to the button
+    //               button.addEventListener('click', () => {
+    //                 removeTaskFromApi(task.task_name);
+    //                 //clearAllTasks;
+    //               });
+    //
+    //               // Append the button to the li
+    //               li.appendChild(button);
+    //     // Append li to ul
+    //     taskUl.appendChild(li);
+    //   });
+    // })
+    // .catch((error) => {
+    //   console.error("Error during fetch operation:", error);
+    // });
+  setActiveTab;
+}
+
+
+function removeTaskFromApi(taskName) {
+  const apiUrl = `/clear_task?task_name=${taskName}`;
+
+  console.log('Sending DELETE request to:1234', apiUrl);
+
+  requestBody={"task_name": taskName}
+
+  fetch('/clear_task', {
+    method: 'DELETE',
+    //method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  })
+    .then(response => {
+      console.log('Sending DELETE request to:12345***', apiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new TypeError("Oops, we haven't got JSON!");
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      // Handle success, such as removing the task from the UI
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle errors here, such as displaying an error message
+    });
+}
+>>>>>>> Stashed changes
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");

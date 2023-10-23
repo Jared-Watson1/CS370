@@ -2,22 +2,26 @@ const express = require('express');
 const sendGridMail = require('@sendgrid/mail');
 
 // Use your real SendGrid API Key here
-sendGridMail.setApiKey('___'); 
+sendGridMail.setApiKey('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'); 
 
 const app = express();
 app.use(express.json());
 
+app.use('/static', express.static(__dirname, + '../frontend'));
+
 // Serve your HTML and other static assets
 app.use(express.static('frontend/templates'));
 
+
 // Send email verification when the relevant API endpoint is hit
-app.post('/api/send_verification', (req, res) => {
+app.post('http://localhost:3000/api/send_verification', (req, res) => {
+    console.log("Received request on /api/send_verification");
     const { email } = req.body;
 
     const msg = {
         to: email,
-        from: 'johnzhaixingyu@gmail.com',  // Use your verified sender email
-        templateId: 'd-b97a373634f844f8a5b3106d5951085f',  // Use your actual template ID
+        from: 'johnzhaixingyu@gmail.com',  
+        templateId: 'd-b97a373634f844f8a5b3106d5951085f',  
         dynamicTemplateData: {
             email
         }
@@ -33,13 +37,15 @@ app.post('/api/send_verification', (req, res) => {
         });
 });
 
+
+
 // Handle requests to the root URL by serving your HTML file
 app.get('/', (req, res) => {
-    res.sendFile('forgot_password.html', { root: __dirname + '/frontend/templates/' });
+    res.sendFile('forgot_password.html', { root: __dirname + '/../frontend/templates/' });
 });
 
 // Start the server
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
