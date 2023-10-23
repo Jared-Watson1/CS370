@@ -7,7 +7,11 @@ sendGridMail.setApiKey('SG.qz7DcctFTGWQ3abvFpo_lw.SUIyHGAs5vShImTvK2xRoD_7QoJQr-
 const app = express();
 app.use(express.json());
 
+
 app.use('/static', express.static(path.join(__dirname, '../frontend')));
+
+
+
 
 // Serve your HTML and other static assets
 app.use(express.static('frontend/templates'));

@@ -6,10 +6,13 @@ import os
 from dotenv import load_dotenv
 from task_database import add_task, clear_all_tasks, clear_task_by_name
 from user_database import addUser, getAllUsers, clearUsers
+from flask_cors import CORS
+
 load_dotenv()
 DATABASE_URL = os.getenv("DB_URL")
 
 app = Flask(__name__)
+CORS(app)
 
 
 ###   ---          TASK END POINTS          ---   ###
@@ -128,7 +131,7 @@ def add_user_endpoint():
         password = data.get('password')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
-
+        
         # Check if mandatory attributes are provided
         if not (username and email and password):  # Password made mandatory
             raise ValueError("Missing mandatory user attributes.")

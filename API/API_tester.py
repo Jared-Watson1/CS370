@@ -16,7 +16,6 @@ def add_task(task_name, description, date_posted, task_owner):
         "task_owner": task_owner
     }
     response = requests.post(endpoint, json=payload)
-
     if response.status_code == 200:
         print("Task added successfully!")
     else:

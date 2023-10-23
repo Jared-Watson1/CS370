@@ -104,88 +104,79 @@ window.onload = function () {
     console.log(location);
     initMap();
   });
-
-<<<<<<< Updated upstream
+  populateTasks();
   setActiveTab;
 }
-
-=======
-      // Grabbing the taskUl element
+function populateTasks() {
+  fetch("/tasks")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json(); // Parse JSON data
+    })
+    .then((data) => {
       const taskUl = document.getElementById("taskUl");
+      const nextPageBtn = document.getElementById("nextPage");
+      const prevPageBtn = document.getElementById("prevPage");
+
+      console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
+
+      // Grabbing the taskUl element
+      const tasksPerPage = 6;
+      let currentPage = 1;
 
       // Iterate through the tasks data and append to the UL
-    //   data.tasks.forEach((task) => {
-    //     // Create li element
-    //     const li = document.createElement("li");
-    //
-    //     // Add task details to li
-    //     li.innerHTML = `
-    //                 <h3>${task.task_name}</h3>
-    //                 <p>${task.description}</p>
-    //                 <p>Date Posted: ${task.date_posted}</p>
-    //                 <p>Task Owner: ${task.task_owner}</p>
-    //             `;
-    //               // Create a button element
-    //               const button = document.createElement('button');
-    //               button.textContent = 'Take Task';
-    //
-    //               // Add an event listener to the button
-    //               button.addEventListener('click', () => {
-    //                 removeTaskFromApi(task.task_name);
-    //                 //clearAllTasks;
-    //               });
-    //
-    //               // Append the button to the li
-    //               li.appendChild(button);
-    //     // Append li to ul
-    //     taskUl.appendChild(li);
-    //   });
-    // })
-    // .catch((error) => {
-    //   console.error("Error during fetch operation:", error);
-    // });
-  setActiveTab;
-}
-
-
-function removeTaskFromApi(taskName) {
-  const apiUrl = `/clear_task?task_name=${taskName}`;
-
-  console.log('Sending DELETE request to:1234', apiUrl);
-
-  requestBody={"task_name": taskName}
-
-  fetch('/clear_task', {
-    method: 'DELETE',
-    //method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then(response => {
-      console.log('Sending DELETE request to:12345***', apiUrl);
-      if (!response.ok) {
-        throw new Error('Network response was not ok: ' + response.statusText);
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new TypeError("Oops, we haven't got JSON!");
-      }
-
-      return response.json();
+      function displayTasks() {
+        // Clear existing list items
+        while (taskUl.firstChild) {
+            taskUl.removeChild(taskUl.firstChild);
+        }
+    
+        // Calculate the start and end index for slicing tasks data
+        const startIndex = (currentPage - 1) * tasksPerPage;
+        const endIndex = startIndex + tasksPerPage;
+    
+        // Slice the data based on current page and tasks per page
+        const tasksToDisplay = data.tasks.slice(startIndex, endIndex);
+        
+        // Populate the tasks on the page
+        tasksToDisplay.forEach((task) => {
+            const li = document.createElement("li");
+            li.classList.add("list-group-item");
+            li.innerHTML = `
+                <h4>${task.task_name}</h4>
+                <p>${task.task_owner}</p>
+            `;
+            taskUl.appendChild(li);
+        });
+    }
+    
+    // Handle next page click
+    nextPageBtn.addEventListener('click', function() {
+        if (currentPage * tasksPerPage < data.tasks.length) {
+            currentPage++;
+            displayTasks();
+        }
+    });
+    
+    // Handle previous page click
+    prevPageBtn.addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            displayTasks();
+        }
+    });
+    displayTasks();
     })
-    .then(data => {
-      console.log('Success:', data);
-      // Handle success, such as removing the task from the UI
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      // Handle errors here, such as displaying an error message
+    .catch((error) => {
+      console.error("Error during fetch operation:", error);
     });
 }
->>>>>>> Stashed changes
+
+// Call populateTasks on page load or whenever needed.
+
+populateTasks();
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
@@ -200,12 +191,12 @@ function loadScriptWithApiKey(apiKey) {
 function fetchAddressFromCoordinates(lat, lon) {
   const apiKey = globalApiKey;
   const endpoint = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`;
-  
+  console.log("asfda")
   fetch(endpoint)
     .then(response => response.json())
     .then(data => {
       if (data.results && data.results[0]) {
-        document.getElementById('getUserLocation').value = data.results[0].formatted_address;
+        
         document.querySelector('.user-location').textContent = data.results[0].formatted_address;
       }
     })
@@ -213,6 +204,7 @@ function fetchAddressFromCoordinates(lat, lon) {
       console.error('Error fetching address:', error);
     });
 }
+
 // Example of how to use the API key in a URL
 function initMap() {
   if (!userLocation) {
@@ -225,12 +217,11 @@ function initMap() {
     center: userLocation,
     zoom: 14.41,
   });
-  initAutocompleteAndListeners(map, "getUserLocation", "getTaskRestaurant");
+
   marker = new google.maps.Marker({
     position: userLocation,
     map: map
   });
-  // Second map initialization...
 }
 function initAutocompleteAndListeners(targetMap, inputId1, inputId2) {
   directionsService = new google.maps.DirectionsService();
@@ -397,6 +388,7 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     }
   }
 }
+
 function toggleView(isChecked) {
   if (isChecked) {
     document.getElementById("GetAFavor").style.display = "none";
@@ -473,7 +465,9 @@ function addTask(listType) {
       });
     }
 
-   
+    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Remove Order</button>`;
+    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Track Order</button>`;
+    taskList.appendChild(taskItem);
 
     // Clear input fields
     taskTitleInput.value = "";
@@ -486,6 +480,7 @@ function addTask(listType) {
     }
   }
 }
+
 function removeTask(button, listType) {
   var taskList = document.getElementById(
     listType === "GetAFavor" ? "getTaskList" : "doTaskList"
@@ -503,6 +498,7 @@ function removeTask(button, listType) {
     renderSharedTaskList();
   }
 }
+
 function renderSharedTaskList() {
   var sharedList = document.getElementById("sharedTaskList");
   //sharedList.innerHTML = "";
@@ -515,6 +511,7 @@ function renderSharedTaskList() {
     sharedList.appendChild(taskItem);
   }
 }
+
 function takeTask(
   button,
   title,
@@ -561,6 +558,7 @@ function takeTask(
 
   renderSharedTaskList();
 }
+
 function dropTask(title, description, restaurant, price, paymentMethod) {
   var sharedTaskListElement = document.getElementById("sharedTaskList");
   var taskItem = document.createElement("li");
@@ -600,6 +598,7 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
+
 // Define a function to set the active tab based on the current page
 function setActiveTab() {
   // Get the current URL path (excluding the domain part)

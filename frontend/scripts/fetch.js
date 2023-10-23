@@ -1,50 +1,51 @@
 // Define the base URL of the API
-const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
+const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com";
 
 // Function to add a task
-function addTask_API(taskType) {
-  // Gather task information from the form
-  const taskTitle = document.getElementById(
-    `${taskType === "DoAFavor" ? "doTask" : "getTask"}Title`
-  ).value;
-  const taskDescription = document.getElementById(
-    `${taskType === "DoAFavor" ? "doTask" : "getTask"}Description`
-  ).value;
+// function addTask_API(taskType) {
+//   // Gather task information from the form
+//   const taskTitle = document.getElementById(
+//     `${taskType === "DoAFavor" ? "doTask" : "getTask"}Title`
+//   ).value;
+//   const taskDescription = document.getElementById(
+//     `${taskType === "DoAFavor" ? "doTask" : "getTask"}Description`
+//   ).value;
 
-  // Prepare the request data
-  const requestData = {
-    task_name: taskTitle,
-    description: taskDescription,
-    // Add other task-related properties here as needed
-  };
+//   // Prepare the request data
+//   const requestData = {
+//     task_name: taskTitle,
+//     description: taskDescription,
+//     // Add other task-related properties here as needed
+//   };
 
-  // Make a POST request to the API to add the task
-  fetch(`${API_BASE_URL}/add_task`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      // Handle the API response
-      if (data.message === "Task added successfully!") {
-        // Clear the form
-        document
-          .getElementById(
-            `${taskType === "DoAFavor" ? "doTask" : "getTask"}Form`
-          )
-          .reset();
-      } else {
-        alert("Failed to add the task. Please try again.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("An error occurred while communicating with the server.");
-    });
-}
+//   // Make a POST request to the API to add the task
+//   fetch(`${API_BASE_URL}/add_task`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(requestData),
+//   })
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log(data)
+//       // Handle the API response
+//       if (data.message === "Task added successfully!") {
+//         // Clear the form
+//         document
+//           .getElementById(
+//             `${taskType === "DoAFavor" ? "doTask" : "getTask"}Form`
+//           )
+//           .reset();
+//       } else {
+//         alert("Failed to add the task. Please try again.");
+//       }
+//     })
+//     .catch((error) => {
+//       // console.error("Error:", error);
+//       // alert("An error occurred while communicating with the server.");
+//     });
+// }
 
 // Function to fetch and display tasks (you can call this function to update the task list)
 function fetchAndDisplayTasks(taskType) {

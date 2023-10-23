@@ -1,8 +1,11 @@
 {
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "axios": "^1.5.1",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "googleapis": "^128.0.0",
+    "nodemailer": "^6.9.7"
   },
   "name": "cs370",
   "description": "",

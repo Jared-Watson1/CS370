@@ -12,15 +12,15 @@ DATABASE_URL = os.getenv("DB_URL")
 # Create table for tasks
 
 
-def createTable():
+def createTable(tableName='Tasks'):
 
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connecxsst(DATABASE_URL, sslmode='require')
     cursor = conn.cursor()
 
     # SQL statement to create the tasks table
-    create_table_query = """
-    CREATE TABLE tasks (
+    create_table_query = f"""
+    CREATE TABLE {tableName} (
         task_id SERIAL PRIMARY KEY,
         task_name VARCHAR(255) NOT NULL,
         description TEXT,
@@ -108,6 +108,7 @@ def clear_all_tasks():
     try:
         cursor.execute(delete_all_tasks_query)
         conn.commit()  # Commit the transaction
+        print("Cleared all tasks from database.")
     except Exception as err:
         conn.rollback()  # Rollback in case of error
         print(f"Error: {err}")
@@ -152,4 +153,5 @@ def clear_task_by_name(task_name):
 
 # Example task
 # add_task("Sample Task2", "This is a description for the sample task2.",
-#          date.today(), "John Doe2")
+        #  date.today(), "John Doe2")
+# clear_all_tasks()
