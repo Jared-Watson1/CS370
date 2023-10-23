@@ -4,8 +4,13 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+<<<<<<< Updated upstream
 from task_database import add_task, clear_all_tasks, clear_task_by_name
 from user_database import addUser, getAllUsers, clearUsers
+=======
+from task_database import add_task, clear_all_tasks
+from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
+>>>>>>> Stashed changes
 from flask_cors import CORS
 
 load_dotenv()
@@ -176,6 +181,47 @@ def get_all_users_endpoint():
         return jsonify({"users": users_list}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/rate_user', methods=['POST'])
+def rate_user():
+    data = request.get_json()
+
+    try:
+        user_id = data.get('user_id')
+        rating = int(data.get('rating'))
+
+        # Validation check for rating
+        if rating < 1 or rating > 5:
+            return jsonify({"error": "Rating should be between 1 and 5"}), 400
+
+        response_message = rateUserInDB(user_id, rating)
+
+        # Check the response to determine the status code
+        if "successfully" in response_message:
+            return jsonify({"message": response_message}), 200
+        else:
+            return jsonify({"error": response_message}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/get_info_by_user', methods=['POST'])
+def get_info_by_user():
+    data = request.get_json()
+
+    try:
+        user_id = data.get('user_id')
+        user_info, error_message = getUserInfo(user_id)
+
+        if error_message:
+            return jsonify({"error": error_message}), 400
+
+        return jsonify(user_info), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
     
 
 @app.route('/DANGER_clear_users', methods=['POST'])

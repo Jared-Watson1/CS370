@@ -114,6 +114,76 @@ def getAllUsers():
         conn.close()
 
 
+def rateUserInDB(user_id, rating):
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+
+    try:
+        # Get the current rating_sum and num_reviews for the user
+        cursor.execute("SELECT rating_sum, num_reviews FROM users WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
+
+        if not result:
+            return "User not found"
+
+        current_rating_sum, current_num_reviews = result
+
+        # Update the rating_sum and num_reviews for the user
+        new_rating_sum = current_rating_sum + rating
+        new_num_reviews = current_num_reviews + 1
+        cursor.execute(
+            "UPDATE users SET rating_sum = %s, num_reviews = %s WHERE user_id = %s",
+            (new_rating_sum, new_num_reviews, user_id)
+        )
+
+        # Commit the changes to the database
+        conn.commit()
+
+        return "User rated successfully"
+    except Exception as e:
+        return str(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def getUserInfo(user_id):
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
+        user = cursor.fetchone()
+
+        if not user:
+            return None, "User not found"
+
+        # Calculate average rating
+        rating_sum, num_reviews = user[7], user[8]
+        if num_reviews == 0:
+            avg_rating = 0
+        else:
+            avg_rating = rating_sum / num_reviews
+
+        # Construct user info dictionary
+        user_info = {
+            "user_id": user[0],
+            "username": user[1],
+            "email": user[2],
+            "first_name": user[4],
+            "last_name": user[5],
+            "phone_number": user[6],
+            "rating": avg_rating
+        }
+
+        return user_info, None
+    except Exception as e:
+        return None, str(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
 # Test the functions
 # addUser('testuser3', 'test2@email.com', '+123456789')
 # print(getAllUsers())
