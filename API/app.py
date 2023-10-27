@@ -4,13 +4,12 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-<<<<<<< Updated upstream
+
 from task_database import add_task, clear_all_tasks, clear_task_by_name
 from user_database import addUser, getAllUsers, clearUsers
-=======
+
 from task_database import add_task, clear_all_tasks
 from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
->>>>>>> Stashed changes
 from flask_cors import CORS
 
 load_dotenv()
