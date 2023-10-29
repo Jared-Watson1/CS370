@@ -4,6 +4,7 @@ body {
   padding: 0;
   font-family: Arial, sans-serif; /* Use a preferred font */
 }
+
 .header-container {
   display: flex;
   align-items: center;
@@ -428,4 +429,16 @@ li:not(:hover) button[type="button"] {
       flex-direction: column;
       align-items: center;
   }
+}
+
+.profile-icon-link {
+  display: inline-block;   /* Display the icon inline with other elements */
+  margin-right: 20px;       /* Add some spacing to the left of the icon */
+  vertical-align: middle;  /* Vertically align with adjacent text */
+  color: inherit;          /* Use inherited color (can be adjusted if needed) */
+  text-decoration: none;   /* Remove underline from link */
+}
+
+.profile-icon-link:hover {
+  color: #007bff;          /* Change color on hover (you can choose any other color) */
 }

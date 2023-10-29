@@ -1,5 +1,7 @@
-const nodemailer = require('nodemailer')
-const { google } = require('googleapis')
+// const nodemailer = require('nodemailer')
+// const { google } = require('googleapis')
+import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 
 const CLIENT_ID = '159269617087-1o4lrm4nqejtugm1t9vvqo46a1f12rbu.apps.googleusercontent.com'
 const CLIENT_SECRET = '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'
@@ -11,7 +13,6 @@ const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_U
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
 export async function sendMail(email) {
-    console.log("I am here")
     try {
         const accessToken = await oAuth2Client.getAccessToken()
         const transport = nodemailer.createTransport({
@@ -25,12 +26,14 @@ export async function sendMail(email) {
                 accessToken: accessToken
             }
         })
-    
+        
+        const verificationLink = ""; // Replace this URL with your actual verification link
+        
         const mailOptions = {
             from: 'DooleyAFavor <DooleyAFavor@gmail.com>',
             to: email,
             subject: "DooleyAFavor Email Verification",
-            text: "Hi dawit verify your email",
+            html: `<p>Please click the following button to verify your email:</p><button onclick="resendEmail()">Verify Email</button>`,
         };
 
         const result = await transport.sendMail(mailOptions)
@@ -42,4 +45,4 @@ export async function sendMail(email) {
 }
 
 // sendMail('dndean@emory.edu').then(result => console.log("email sent", result)).catch(error => console.log(error.messsage))
-// sendMail('dndean@emory.edu')
+sendMail('macheem@emory.edu')

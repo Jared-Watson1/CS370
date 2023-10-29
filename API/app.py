@@ -30,13 +30,12 @@ def add_task_endpoint():
         date_posted = datetime.strptime(data.get('date_posted'), '%Y-%m-%d').date()
         task_owner = data.get('task_owner')
 
-        # If the category indicates a food task, extract additional attributes
+        # If food task extract additional attributes
         if category == 'food':
             start_loc = data.get('start_loc')
             end_loc = data.get('end_loc')
             price = data.get('price')
             restaurant = data.get('restaurant')
-        # Further conditions can be added for other categories if needed
         # elif category == 'service':
         #     ...
 
@@ -45,12 +44,9 @@ def add_task_endpoint():
 
     try:
         if category == 'food':
-            # Use the add_food_task function (which you should have from previous steps) 
-            # to add the food task to the database
+            # add the food task to the database
             add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price, restaurant, description)
         else:
-            # For now, default to the original add_task for non-food tasks, 
-            # but you should enhance this for other categories later
             # add_task(task_name, description, date_posted, task_owner)
             print("Other categories not added implemented yet")
         
@@ -64,7 +60,6 @@ def get_tasks_endpoint():
     tasks = get_all_tasks()
     return jsonify({"tasks": tasks})
 
-
 def get_all_tasks():
 
     # Connect to the PostgreSQL database
@@ -72,7 +67,9 @@ def get_all_tasks():
     cursor = conn.cursor()
 
     # SQL statement to retrieve all tasks
-    select_all_tasks_query = "SELECT * FROM tasks;"
+    select_all_tasks_query = """
+    SELECT task_id, task_name, category, date_posted, task_owner FROM tasks;
+    """
 
     result_tasks = []
 
@@ -84,7 +81,7 @@ def get_all_tasks():
             task_data = {
                 "task_id": task[0],
                 "task_name": task[1],
-                "description": task[2],
+                "category": task[2],
                 "date_posted": str(task[3]),
                 "task_owner": task[4]
             }
@@ -247,7 +244,7 @@ def clear_users_endpoint():
         return jsonify({"error": response_message}), 500
 
 
-port = int(os.environ.get("PORT", 5000))
+port = int(os.environ.get("PORT", 4000))
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # print(get_all_tasks())
