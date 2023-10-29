@@ -6,10 +6,9 @@ import os
 from dotenv import load_dotenv
 
 from task_database import add_task, clear_all_tasks, clear_task_by_name
-from user_database import addUser, getAllUsers, clearUsers
 
-from task_database import add_task, clear_all_tasks
 from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
+
 from flask_cors import CORS
 
 load_dotenv()
