@@ -4,13 +4,8 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-<<<<<<< Updated upstream
-from task_database import add_task, clear_all_tasks, clear_task_by_name
-from user_database import addUser, getAllUsers, clearUsers
-=======
-from task_database import add_task, clear_all_tasks
+from task_database import clear_all_tasks, add_food_task
 from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
->>>>>>> Stashed changes
 from flask_cors import CORS
 
 load_dotenv()
@@ -30,19 +25,38 @@ def add_task_endpoint():
     # Extract task details from the incoming JSON data
     try:
         task_name = data.get('task_name')
+        category = data.get('category', '').lower()  # This will determine the type of task (food or service)
         description = data.get('description')
-        date_posted = datetime.strptime(
-            data.get('date_posted'), '%Y-%m-%d').date()
+        date_posted = datetime.strptime(data.get('date_posted'), '%Y-%m-%d').date()
         task_owner = data.get('task_owner')
+
+        # If the category indicates a food task, extract additional attributes
+        if category == 'food':
+            start_loc = data.get('start_loc')
+            end_loc = data.get('end_loc')
+            price = data.get('price')
+            restaurant = data.get('restaurant')
+        # Further conditions can be added for other categories if needed
+        # elif category == 'service':
+        #     ...
+
     except Exception as e:
-        print("Error: might of missed task attributes: " + str(e))
+        return jsonify({"error": f"Error extracting task attributes: {str(e)}"}), 400
 
     try:
-        # Use the add_task function to add the task to the database
-        add_task(task_name, description, date_posted, task_owner)
+        if category == 'food':
+            # Use the add_food_task function (which you should have from previous steps) 
+            # to add the food task to the database
+            add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price, restaurant, description)
+        else:
+            # For now, default to the original add_task for non-food tasks, 
+            # but you should enhance this for other categories later
+            # add_task(task_name, description, date_posted, task_owner)
+            print("Other categories not added implemented yet")
+        
         return jsonify({"message": "Task added successfully!"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Database error: {str(e)}"}), 500
 
 
 @app.route('/get_tasks', methods=['GET'])
