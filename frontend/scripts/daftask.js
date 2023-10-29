@@ -148,10 +148,60 @@ function populateTasks() {
                 <h4>${task.task_name}</h4>
                 <p>${task.task_owner}</p>
             `;
+            // Create a button element
+            const button = document.createElement('button');
+            button.textContent = 'Take Task';
+    //
+            // Add an event listener to the button
+            button.addEventListener('click', () => {
+                removeTaskFromApi(task.task_name);
+                  
+            });
+    //
+            // Append the button to the li
+            li.appendChild(button);
             taskUl.appendChild(li);
         });
     }
     
+    function removeTaskFromApi(taskName) {
+      const apiUrl = `/clear_task?task_name=${taskName}`;
+    
+      console.log('Sending DELETE request to:1234', apiUrl);
+    
+      requestBody={"task_name": taskName}
+    
+      fetch('/clear_task', {
+        method: 'DELETE',
+        //method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+        .then(response => {
+          console.log('Sending DELETE request to:12345***', apiUrl);
+          if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+          }
+    
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            throw new TypeError("Oops, we haven't got JSON!");
+          }
+    
+          return response.json();
+        })
+        .then(data => {
+          console.log('Success:', data);
+          // Handle success, such as removing the task from the UI
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Handle errors here, such as displaying an error message
+        });
+    }
+
     // Handle next page click
     nextPageBtn.addEventListener('click', function() {
         if (currentPage * tasksPerPage < data.tasks.length) {
