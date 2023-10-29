@@ -177,12 +177,48 @@ function populateTasks() {
                   detailsDiv.style.display = "none";
               }
           });
-          
-      
             taskUl.appendChild(li);
         });
     }
     
+    function removeTaskFromApi(taskName) {
+      const apiUrl = `/clear_task?task_name=${taskName}`;
+    
+      console.log('Sending DELETE request to:1234', apiUrl);
+    
+      requestBody={"task_name": taskName}
+    
+      fetch('/clear_task', {
+        method: 'DELETE',
+        //method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+        .then(response => {
+          console.log('Sending DELETE request to:12345***', apiUrl);
+          if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+          }
+    
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            throw new TypeError("Oops, we haven't got JSON!");
+          }
+    
+          return response.json();
+        })
+        .then(data => {
+          console.log('Success:', data);
+          // Handle success, such as removing the task from the UI
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Handle errors here, such as displaying an error message
+        });
+    }
+
     // Handle next page click
     nextPageBtn.addEventListener('click', function() {
         if (currentPage * tasksPerPage < data.tasks.length) {
