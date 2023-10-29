@@ -21,6 +21,18 @@ body {
   padding: 0; /* Removes default padding */
   margin: 0; /* Removes default margin */
 }
+.task-details {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.task-details.show {
+  max-height: 100px; /* Adjust based on your content */
+  opacity: 1;
+}
+
 .angled-container {
   display: flex;
 }
