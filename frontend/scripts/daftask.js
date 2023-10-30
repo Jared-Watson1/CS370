@@ -21,6 +21,39 @@ function getUserLocation(callback) {
       callback(new Error("Geolocation is not supported by this browser."));
   }
 }
+function getUserbyID(data) {
+  return new Promise((resolve, reject) => {
+    const requestBody = data;
+
+    fetch("/get_info_by_user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          reject("Network response was not ok: " + response.statusText);
+          return;
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          reject("Oops, we haven't got JSON!");
+          return;
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        resolve(data); // We resolve the promise with the data we received
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
 
 
 function postTaskToApi(data) {
@@ -130,10 +163,10 @@ function populateTasks() {
       function closeAllTaskDetails() {
         const allDetails = document.querySelectorAll('.task-details');
         allDetails.forEach(details => {
-            details.style.display = "none"; // You can also use classList.remove('show') if you want
+            details.classList.remove('show'); 
         });
     }
-      function displayTasks() {
+       async function displayTasks() {
         // Clear existing list items
         while (taskUl.firstChild) {
             taskUl.removeChild(taskUl.firstChild);
@@ -147,38 +180,33 @@ function populateTasks() {
         const tasksToDisplay = data.tasks.slice(startIndex, endIndex);
         
         // Populate the tasks on the page
-        tasksToDisplay.forEach((task) => {
+        for (let task of tasksToDisplay) {
+            const userId = task.task_owner
+            const owner = {
+              user_id: userId
+            };
+            const username = await getUserbyID(owner);
             const li = document.createElement("li");
             li.classList.add("list-group-item");
             li.innerHTML = `
                 <h4>${task.task_name}</h4>
-                <p>${task.task_owner}</p>
+                <p>${username.first_name} ${username.last_name}</p>
                 <div class="task-details" style="display: none;">
-                <p>Detail 1: </p>
-                <p>Detail 2: </p>
+                <p>Restaurant: ${task.restaurant}</p>
+                <p>Detail 2: ${task.end_loc} </p>
                 <!-- Add more details as required -->
                 </div>
             `;
             
             li.addEventListener('click', function() {
               // Close all details first
-              closeAllTaskDetails(); 
-              console.log("asdfasf")
+              closeAllTaskDetails();
+              console.log("adfsaf");
               const detailsDiv = this.querySelector('.task-details');
-              if (detailsDiv.style.display === "none") {
-                  
-                  detailsDiv.style.display = "block";
-                  if (detailsDiv.classList.contains('show')) {
-                    detailsDiv.classList.remove('show');
-                    } else {
-                        detailsDiv.classList.add('show');
-                    }
-              } else {
-                  detailsDiv.style.display = "none";
-              }
+              detailsDiv.classList.toggle('show');
           });
             taskUl.appendChild(li);
-        });
+        };
     }
     
     function removeTaskFromApi(taskName) {

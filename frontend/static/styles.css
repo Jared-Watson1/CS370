@@ -26,12 +26,15 @@ body {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
+  display: none;
 }
 
 .task-details.show {
   max-height: 100px; /* Adjust based on your content */
   opacity: 1;
+  display: block !important;
 }
+
 
 .angled-container {
   display: flex;
@@ -46,6 +49,10 @@ h1, .user-location {
     box-shadow: none;
 }
 .logo-container {
+  display: flex;
+  align-items: center;
+}
+.nav-container2{
   display: flex;
   align-items: center;
 }
@@ -65,6 +72,14 @@ h1, .user-location {
 }
 .location-icon i {
   font-size: 1rem;  /* Adjust as needed for icon size */
+}
+.centered-nav-container {
+  width: 100%;
+  text-align: center;
+}
+
+.nav-container2 {
+  display: inline-block;
 }
 .navbar.logo-container {
   display: flex;
