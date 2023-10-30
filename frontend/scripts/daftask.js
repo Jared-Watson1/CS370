@@ -191,10 +191,13 @@ function populateTasks() {
             const li = document.createElement("li");
             li.classList.add("list-group-item");
 
-            li.classList.add('task-type-2'); 
-            
+            // const ribbonClass = Math.random() > 0.5 ? "ribbonr" : "ribbonb";
+
+
+            const ribbonClass = task.category === 'Food' ? 'ribbonr' : 'ribbonb';
+
             li.innerHTML = `
-            <div class="ribbonr"></div>
+              <div class="${ribbonClass}"></div>
                 <h4>${task.task_name}</h4>
                 <p>${username.first_name} ${username.last_name}</p>
                 <div class="task-details" style="display: none;">
@@ -208,13 +211,11 @@ function populateTasks() {
             li.addEventListener('click', function() {
               // Close all details first
               closeAllTaskDetails();
-              console.log("adfsaf");
-
               updateMap(
                 map,
-                'Chicago, IL',
-                'Los Angeles, CA',
-                'DRIVING'
+                task.start_loc,
+                task.restaurant,
+                document.getElementById("mode")
               )
               const detailsDiv = this.querySelector('.task-details');
               detailsDiv.classList.toggle('show');
@@ -285,7 +286,7 @@ function populateTasks() {
 
 // Call populateTasks on page load or whenever needed.
 
-populateTasks();
+
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
