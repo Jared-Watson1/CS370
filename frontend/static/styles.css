@@ -21,6 +21,18 @@ body {
   padding: 0; /* Removes default padding */
   margin: 0; /* Removes default margin */
 }
+.task-details {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.task-details.show {
+  max-height: 100px; /* Adjust based on your content */
+  opacity: 1;
+}
+
 .angled-container {
   display: flex;
 }
@@ -162,6 +174,11 @@ h2 {
   margin-left: 20px;
   font-style: bold;
 }
+
+.bg-light-blue {
+  background-color: #e0e4ed; /* Use your preferred shade of light blue */
+}
+
 .blue {
   color: rgba(23, 80, 157);
 }
@@ -217,9 +234,34 @@ h2 {
 * {
     box-sizing: border-box;
 }
+
+.transport-options {
+  margin-top: 150px;
+}
+
 #taskList {
     height: 100%;
     overflow-y: auto;
+}
+
+#getTaskForm {
+  background-color: rgba(0, 0, 0, 0);
+  margin-top: 20px;
+}
+
+#getTaskForm .mb-3 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#getTaskForm .form-label {
+  width: 100px; /* Set a fixed width for the labels */
+  margin-right: 75px; /* Add some spacing between labels and input elements */
+}
+
+#getTaskForm .form-control {
+  flex: 1; /* Allow the input elements to expand and take up remaining space */
 }
 
 .task-list li {

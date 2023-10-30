@@ -5,10 +5,12 @@ To open the website,
 4. Copy paste the lines sent in groupchat into .env
 5. In the terminal change directory to DooleyAFavor/frontend/scripts/
 6. Start localhost by 'node app.js'
-7. In a browser, enter http://localhost:3000/templates/task.html
+7. In a browser, enter http://localhost:3000/templates/tasks.html
 
 http://localhost:3000/templates/forgot_password.html
 cd /Users/xingyuzhai/Documents/GitHub/CS370/backend
 
-
 Dependencies: npm install googleapis nodemailer
+
+Description:
+authentication.html <-> authentication.js
