@@ -1,4 +1,4 @@
-// import { sendMail } from "../../API/gmail-api/app.mjs";
+import { sendMail } from "../../API/gmail-api/app.mjs";
 
 let email;
 
@@ -46,7 +46,7 @@ function signup() {
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
     // console.log("here");
-    // sendMail(email)
+    sendMail(email)
     window.location.href = "../templates/emailVerification.html"
     const tasData = {
       username: username,
