@@ -258,6 +258,33 @@ h2 {
     height: 100%;
     overflow-y: auto;
 }
+.list-group-item {
+  position: relative; 
+  padding-left: 30px; /* Adjust this value as per your design preferences */
+}
+
+.ribbonr {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px; /* Adjust this width as required */
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: rgba(53, 100, 177);
+  z-index: 1;
+}
+.ribbonb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px; /* Adjust this width as required */
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: rgba(232, 167, 19);
+  z-index: 1;
+}
 
 #getTaskForm {
   background-color: rgba(0, 0, 0, 0);
