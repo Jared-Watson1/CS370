@@ -30,12 +30,13 @@
         <span class="location-icon"><i class="fas fa-map-marker-alt"></i></span>
         <span class="user-location"></span>
       </div>
-      <div class="nav-container">
-        <ul class="nav">
-          <li class="nav-item" id="my-nav">
-            <a class="nav-link" href="profile.html">My Profile</a>
-        </li>
-        </ul>
+<div class="nav-container">
+    <ul class="nav">
+    <a href="profile.html" class="profile-icon-link">
+    <i class="fas fa-user-circle fa-2x"></i>
+    </a>
+    </ul>
+    
         <div class="nav-container1">
           <ul class="nav nav-pills nav-fill">
               <li class="nav-item" id="my-nav">
@@ -140,15 +141,30 @@
                 </div>
 
 
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                >
-                  Add Task
-                </button>
-                <button type="submit" class="btn btn-secondary">
-                  Schedule Task
-                </button>
+                <button type="submit" class="btn btn-primary btn">Add Task</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScheduleDropdown()">Schedule Task</button>
+<!-- Schedule Dropdown (Initially Hidden) -->
+<div id="scheduleDropdown" style="display: none;">
+    <div class="mb-3">
+        <label for="scheduleTime" class="form-label">Select Time:</label>
+        <input type="time" class="form-control" id="scheduleTime" required>
+    </div>
+    <button type="submit" class="btn btn-primary btn">Confirm Schedule</button>
+</div>
+
+<!-- Add JavaScript to Toggle the Dropdown -->
+<script>
+    function toggleScheduleDropdown() {
+        var dropdown = document.getElementById("scheduleDropdown");
+        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+</script>
+
+
+</form>
+</div>
+</div>
+
               </form>
             </div>
         </div>
