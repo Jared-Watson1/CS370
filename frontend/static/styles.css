@@ -189,6 +189,11 @@ h2 {
   margin-left: 20px;
   font-style: bold;
 }
+
+.bg-light-blue {
+  background-color: #e0e4ed; /* Use your preferred shade of light blue */
+}
+
 .blue {
   color: rgba(23, 80, 157);
 }
@@ -244,9 +249,34 @@ h2 {
 * {
     box-sizing: border-box;
 }
+
+.transport-options {
+  margin-top: 150px;
+}
+
 #taskList {
     height: 100%;
     overflow-y: auto;
+}
+
+#getTaskForm {
+  background-color: rgba(0, 0, 0, 0);
+  margin-top: 20px;
+}
+
+#getTaskForm .mb-3 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#getTaskForm .form-label {
+  width: 100px; /* Set a fixed width for the labels */
+  margin-right: 75px; /* Add some spacing between labels and input elements */
+}
+
+#getTaskForm .form-control {
+  flex: 1; /* Allow the input elements to expand and take up remaining space */
 }
 
 .task-list li {

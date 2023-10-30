@@ -603,9 +603,9 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
-document.getElementById('profileIcon').addEventListener('click', function() {
-  window.location.href = "../frontend/templates/profile.html"; 
-});
+// document.getElementById('profileIcon').addEventListener('click', function() {
+//   window.location.href = "../frontend/templates/profile.html"; 
+// });
 
 // Define a function to set the active tab based on the current page
 function setActiveTab() {
