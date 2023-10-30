@@ -4,11 +4,8 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-
-from task_database import add_task, clear_all_tasks, clear_task_by_name
-
+from task_database import clear_all_tasks, add_food_task
 from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
-
 from flask_cors import CORS
 
 load_dotenv()
@@ -28,26 +25,40 @@ def add_task_endpoint():
     # Extract task details from the incoming JSON data
     try:
         task_name = data.get('task_name')
+        category = data.get('category', '').lower()  # This will determine the type of task (food or service)
         description = data.get('description')
-        date_posted = datetime.strptime(
-            data.get('date_posted'), '%Y-%m-%d').date()
+        date_posted = datetime.strptime(data.get('date_posted'), '%Y-%m-%d').date()
         task_owner = data.get('task_owner')
+
+        # If food task extract additional attributes
+        if category == 'food':
+            start_loc = data.get('start_loc')
+            end_loc = data.get('end_loc')
+            price = data.get('price')
+            restaurant = data.get('restaurant')
+        # elif category == 'service':
+        #     ...
+
     except Exception as e:
-        print("Error: might of missed task attributes: " + str(e))
+        return jsonify({"error": f"Error extracting task attributes: {str(e)}"}), 400
 
     try:
-        # Use the add_task function to add the task to the database
-        add_task(task_name, description, date_posted, task_owner)
+        if category == 'food':
+            # add the food task to the database
+            add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price, restaurant, description)
+        else:
+            # add_task(task_name, description, date_posted, task_owner)
+            print("Other categories not added implemented yet")
+        
         return jsonify({"message": "Task added successfully!"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Database error: {str(e)}"}), 500
 
 
 @app.route('/get_tasks', methods=['GET'])
 def get_tasks_endpoint():
     tasks = get_all_tasks()
     return jsonify({"tasks": tasks})
-
 
 def get_all_tasks():
 
@@ -56,7 +67,9 @@ def get_all_tasks():
     cursor = conn.cursor()
 
     # SQL statement to retrieve all tasks
-    select_all_tasks_query = "SELECT * FROM tasks;"
+    select_all_tasks_query = """
+    SELECT task_id, task_name, category, date_posted, task_owner FROM tasks;
+    """
 
     result_tasks = []
 
@@ -68,7 +81,7 @@ def get_all_tasks():
             task_data = {
                 "task_id": task[0],
                 "task_name": task[1],
-                "description": task[2],
+                "category": task[2],
                 "date_posted": str(task[3]),
                 "task_owner": task[4]
             }
@@ -231,7 +244,7 @@ def clear_users_endpoint():
         return jsonify({"error": response_message}), 500
 
 
-port = int(os.environ.get("PORT", 5000))
+port = int(os.environ.get("PORT", 4000))
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # print(get_all_tasks())

@@ -127,6 +127,12 @@ function populateTasks() {
       let currentPage = 1;
 
       // Iterate through the tasks data and append to the UL
+      function closeAllTaskDetails() {
+        const allDetails = document.querySelectorAll('.task-details');
+        allDetails.forEach(details => {
+            details.style.display = "none"; // You can also use classList.remove('show') if you want
+        });
+    }
       function displayTasks() {
         // Clear existing list items
         while (taskUl.firstChild) {
@@ -147,19 +153,30 @@ function populateTasks() {
             li.innerHTML = `
                 <h4>${task.task_name}</h4>
                 <p>${task.task_owner}</p>
+                <div class="task-details" style="display: none;">
+                <p>Detail 1: </p>
+                <p>Detail 2: </p>
+                <!-- Add more details as required -->
+                </div>
             `;
-            // Create a button element
-            const button = document.createElement('button');
-            button.textContent = 'Take Task';
-    //
-            // Add an event listener to the button
-            button.addEventListener('click', () => {
-                removeTaskFromApi(task.task_name);
+            
+            li.addEventListener('click', function() {
+              // Close all details first
+              closeAllTaskDetails(); 
+              console.log("asdfasf")
+              const detailsDiv = this.querySelector('.task-details');
+              if (detailsDiv.style.display === "none") {
                   
-            });
-    //
-            // Append the button to the li
-            li.appendChild(button);
+                  detailsDiv.style.display = "block";
+                  if (detailsDiv.classList.contains('show')) {
+                    detailsDiv.classList.remove('show');
+                    } else {
+                        detailsDiv.classList.add('show');
+                    }
+              } else {
+                  detailsDiv.style.display = "none";
+              }
+          });
             taskUl.appendChild(li);
         });
     }
