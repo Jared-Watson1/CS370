@@ -2,10 +2,11 @@ var map;
 var doAFavorMap;
 var directionsService;
 var directionsRenderer;
-var autocomplete1, autocomplete2;
 var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
+let autocomplete1;
+let autocomplete2;
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -139,6 +140,7 @@ window.onload = function () {
   });
   populateTasks();
   setActiveTab;
+
 }
 function populateTasks() {
   fetch("/tasks")
@@ -188,20 +190,32 @@ function populateTasks() {
             const username = await getUserbyID(owner);
             const li = document.createElement("li");
             li.classList.add("list-group-item");
+
+            li.classList.add('task-type-2'); 
+            
             li.innerHTML = `
+            <div class="ribbonr"></div>
                 <h4>${task.task_name}</h4>
                 <p>${username.first_name} ${username.last_name}</p>
                 <div class="task-details" style="display: none;">
-                <p>Restaurant: ${task.restaurant}</p>
-                <p>Detail 2: ${task.end_loc} </p>
+                <p>Restaurant: McDonalds at North Decatur</p>
+                <p>Destination: MSC building </p>
                 <!-- Add more details as required -->
                 </div>
+                
             `;
             
             li.addEventListener('click', function() {
               // Close all details first
               closeAllTaskDetails();
               console.log("adfsaf");
+
+              updateMap(
+                map,
+                'Chicago, IL',
+                'Los Angeles, CA',
+                'DRIVING'
+              )
               const detailsDiv = this.querySelector('.task-details');
               detailsDiv.classList.toggle('show');
           });
@@ -317,36 +331,31 @@ function initMap() {
     position: userLocation,
     map: map
   });
+  initAutocompleteAndListeners(map);
+
 }
-function initAutocompleteAndListeners(targetMap, inputId1, inputId2) {
+function initAutocompleteAndListeners(targetMap) {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({ map: targetMap });
 
   // Initialize autocomplete...
-  const autocomplete1 = new google.maps.places.Autocomplete(
-    document.getElementById(inputId1)
-  );
-  const autocomplete2 = new google.maps.places.Autocomplete(
-    document.getElementById(inputId2)
-  );
-
   // Add listeners for place changed event...
-  autocomplete1.addListener("place_changed", () =>
-    updateMap(
-      targetMap,
-      autocomplete1,
-      autocomplete2,
-      document.getElementById("mode")
-    )
-  );
-  autocomplete2.addListener("place_changed", () =>
-    updateMap(
-      targetMap,
-      autocomplete1,
-      autocomplete2,
-      document.getElementById("mode")
-    )
-  );
+  // autocomplete1.addListener("place_changed", () =>
+  //   updateMap(
+  //     targetMap,
+  //     autocomplete1,
+  //     autocomplete2,
+  //     document.getElementById("mode")
+  //   )
+  // );
+  // autocomplete2.addListener("place_changed", () =>
+  //   updateMap(
+  //     targetMap,
+  //     autocomplete1,
+  //     autocomplete2,
+  //     document.getElementById("mode")
+  //   )
+  // );
   document.getElementById("mode").addEventListener("change", function () {
     updateMap(
       targetMap,
@@ -373,8 +382,8 @@ function placeMarkers(targetMap) {
   });
 }
 function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
-  var userPlace = autocomplete1 ? autocomplete1.getPlace() : null;
-  var restaurantPlace = autocomplete2 ? autocomplete2.getPlace() : null;
+  var userPlace = autocomplete1;
+  var restaurantPlace = autocomplete2;
 
   // if (targetMap.userMarker) {
   //     targetMap.userMarker.setMap(null);
@@ -382,23 +391,21 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   // if (targetMap.restaurantMarker) {
   //     targetMap.restaurantMarker.setMap(null);
   // }
-  if (
-    userLocation &&  // Adjusted this condition
+  if ( // Adjusted this condition
     restaurantPlace &&
-    restaurantPlace.place_id &&
-    !userPlace
+    userPlace
   ) {
-    let userDestination = userLocation;
+    let userDestination = userPlace;
     directionsService.route(
       {
-        origin: { placeId: restaurantPlace.place_id },
-        destination: userDestination,
-        travelMode:
-          google.maps.TravelMode[document.getElementById("mode").value],
+        origin: 'McDonalds, North Decatur',
+        destination: 'math and science center, GA',
+        travelMode: 'DRIVING',
       },
       function (response, status) {
         if (status === "OK") {
           directionsRenderer.setDirections(response);
+          console.log(response);
           var duration = response.routes[0].legs[0].duration.text;
 
           // If an InfoWindow already exists, close it
