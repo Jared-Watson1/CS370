@@ -36,6 +36,10 @@ def add_task_endpoint():
     try:
         if category == "food":
             # add the food task to the database
+            start_loc = data.get("start_loc")
+            end_loc = data.get("end_loc")
+            price = data.get("price")
+            restaurant = data.get("restaurant")
             add_food_task(
                 task_name,
                 date_posted,
