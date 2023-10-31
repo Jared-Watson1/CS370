@@ -101,35 +101,64 @@ def add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price,
         conn.close()
 
 
-# tester function to see all tasks
-
-
-def get_all_tasks_tester():
+def get_all_tasks():
+    """ Function to retrieve all tasks from every task table and package tasks into dictionary"""
 
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = conn.cursor()
 
-    # SQL statement to retrieve all tasks
-    select_all_tasks_query = "SELECT * FROM tasks;"
+    # SQL statement to retrieve tasks along with details from foodtasks and servicetasks
+    select_all_tasks_query = """
+    SELECT 
+        tasks.task_id, tasks.task_name, tasks.category, tasks.date_posted, tasks.task_owner,
+        food.start_loc, food.end_loc, food.price AS food_price, food.restaurant, food.description AS food_description,
+        service.location, service.description AS service_description, service.price AS service_price
+    FROM tasks
+    LEFT JOIN foodtasks as food ON tasks.task_id = food.task_id
+    LEFT JOIN servicetasks as service ON tasks.task_id = service.task_id;
+    """
+
+
+    result_tasks = []
 
     try:
         cursor.execute(select_all_tasks_query)
         tasks = cursor.fetchall()
 
-        if not tasks:
-            print("No tasks found.")
-            return
-
-        print("Tasks in the database:")
         for task in tasks:
-            print(
-                f"Task ID: {task[0]}, Task Name: {task[1]}, Description: {task[2]}, Date Posted: {task[3]}, Task Owner: {task[4]}")
+            task_data = {
+                "task_id": task[0],
+                "task_name": task[1],
+                "category": task[2],
+                "date_posted": str(task[3]),
+                "task_owner": task[4]
+            }
+            
+            if task[2] == "Food":
+                task_data.update({
+                    "start_loc": task[5],
+                    "end_loc": task[6],
+                    "price": task[7],
+                    "restaurant": task[8],
+                    "description": task[9]
+                })
+            elif task[2] == "Service":
+                task_data.update({
+                    "location": task[10],
+                    "description": task[11],
+                    "price": task[12]
+                })
+            
+            result_tasks.append(task_data)
+
     except Exception as err:
         print(f"Error: {err}")
     finally:
         cursor.close()
         conn.close()
+
+    return result_tasks
 
 
 def clear_all_tasks():

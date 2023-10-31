@@ -4,7 +4,7 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from task_database import clear_all_tasks, add_food_task
+from task_database import clear_all_tasks, add_food_task, get_all_tasks
 from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
 from flask_cors import CORS
 
@@ -25,9 +25,11 @@ def add_task_endpoint():
     # Extract task details from the incoming JSON data
     try:
         task_name = data.get('task_name')
-        category = data.get('category', '').lower()  # This will determine the type of task (food or service)
+        # This will determine the type of task (food or service)
+        category = data.get('category', '').lower()
         description = data.get('description')
-        date_posted = datetime.strptime(data.get('date_posted'), '%Y-%m-%d').date()
+        date_posted = datetime.strptime(
+            data.get('date_posted'), '%Y-%m-%d').date()
         task_owner = data.get('task_owner')
 
         # If food task extract additional attributes
@@ -45,11 +47,12 @@ def add_task_endpoint():
     try:
         if category == 'food':
             # add the food task to the database
-            add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price, restaurant, description)
+            add_food_task(task_name, date_posted, task_owner,
+                          start_loc, end_loc, price, restaurant, description)
         else:
             # add_task(task_name, description, date_posted, task_owner)
             print("Other categories not added implemented yet")
-        
+
         return jsonify({"message": "Task added successfully!"}), 200
     except Exception as e:
         return jsonify({"error": f"Database error: {str(e)}"}), 500
@@ -60,41 +63,6 @@ def get_tasks_endpoint():
     tasks = get_all_tasks()
     return jsonify({"tasks": tasks})
 
-def get_all_tasks():
-
-    # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor()
-
-    # SQL statement to retrieve all tasks
-    select_all_tasks_query = """
-    SELECT task_id, task_name, category, date_posted, task_owner FROM tasks;
-    """
-
-    result_tasks = []
-
-    try:
-        cursor.execute(select_all_tasks_query)
-        tasks = cursor.fetchall()
-
-        for task in tasks:
-            task_data = {
-                "task_id": task[0],
-                "task_name": task[1],
-                "category": task[2],
-                "date_posted": str(task[3]),
-                "task_owner": task[4]
-            }
-            result_tasks.append(task_data)
-
-    except Exception as err:
-        print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
-
-    return result_tasks
-
 
 @app.route('/DANGER_clear_tasks', methods=['DELETE'])
 def clear_tasks_endpoint():
@@ -104,13 +72,13 @@ def clear_tasks_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/clear_task', methods=['DELETE'])
 def clear_task_endpoint():
-    #console.log('#####^^^^^^^^^^^^^^^^^^000');
+    # console.log('#####^^^^^^^^^^^^^^^^^^000');
     data = request.get_json()
     task_name = data.get('task_name')
-    #task_name='a'
-    #console.log('#####^^^^^^^^^^^^^^^^^^');
+    # task_name='a'
     if not task_name:
         return jsonify({"error": "Missing 'task_name' parameter"}), 400
     try:
@@ -147,11 +115,11 @@ def add_user_endpoint():
         password = data.get('password')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
-        
+
         # Check if mandatory attributes are provided
         if not (username and email and password):  # Password made mandatory
             raise ValueError("Missing mandatory user attributes.")
-        
+
         hashed_password = hash_password(password)
 
     except Exception as e:
@@ -192,7 +160,7 @@ def get_all_users_endpoint():
         return jsonify({"users": users_list}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 
 @app.route('/rate_user', methods=['POST'])
 def rate_user():
@@ -215,7 +183,7 @@ def rate_user():
             return jsonify({"error": response_message}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 
 @app.route('/get_info_by_user', methods=['POST'])
 def get_info_by_user():
@@ -233,8 +201,6 @@ def get_info_by_user():
         return jsonify({"error": str(e)}), 500
 
 
-    
-
 @app.route('/DANGER_clear_users', methods=['POST'])
 def clear_users_endpoint():
     response_message = clearUsers()
@@ -244,7 +210,7 @@ def clear_users_endpoint():
         return jsonify({"error": response_message}), 500
 
 
-port = int(os.environ.get("PORT", 4000))
+port = int(os.environ.get("PORT", 6000))
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # print(get_all_tasks())
