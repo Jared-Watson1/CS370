@@ -12,6 +12,8 @@
      - [Add a Task](#add-a-task)
      - [Get All Tasks](#get-all-tasks)
    - [Making Requests](#making-requests)
+3. [User Manager API](#user-manager-api)
+   - Endpoints
 
 ---
 
