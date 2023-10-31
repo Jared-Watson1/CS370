@@ -14,7 +14,7 @@ DATABASE_URL = os.getenv("DB_URL")
 
 def create_tables():
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to create the tasks table
@@ -66,9 +66,18 @@ def create_tables():
         conn.close()
 
 
-def add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price, restaurant, description):
+def add_food_task(
+    task_name,
+    date_posted,
+    task_owner,
+    start_loc,
+    end_loc,
+    price,
+    restaurant,
+    description,
+):
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to insert a new task in tasks table
@@ -90,8 +99,10 @@ def add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price,
         task_id = cursor.fetchone()[0]
 
         # Add corresponding details to foodtasks table
-        cursor.execute(insert_food_task_query, (task_id, start_loc,
-                       end_loc, price, restaurant, description))
+        cursor.execute(
+            insert_food_task_query,
+            (task_id, start_loc, end_loc, price, restaurant, description),
+        )
         conn.commit()
         print("Food task added successfully!")
     except Exception as err:
@@ -102,10 +113,10 @@ def add_food_task(task_name, date_posted, task_owner, start_loc, end_loc, price,
 
 
 def get_all_tasks():
-    """ Function to retrieve all tasks from every task table and package tasks into dictionary"""
+    """Function to retrieve all tasks from every task table and package tasks into dictionary"""
 
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to retrieve tasks along with details from foodtasks and servicetasks
@@ -119,7 +130,6 @@ def get_all_tasks():
     LEFT JOIN servicetasks as service ON tasks.task_id = service.task_id;
     """
 
-
     result_tasks = []
 
     try:
@@ -132,24 +142,24 @@ def get_all_tasks():
                 "task_name": task[1],
                 "category": task[2],
                 "date_posted": str(task[3]),
-                "task_owner": task[4]
+                "task_owner": task[4],
             }
-            
+
             if task[2] == "Food":
-                task_data.update({
-                    "start_loc": task[5],
-                    "end_loc": task[6],
-                    "price": task[7],
-                    "restaurant": task[8],
-                    "description": task[9]
-                })
+                task_data.update(
+                    {
+                        "start_loc": task[5],
+                        "end_loc": task[6],
+                        "price": task[7],
+                        "restaurant": task[8],
+                        "description": task[9],
+                    }
+                )
             elif task[2] == "Service":
-                task_data.update({
-                    "location": task[10],
-                    "description": task[11],
-                    "price": task[12]
-                })
-            
+                task_data.update(
+                    {"location": task[10], "description": task[11], "price": task[12]}
+                )
+
             result_tasks.append(task_data)
 
     except Exception as err:
@@ -163,7 +173,7 @@ def get_all_tasks():
 
 def clear_all_tasks():
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to delete all tasks
@@ -182,7 +192,7 @@ def clear_all_tasks():
 
 
 def clear_task_by_name(task_name):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to insert a new task
@@ -191,14 +201,14 @@ def clear_task_by_name(task_name):
     VALUES (%s);
     """
 
-    #console.log('perform send *****');
+    # console.log('perform send *****');
 
     # list_task_query="""
     # SELECT * FROM tasks
     # """
 
     # SQL statement to delete a task by task_name
-    #delete_task_query = "DELETE FROM tasks WHERE task_name = %s;"
+    # delete_task_query = "DELETE FROM tasks WHERE task_name = %s;"
 
     try:
         cursor.execute(delete_task_query, (task_name))
@@ -215,7 +225,7 @@ def clear_task_by_name(task_name):
 
 def delete_tables():
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statements to drop the tables

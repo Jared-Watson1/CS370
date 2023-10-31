@@ -9,14 +9,12 @@ load_dotenv()
 # Please make sure you have set the correct environment variable name
 DATABASE_URL = os.getenv("DB_URL")
 
-# Create table for users
-
 
 def createUserTable():
     """Creates the 'users' table in the database."""
 
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to create the users table
@@ -52,12 +50,19 @@ def hash_username(username: str) -> str:
     return hashlib.sha256(username.encode()).hexdigest()
 
 
-def addUser(username: str, email: str, phone_number: str, password: bytes, first_name: str, last_name: str):
+def addUser(
+    username: str,
+    email: str,
+    phone_number: str,
+    password: bytes,
+    first_name: str,
+    last_name: str,
+):
     """
     Adds a user to the 'users' table in the database.
     """
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     user_id = hash_username(username)
@@ -69,8 +74,10 @@ def addUser(username: str, email: str, phone_number: str, password: bytes, first
     """
 
     try:
-        cursor.execute(insert_query, (user_id, username, email,
-                       password, first_name, last_name, phone_number))
+        cursor.execute(
+            insert_query,
+            (user_id, username, email, password, first_name, last_name, phone_number),
+        )
         conn.commit()
         return f"User '{username}' added successfully!"
     except psycopg2.IntegrityError as e:
@@ -81,7 +88,9 @@ def addUser(username: str, email: str, phone_number: str, password: bytes, first
             elif "email" in str(e):
                 return f"Email '{email}' is already associated with another user."
             else:
-                return "An error occurred while trying to add the user. Please try again."
+                return (
+                    "An error occurred while trying to add the user. Please try again."
+                )
         else:
             return "An error occurred while trying to add the user. Please try again."
     except Exception as err:
@@ -96,7 +105,7 @@ def getAllUsers():
     Retrieves all users from the 'users' table in the database.
     """
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to fetch all users
@@ -115,12 +124,14 @@ def getAllUsers():
 
 
 def rateUserInDB(user_id, rating):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     try:
         # Get the current rating_sum and num_reviews for the user
-        cursor.execute("SELECT rating_sum, num_reviews FROM users WHERE user_id = %s", (user_id,))
+        cursor.execute(
+            "SELECT rating_sum, num_reviews FROM users WHERE user_id = %s", (user_id,)
+        )
         result = cursor.fetchone()
 
         if not result:
@@ -133,7 +144,7 @@ def rateUserInDB(user_id, rating):
         new_num_reviews = current_num_reviews + 1
         cursor.execute(
             "UPDATE users SET rating_sum = %s, num_reviews = %s WHERE user_id = %s",
-            (new_rating_sum, new_num_reviews, user_id)
+            (new_rating_sum, new_num_reviews, user_id),
         )
 
         # Commit the changes to the database
@@ -148,7 +159,7 @@ def rateUserInDB(user_id, rating):
 
 
 def getUserInfo(user_id):
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     try:
@@ -173,7 +184,7 @@ def getUserInfo(user_id):
             "first_name": user[4],
             "last_name": user[5],
             "phone_number": user[6],
-            "rating": avg_rating
+            "rating": avg_rating,
         }
 
         return user_info, None
@@ -186,9 +197,9 @@ def getUserInfo(user_id):
 
 def get_user_id(username):
     """Get user_id based on a username."""
-    
+
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to fetch user_id for the given username
@@ -221,7 +232,7 @@ def delete_users_table():
     """Deletes the 'users' table from the database."""
 
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to delete the users table
@@ -245,7 +256,7 @@ def clearUsers():
     Deletes all users from the 'users' table in the database.
     """
     # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     # SQL statement to delete all rows from the users table
@@ -260,6 +271,7 @@ def clearUsers():
     finally:
         cursor.close()
         conn.close()
+
 
 # delete_users_table()
 # createUserTable()
