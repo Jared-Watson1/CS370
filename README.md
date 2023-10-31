@@ -10,6 +10,7 @@ DooleyAFavor is a web application that allows Emory students to post and complet
 The DooleyAFavor repository has the following file structure:
 
 DooleyAFavor
+```
 ├── API
 │   └── README.md
 ├── Frontend
@@ -17,6 +18,7 @@ DooleyAFavor
 │   ├── template
 │   └── style
 └── README.md
+```
 ## API Folder
 
 The API folder contains a Flask API that handles all operations with the database. This includes task management, task retrieval, user management, and user information retrieval. For more information on how to interact with the API, please see the README file within the API directory.
