@@ -39,4 +39,4 @@ def get_tasks():
 # add_task("test test test", "This is a new task test 3", "2023-10-01", "j dub")
 
 # Get and display tasks
-# get_tasks()
+get_tasks()

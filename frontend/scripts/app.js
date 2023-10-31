@@ -35,13 +35,17 @@ app.get('/api/data', (req, res) => {
 });
 app.post('/add_task', async (req, res) => {
     try {
-
-        const { task_name, description, date_posted, task_owner} = req.body;
+        const { task_name, category, description, task_owner, start_loc, end_loc, price, restaurant, date_posted} = req.body;
         const response = await axios.post('https://task-manager-0-94114aee724a.herokuapp.com/add_task', {
             task_name,
+            category,
             description,
-            date_posted,
+            start_loc,
             task_owner,
+            end_loc,
+            date_posted,
+            price,
+            restaurant
         });
         console.log(response.data)
         res.json(response.data);
@@ -71,6 +75,29 @@ app.get('/get_all_users', async (req, res) => {
     }
     res.json({ users });
 });
+
+app.post('/get_info_by_user', async (req, res) => {
+    const user_id = req.body.user_id;
+
+    if (!user_id) {
+        return res.status(400).json({ error: "User ID is required." });
+    }
+
+    try {
+        // Assuming you're communicating with a Flask backend:
+        const flaskServerUrl = 'https://task-manager-0-94114aee724a.herokuapp.com';  // Replace with your Flask API's base URL if different
+        const response = await axios.post(`${flaskServerUrl}/get_info_by_user`, { user_id: user_id });
+
+        // Forward the response from Flask to the frontend
+        console.log(response)
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching user info:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 const getUsersFromFlaskAPI = async () => {
     try {

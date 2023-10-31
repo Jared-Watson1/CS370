@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 from task_database import clear_all_tasks, add_food_task, get_all_tasks
 from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
+
 from flask_cors import CORS
 
 load_dotenv()
@@ -31,18 +32,8 @@ def add_task_endpoint():
         date_posted = datetime.strptime(
             data.get('date_posted'), '%Y-%m-%d').date()
         task_owner = data.get('task_owner')
-
-        # If food task extract additional attributes
-        if category == 'food':
-            start_loc = data.get('start_loc')
-            end_loc = data.get('end_loc')
-            price = data.get('price')
-            restaurant = data.get('restaurant')
-        # elif category == 'service':
-        #     ...
-
     except Exception as e:
-        return jsonify({"error": f"Error extracting task attributes: {str(e)}"}), 400
+        print("Error: might of missed task attributes: " + str(e))
 
     try:
         if category == 'food':
@@ -55,7 +46,7 @@ def add_task_endpoint():
 
         return jsonify({"message": "Task added successfully!"}), 200
     except Exception as e:
-        return jsonify({"error": f"Database error: {str(e)}"}), 500
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route('/get_tasks', methods=['GET'])
@@ -210,7 +201,7 @@ def clear_users_endpoint():
         return jsonify({"error": response_message}), 500
 
 
-port = int(os.environ.get("PORT", 6000))
+port = int(os.environ.get("PORT", 5000))
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=port)
     # print(get_all_tasks())
