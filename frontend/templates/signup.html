@@ -1,54 +1,90 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Signup</title>
-    <link rel="stylesheet" type="text/css" href="../static/styles.css">
-
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+  </head>
+  <body>
     <div class="header-container">
-        <h1><span class="blue">Dooley</span><span class="yellow">A</span><span class="blue">Favor</span></h1>
+      <h1>
+        <span class="blue">Dooley</span><span class="yellow">A</span
+        ><span class="blue">Favor</span>
+      </h1>
     </div>
 
     <h2>Signup</h2>
-    <form id = "personalForm">
-        <div class = "form-row">
-            <div class = "form-group">
-                <label for="first name">First Name:</label>
-                <input type="text" id="first name" placeholder="Enter first name" required><br><br>
-            </div>
-            <div class = "form-group">
-                <label for="last name">Last name:</label>
-                <input type="text" id="last name" placeholder="Enter last name" required><br><br>
-            </div>  
+    <form id="personalForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first name">First Name:</label>
+          <input
+            type="text"
+            id="first name"
+            placeholder="Enter first name"
+            required
+          /><br /><br />
         </div>
+        <div class="form-group">
+          <label for="last name">Last name:</label>
+          <input
+            type="text"
+            id="last name"
+            placeholder="Enter last name"
+            required
+          /><br /><br />
+        </div>
+      </div>
 
-        <div class = "form-row">
-            <div class = "form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" placeholder="Enter username" required><br><br>
-            </div>
-            <div class = "form-group">
-                <label for="phone number">Phone Number:</label>
-                <input type="text" id="phone number" placeholder="Enter phone number" required><br><br>
-            </div>  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="Enter username"
+            required
+          /><br /><br />
         </div>
+        <div class="form-group">
+          <label for="phone number">Phone Number:</label>
+          <input
+            type="text"
+            id="phone number"
+            placeholder="Enter phone number"
+            required
+          /><br /><br />
+        </div>
+      </div>
     </form>
 
-    <form id = "signupForm">
-        <label for="Email">Email:</label>
-        <input type="text" id="email" placeholder="Enter Email (emory.edu)" required><br><br>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" placeholder="Enter password" required><br><br>
+    <form id="signupForm">
+      <label for="Email">Email:</label>
+      <input
+        type="text"
+        id="email"
+        placeholder="Enter Email (emory.edu)"
+        required
+      /><br /><br />
 
-        <label for="password">Confirm Password:</label>
-        <input type="password" id="password2" placeholder="Enter password" required><br><br>
-        
-        <input type="button" value="Signup" onclick="signup()">
-        
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter password"
+        required
+      /><br /><br />
+
+      <label for="password">Confirm Password:</label>
+      <input
+        type="password"
+        id="password2"
+        placeholder="Enter password"
+        required
+      /><br /><br />
+
+      <input type="button" value="Signup" onclick="signup()" />
     </form>
-    
-    <script src = "../scripts/signup.js" type = "module"></script>
-</body>
+
+    <script src="../scripts/signup.js" type="module"></script>
+  </body>
 </html>

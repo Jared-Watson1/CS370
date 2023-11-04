@@ -21,6 +21,21 @@ body {
   padding: 0; /* Removes default padding */
   margin: 0; /* Removes default margin */
 }
+.task-details {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  display: none;
+}
+
+.task-details.show {
+  max-height: 100px; /* Adjust based on your content */
+  opacity: 1;
+  display: block !important;
+}
+
+
 .angled-container {
   display: flex;
 }
@@ -34,6 +49,10 @@ h1, .user-location {
     box-shadow: none;
 }
 .logo-container {
+  display: flex;
+  align-items: center;
+}
+.nav-container2{
   display: flex;
   align-items: center;
 }
@@ -53,6 +72,14 @@ h1, .user-location {
 }
 .location-icon i {
   font-size: 1rem;  /* Adjust as needed for icon size */
+}
+.centered-nav-container {
+  width: 100%;
+  text-align: center;
+}
+
+.nav-container2 {
+  display: inline-block;
 }
 .navbar.logo-container {
   display: flex;
@@ -162,6 +189,11 @@ h2 {
   margin-left: 20px;
   font-style: bold;
 }
+
+.bg-light-blue {
+  background-color: #e0e4ed; /* Use your preferred shade of light blue */
+}
+
 .blue {
   color: rgba(23, 80, 157);
 }
@@ -217,9 +249,61 @@ h2 {
 * {
     box-sizing: border-box;
 }
+
+.transport-options {
+  margin-top: 150px;
+}
+
 #taskList {
     height: 100%;
     overflow-y: auto;
+}
+.list-group-item {
+  position: relative; 
+  padding-left: 30px; /* Adjust this value as per your design preferences */
+}
+
+.ribbonr {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px; /* Adjust this width as required */
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: rgba(53, 100, 177);
+  z-index: 1;
+}
+.ribbonb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 10px; /* Adjust this width as required */
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: rgba(232, 167, 19);
+  z-index: 1;
+}
+
+#getTaskForm {
+  background-color: rgba(0, 0, 0, 0);
+  margin-top: 20px;
+}
+
+#getTaskForm .mb-3 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#getTaskForm .form-label {
+  width: 100px; /* Set a fixed width for the labels */
+  margin-right: 75px; /* Add some spacing between labels and input elements */
+}
+
+#getTaskForm .form-control {
+  flex: 1; /* Allow the input elements to expand and take up remaining space */
 }
 
 .task-list li {

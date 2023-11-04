@@ -441,12 +441,19 @@ function addTask(listType) {
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;
     var taskTitle = taskTitleInput.value.trim();
+
     const taskData = {
-      task_name: taskTitle,
-      description: taskRestaurant,
-      date_posted: getTodayDate(),
-      task_owner: "John Doe",
-    };
+               task_name: "Lunch Delivery",
+               category: "food",
+               description: "Deliver lunch from ABC restaurant to XYZ location",
+               date_posted: "2023-10-29",
+               task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
+               start_loc: "ABC restaurant, Main St, City",
+               end_loc: "XYZ location, Elm St, City",
+               price: "15.99",
+               restaurant: "ABC restaurant"
+           };
+
     postTaskToApi(taskData);
   }
 
@@ -596,9 +603,9 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
-document.getElementById('profileIcon').addEventListener('click', function() {
-  window.location.href = "../frontend/templates/profile.html"; 
-});
+// document.getElementById('profileIcon').addEventListener('click', function() {
+//   window.location.href = "../frontend/templates/profile.html"; 
+// });
 
 // Define a function to set the active tab based on the current page
 function setActiveTab() {

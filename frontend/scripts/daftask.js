@@ -2,26 +2,62 @@ var map;
 var doAFavorMap;
 var directionsService;
 var directionsRenderer;
-var autocomplete1, autocomplete2;
 var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
+let autocomplete1;
+let autocomplete2;
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-          const location = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-          };
-          callback(null, location);
-      }, (error) => {
-          callback(error);
-      });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        callback(null, location);
+      },
+      (error) => {
+        callback(error);
+      }
+    );
   } else {
-      callback(new Error("Geolocation is not supported by this browser."));
+    callback(new Error("Geolocation is not supported by this browser."));
   }
 }
+function getUserbyID(data) {
+  return new Promise((resolve, reject) => {
+    const requestBody = data;
 
+    fetch("/get_info_by_user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          reject("Network response was not ok: " + response.statusText);
+          return;
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          reject("Oops, we haven't got JSON!");
+          return;
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        resolve(data); // We resolve the promise with the data we received
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
 
 function postTaskToApi(data) {
   const requestBody = data;
@@ -94,11 +130,10 @@ window.onload = function () {
   // Make sure to fetch user location and then initialize the map after location is fetched
   getUserLocation((error, location) => {
     if (error) {
-      console.error('Error fetching user location:', error);
+      console.error("Error fetching user location:", error);
       return;
     }
     fetchAddressFromCoordinates(location.lat, location.lng);
-    
 
     userLocation = location;
     console.log(location);
@@ -106,7 +141,7 @@ window.onload = function () {
   });
   populateTasks();
   setActiveTab;
-}
+};
 function populateTasks() {
   fetch("/tasks")
     .then((response) => {
@@ -127,47 +162,118 @@ function populateTasks() {
       let currentPage = 1;
 
       // Iterate through the tasks data and append to the UL
-      function displayTasks() {
+      function closeAllTaskDetails() {
+        const allDetails = document.querySelectorAll(".task-details");
+        allDetails.forEach((details) => {
+          details.classList.remove("show");
+        });
+      }
+      async function displayTasks() {
         // Clear existing list items
         while (taskUl.firstChild) {
-            taskUl.removeChild(taskUl.firstChild);
+          taskUl.removeChild(taskUl.firstChild);
         }
-    
+
         // Calculate the start and end index for slicing tasks data
         const startIndex = (currentPage - 1) * tasksPerPage;
         const endIndex = startIndex + tasksPerPage;
-    
+
         // Slice the data based on current page and tasks per page
         const tasksToDisplay = data.tasks.slice(startIndex, endIndex);
-        
+
         // Populate the tasks on the page
-        tasksToDisplay.forEach((task) => {
-            const li = document.createElement("li");
-            li.classList.add("list-group-item");
-            li.innerHTML = `
+        for (let task of tasksToDisplay) {
+          const userId = task.task_owner;
+          const owner = {
+            user_id: userId,
+          };
+          const username = await getUserbyID(owner);
+          const li = document.createElement("li");
+          li.classList.add("list-group-item");
+
+          li.classList.add("task-type-2");
+
+          li.innerHTML = `
+            <div class="ribbonr"></div>
                 <h4>${task.task_name}</h4>
-                <p>${task.task_owner}</p>
+                <p>${username.first_name} ${username.last_name}</p>
+                <div class="task-details" style="display: none;">
+                <p>Restaurant: McDonalds at North Decatur</p>
+                <p>Destination: MSC building </p>
+                <!-- Add more details as required -->
+                </div>
+                
             `;
-            taskUl.appendChild(li);
-        });
-    }
-    
-    // Handle next page click
-    nextPageBtn.addEventListener('click', function() {
+
+          li.addEventListener("click", function () {
+            // Close all details first
+            closeAllTaskDetails();
+            console.log("adfsaf");
+
+            updateMap(map, "Chicago, IL", "Los Angeles, CA", "DRIVING");
+            const detailsDiv = this.querySelector(".task-details");
+            detailsDiv.classList.toggle("show");
+          });
+          taskUl.appendChild(li);
+        }
+      }
+
+      function removeTaskFromApi(taskName) {
+        const apiUrl = `/clear_task?task_name=${taskName}`;
+
+        console.log("Sending DELETE request to:1234", apiUrl);
+
+        requestBody = { task_name: taskName };
+
+        fetch("/clear_task", {
+          method: "DELETE",
+          //method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        })
+          .then((response) => {
+            console.log("Sending DELETE request to:12345***", apiUrl);
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok: " + response.statusText
+              );
+            }
+
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+              throw new TypeError("Oops, we haven't got JSON!");
+            }
+
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Success:", data);
+            // Handle success, such as removing the task from the UI
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle errors here, such as displaying an error message
+          });
+      }
+
+      // Handle next page click
+      nextPageBtn.addEventListener("click", function () {
         if (currentPage * tasksPerPage < data.tasks.length) {
-            currentPage++;
-            displayTasks();
+          currentPage++;
+          displayTasks();
         }
-    });
-    
-    // Handle previous page click
-    prevPageBtn.addEventListener('click', function() {
+      });
+
+      // Handle previous page click
+      prevPageBtn.addEventListener("click", function () {
         if (currentPage > 1) {
-            currentPage--;
-            displayTasks();
+          currentPage--;
+          displayTasks();
         }
-    });
-    displayTasks();
+      });
+      displayTasks();
     })
     .catch((error) => {
       console.error("Error during fetch operation:", error);
@@ -191,24 +297,24 @@ function loadScriptWithApiKey(apiKey) {
 function fetchAddressFromCoordinates(lat, lon) {
   const apiKey = globalApiKey;
   const endpoint = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`;
-  console.log("asfda")
+  console.log("asfda");
   fetch(endpoint)
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (data.results && data.results[0]) {
-        
-        document.querySelector('.user-location').textContent = data.results[0].formatted_address;
+        document.querySelector(".user-location").textContent =
+          data.results[0].formatted_address;
       }
     })
-    .catch(error => {
-      console.error('Error fetching address:', error);
+    .catch((error) => {
+      console.error("Error fetching address:", error);
     });
 }
 
 // Example of how to use the API key in a URL
 function initMap() {
   if (!userLocation) {
-    console.error('User location is not defined yet.');
+    console.error("User location is not defined yet.");
     return;
   }
 
@@ -220,38 +326,32 @@ function initMap() {
 
   marker = new google.maps.Marker({
     position: userLocation,
-    map: map
+    map: map,
   });
+  initAutocompleteAndListeners(map);
 }
-function initAutocompleteAndListeners(targetMap, inputId1, inputId2) {
+function initAutocompleteAndListeners(targetMap) {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({ map: targetMap });
 
   // Initialize autocomplete...
-  const autocomplete1 = new google.maps.places.Autocomplete(
-    document.getElementById(inputId1)
-  );
-  const autocomplete2 = new google.maps.places.Autocomplete(
-    document.getElementById(inputId2)
-  );
-
   // Add listeners for place changed event...
-  autocomplete1.addListener("place_changed", () =>
-    updateMap(
-      targetMap,
-      autocomplete1,
-      autocomplete2,
-      document.getElementById("mode")
-    )
-  );
-  autocomplete2.addListener("place_changed", () =>
-    updateMap(
-      targetMap,
-      autocomplete1,
-      autocomplete2,
-      document.getElementById("mode")
-    )
-  );
+  // autocomplete1.addListener("place_changed", () =>
+  //   updateMap(
+  //     targetMap,
+  //     autocomplete1,
+  //     autocomplete2,
+  //     document.getElementById("mode")
+  //   )
+  // );
+  // autocomplete2.addListener("place_changed", () =>
+  //   updateMap(
+  //     targetMap,
+  //     autocomplete1,
+  //     autocomplete2,
+  //     document.getElementById("mode")
+  //   )
+  // );
   document.getElementById("mode").addEventListener("change", function () {
     updateMap(
       targetMap,
@@ -278,8 +378,8 @@ function placeMarkers(targetMap) {
   });
 }
 function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
-  var userPlace = autocomplete1 ? autocomplete1.getPlace() : null;
-  var restaurantPlace = autocomplete2 ? autocomplete2.getPlace() : null;
+  var userPlace = autocomplete1;
+  var restaurantPlace = autocomplete2;
 
   // if (targetMap.userMarker) {
   //     targetMap.userMarker.setMap(null);
@@ -288,22 +388,21 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   //     targetMap.restaurantMarker.setMap(null);
   // }
   if (
-    userLocation &&  // Adjusted this condition
+    // Adjusted this condition
     restaurantPlace &&
-    restaurantPlace.place_id &&
-    !userPlace
+    userPlace
   ) {
-    let userDestination = userLocation;
+    let userDestination = userPlace;
     directionsService.route(
       {
-        origin: { placeId: restaurantPlace.place_id },
-        destination: userDestination,
-        travelMode:
-          google.maps.TravelMode[document.getElementById("mode").value],
+        origin: "McDonalds, North Decatur",
+        destination: "math and science center, GA",
+        travelMode: "DRIVING",
       },
       function (response, status) {
         if (status === "OK") {
           directionsRenderer.setDirections(response);
+          console.log(response);
           var duration = response.routes[0].legs[0].duration.text;
 
           // If an InfoWindow already exists, close it
@@ -324,17 +423,16 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
         }
       }
     );
-  } else if(
-    userPlace &&  
+  } else if (
+    userPlace &&
     userPlace.place_id &&
     restaurantPlace &&
     restaurantPlace.place_id
-  ){
-
+  ) {
     directionsService.route(
       {
         origin: { placeId: restaurantPlace.place_id },
-        destination: {placeId: userPlace.place_id},
+        destination: { placeId: userPlace.place_id },
         travelMode:
           google.maps.TravelMode[document.getElementById("mode").value],
       },
@@ -361,8 +459,7 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
         }
       }
     );
-  
-  }else{
+  } else {
     // Handling when one or none locations are available...
     var location, marker;
 
@@ -624,4 +721,3 @@ function setActiveTab() {
 }
 
 // Call the setActiveTab function when the page loads
-

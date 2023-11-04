@@ -16,7 +16,10 @@ function login() {
 }
 
 // When the user hits enter and they're inside of the form, it submits the form.
-document.getElementById("signupForm").addEventListener("keydown", function (event) {
+document
+  .getElementById("signupForm")
+  .addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       login();
-}});
+    }
+  });

@@ -22,4 +22,4 @@ document.getElementById("signupForm").addEventListener("submit", function (e) {
 });
 
 // /Users/xingyuzhai/Documents/GitHub/CS370/Backend/server.js
-<script src="../scripts/emailvrf.js"></script>
+<script src="../scripts/emailvrf.js"></script>;
