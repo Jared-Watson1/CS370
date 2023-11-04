@@ -5,7 +5,14 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from task_database import clear_all_tasks, add_food_task, get_all_tasks
-from user_database import addUser, getAllUsers, clearUsers, rateUserInDB, getUserInfo
+from user_database import (
+    addUser,
+    getAllUsers,
+    clearUsers,
+    rateUserInDB,
+    getUserInfo,
+    get_user_id,
+)
 from flask_cors import CORS
 
 load_dotenv()
@@ -20,6 +27,7 @@ CORS(app)
 
 @app.route("/add_task", methods=["POST"])
 def add_task_endpoint():
+    """Endpoint to add a task to the database. Takes in task specific attributes"""
     data = request.get_json()
 
     # Extract task details from the incoming JSON data
@@ -29,7 +37,8 @@ def add_task_endpoint():
         category = data.get("category", "").lower()
         description = data.get("description")
         date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
-        task_owner = data.get("task_owner")
+        username = data.get("username")
+        task_owner = get_user_id(username=username)
     except Exception as e:
         print("Error: might of missed task attributes: " + str(e))
 
@@ -61,6 +70,7 @@ def add_task_endpoint():
 
 @app.route("/get_tasks", methods=["GET"])
 def get_tasks_endpoint():
+    """End point for getting all tasks"""
     tasks = get_all_tasks()
     return jsonify({"tasks": tasks})
 
@@ -107,6 +117,7 @@ def check_password(plain_password: str, hashed_password: bytes) -> bool:
 
 @app.route("/add_user", methods=["POST"])
 def add_user_endpoint():
+    """End point to add user to the DB. Takes in all user attributes"""
     data = request.get_json()
 
     # Extract user details from the incoming JSON data
@@ -141,6 +152,7 @@ def add_user_endpoint():
 
 @app.route("/get_all_users", methods=["GET"])
 def get_all_users_endpoint():
+    """Endpoint to get all users in DB"""
     try:
         users_data = getAllUsers()
 
@@ -167,6 +179,7 @@ def get_all_users_endpoint():
 
 @app.route("/rate_user", methods=["POST"])
 def rate_user():
+    """Endpoint to rate user based off of a username"""
     data = request.get_json()
 
     try:
@@ -190,10 +203,12 @@ def rate_user():
 
 @app.route("/get_info_by_user", methods=["POST"])
 def get_info_by_user():
+    """Get user information based off of user's username."""
     data = request.get_json()
 
     try:
-        user_id = data.get("user_id")
+        username = data.get("username")
+        user_id = get_user_id(username)
         user_info, error_message = getUserInfo(user_id)
 
         if error_message:
@@ -213,7 +228,7 @@ def clear_users_endpoint():
         return jsonify({"error": response_message}), 500
 
 
-port = int(os.environ.get("PORT", 5000))
+port = int(os.environ.get("PORT", 3000))
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port)
     # print(get_all_tasks())

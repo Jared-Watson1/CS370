@@ -50,8 +50,8 @@ The script uses the `psycopg2` library to connect to the PostgreSQL database and
    Uncomment the desired function calls at the bottom of task_database.py to perform specific operations.
    Execute the script:
    `bash
-    python task_database.py
-    `
+python task_database.py
+`
 
 ## Interacting with ElephantSQL
 

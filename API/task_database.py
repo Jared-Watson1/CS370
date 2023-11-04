@@ -176,17 +176,28 @@ def clear_all_tasks():
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
-    # SQL statement to delete all tasks
+    # SQL statements to delete all tasks from the related tables
+    delete_food_tasks_query = "DELETE FROM foodtasks;"
+    delete_service_tasks_query = "DELETE FROM servicetasks;"
     delete_all_tasks_query = "DELETE FROM tasks;"
 
     try:
+        # Since we are deleting all records, we should start with the child tables
+        cursor.execute(delete_food_tasks_query)
+        cursor.execute(delete_service_tasks_query)
+
+        # After the child tables have been cleared, we can clear the main tasks table
         cursor.execute(delete_all_tasks_query)
-        conn.commit()  # Commit the transaction
-        print("Cleared all tasks from database.")
+
+        # Commit the transaction
+        conn.commit()
+        print("Cleared all tasks and related entries from database.")
     except Exception as err:
-        conn.rollback()  # Rollback in case of error
+        # Rollback in case of error
+        conn.rollback()
         print(f"Error: {err}")
     finally:
+        # Close the cursor and connection
         cursor.close()
         conn.close()
 
