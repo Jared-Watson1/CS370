@@ -52,6 +52,7 @@
     <br />
     <!-- Include the content of the Get A Favor section here -->
     <!-- This should include everything from the GetAFavor div -->
+
     <div id="GetAFavor">
       <div class="container-fluid">   
           <div class="row">
@@ -62,23 +63,15 @@
             
             </div>
           <!-- <div class="left padded form-section" style="flex: 1"> -->
-            <div class="col-lg-5 d-flex bg-light-blue" style=" border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
-              <form id="getTaskForm" class="w-100" onsubmit="event.preventDefault(); addTask('GetAFavor');">
-                <div class="centered-nav-container" style="padding-bottom: 20px; ">
-                  <div class="nav-container1">
-                    <ul class="nav nav-pills nav-fill">
-                        <li class="nav-item" id="my-nav">
-                            <a class="nav-link active" aria-current="page" href="#">Food Delivery</a>
-                        </li>
-                        <li class="nav-item" id="my-nav">
-                            <a class="nav-link" href="services.html">Request Services</a>
-                        </li>
-                    </ul>
-                </div>
-              </div>
+          <div class="col-lg-5 bg-light-blue" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
+            <div style="height: 100%">
+              <form
+                id="getTaskForm"
+                onsubmit="event.preventDefault(); addTask('GetAFavor');"
+              >
                 <div class="mb-3">
                   <label for="getTaskTitle" class="form-label">Title:</label>
-                  <input
+                  <input 
                     type="text"
                     class="form-control"
                     id="getTaskTitle"
@@ -86,7 +79,6 @@
                     required
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskDescription" class="form-label"
                     >Description:</label
@@ -95,10 +87,10 @@
                     class="form-control"
                     id="getTaskDescription"
                     placeholder="Enter your item descriptions and delivery instructions"
+                    style = "max-width: 100%; max-height: 100px";
                     required
                   ></textarea>
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskRestaurant" class="form-label"
                     >Restaurant:</label
@@ -112,7 +104,6 @@
                     onchange="updateMap()"
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getUserLocation" class="form-label"
                     >Your location:</label
@@ -126,7 +117,6 @@
                     onchange="updateMap()"
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskPrice" class="form-label">Price:</label>
                   <input
@@ -136,9 +126,10 @@
                     required
                   />
                 </div>
-
                 <div class="mb-3">
-                  <label for="getTaskPaymentMethod" class="form-label">Payment Method:</label>
+                  <label for="getTaskPaymentMethod" class="form-label"
+                    >Payment Method:</label
+                  >
                   <select class="form-select" id="getTaskPaymentMethod" required>
                     <option value="PayPal">PayPal</option>
                     <option value="Venmo">Venmo</option>
@@ -146,35 +137,23 @@
                   </select>
                 </div>
 
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary me-1">Add Task</button>
-                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScheduleDropdown()">Schedule Task</button>
-                </div>
-<!-- Schedule Dropdown (Initially Hidden) -->
-<div id="scheduleDropdown" style="display: none;">
-    <div class="mb-3">
-        <label for="scheduleTime" class="form-label">Select Time:</label>
-        <input type="time" class="form-control" id="scheduleTime">
-    </div>
-    <button type="submit" class="btn btn-primary btn">Confirm Schedule</button>
-</div>
-</form>
-</div>
-<!-- Add JavaScript to Toggle the Dropdown -->
-<script>
-    function toggleScheduleDropdown() {
-        var dropdown = document.getElementById("scheduleDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-        if (document.getElementById('scheduleDropdown').style.display !== 'none') {
-        // If it is visible, set the 'required' attribute on the 'scheduleTime' input
-        document.getElementById('scheduleTime').setAttribute('required', '');
-    }
-    }
-</script>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                >
+                  Add Task
+                </button>
+                <button type="submit" class="btn btn-secondary">
+                  Schedule Task
+                </button>
+              </form>
+            </div>
+        </div>
         <!-- <div class="right padded map-section" style="flex: 1"> -->
-          <div class="col-lg-5 bg-light-blue d-flex justify-content-center align-items-center" 
-          style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
-          <div id="floating-panel" class="transport-options">
+        <div class="col-lg-6 bg-light-blue d-flex justify-content-center align-items-center" 
+              style = "height: 80vh; width: 100vh; border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
+          <div id="floating-panel" class = "transport-options">
             <b>Mode of Travel:</b>
             <select id="mode" class="form-select">
               <option value="DRIVING">Driving</option>
@@ -183,7 +162,7 @@
               <option value="TRANSIT">Transit</option>
             </select>
           </div>
-          <div id="map" style="height: 90%; width: 95%; border-radius: 50px; border: 1px solid #b4b5b8"></div>
+          <div id="map" style="height: 75%; width: 75%; margin-bottom: 120px; border-radius: 50px; border: 1px solid #b4b5b8"></div>
         </div>
       </div>
     </div>
