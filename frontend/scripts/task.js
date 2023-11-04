@@ -441,12 +441,23 @@ function addTask(listType) {
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;
     var taskTitle = taskTitleInput.value.trim();
+    var taskuserlocinput = document.getElementById("getUserLocation");
+    var taskuserloc = taskuserlocinput.value.trim();
+    
+    var taskdesinput = document.getElementById("getTaskDescription");
+    var taskdes = taskdesinput.value.trim();
     const taskData = {
-      task_name: taskTitle,
-      description: taskRestaurant,
-      date_posted: getTodayDate(),
-      task_owner: "John Doe",
-    };
+               task_name: taskTitle,
+               category: "food",
+               description: taskdes,
+               date_posted: getTodayDate(),
+               task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
+               start_loc: taskRestaurant,
+               end_loc: taskuserloc,
+               price: taskPrice,
+               restaurant: taskRestaurant
+           };
+
     postTaskToApi(taskData);
   }
 

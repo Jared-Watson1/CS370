@@ -7,7 +7,7 @@ function signup() {
   let usernameField = document.getElementById("username");
   let passwordField = document.getElementById("password");
   let password2Field = document.getElementById("password2");
-  let phone_numberField = document.getElementById("phone number")
+  let phone_numberField = document.getElementById("phone number");
   let emails = document.getElementById("email");
   email = emails.value; // updates global email var to be used for resendEmail
   let username = usernameField.value;
@@ -22,32 +22,31 @@ function signup() {
     passwordField.value = "";
     password2Field.value = "";
     passwordField.focus(); // put clicker back on password
-  
-  } else if (password.length < password_length || password2.length < password_length) {
+  } else if (
+    password.length < password_length ||
+    password2.length < password_length
+  ) {
     alert("Password is too short");
     passwordField.value = "";
     password2Field.value = "";
     passwordField.focus(); // put clicker back on password
-  
   } else if (!email.endsWith("@emory.edu")) {
     alert("Must have an @emory.edu email");
     usernameField.value = "";
     passwordField.value = "";
     password2Field.value = "";
     usernameField.focus(); // put focus back on the username field
-  
   } else if (phone_number.length < 10) {
     alert("Phone number is an invalid length.");
     phone_numberField.value = "";
     phone_numberField.focus();
-  
   } else {
     alert(
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
     // console.log("here");
-    sendMail(email)
-    window.location.href = "../templates/emailVerification.html"
+    sendMail(email);
+    window.location.href = "../templates/emailVerification.html";
     const tasData = {
       username: username,
       email: email,
@@ -62,22 +61,25 @@ function signup() {
 }
 
 function resendEmail() {
-  sendMail(email)
+  sendMail(email);
 }
 
 // When the user hits enter and they're inside of the form, it submits the form.
-document.getElementById("signupForm").addEventListener("keydown", function (event) {
+document
+  .getElementById("signupForm")
+  .addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       signup();
     }
-});
+  });
 
-document.getElementById("personalForm").addEventListener("keydown", function (event) {
-  if (event.key === "Enter") {
-    signup();
-  }
-});
-
+document
+  .getElementById("personalForm")
+  .addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      signup();
+    }
+  });
 
 // Define the base URL of the API
 const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
@@ -96,7 +98,7 @@ function postUserToAp(data) {
     body: JSON.stringify(requestBody),
   })
     .then((response) => {
-      console.log("Received:", response); // Log the response object for debugging purposes 
+      console.log("Received:", response); // Log the response object for debugging purposes
 
       if (!response.ok) {
         throw new Error("Network response was not ok: " + response.statusText);

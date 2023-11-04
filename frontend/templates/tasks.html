@@ -36,6 +36,12 @@
       </div>
       <div class="nav-container">
         <ul class="nav">
+          <li class="nav-item" id="my-nav">
+              <a class="nav-link" href="#">My chats</a>
+          </li>
+  </a>
+      </ul>
+        <ul class="nav">
             <!-- <li class="nav-item" id="my-nav">
                 <a class="nav-link" href="#">Order History</a>
             </li> -->
@@ -79,10 +85,18 @@
           </div>
         </div>
         <div class="right padded" style="flex: 1">
+          <div id="floating-panel">
+            <b>Mode of Travel:</b>
+            <select id="mode" class="form-select">
+              <option value="DRIVING">Driving</option>
+              <option value="WALKING">Walking</option>
+              <option value="BICYCLING">Bicycling</option>
+              <option value="TRANSIT">Transit</option>
+            </select>
+          </div>
           <div id="map" style="height: 100%; width: 100%"></div>
         </div>
       </div>
     </div>
-    <script src="../scripts/tasks_map.js"></script>
   </body>
 </html>
