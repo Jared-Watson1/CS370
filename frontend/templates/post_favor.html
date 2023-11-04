@@ -51,17 +51,11 @@
     <br />
     <!-- Include the content of the Get A Favor section here -->
     <!-- This should include everything from the GetAFavor div -->
+
     <div id="GetAFavor">
       <div class="container-fluid">   
-          <div class="row">
-            <!-- Full-height column on the left -->
-            <div class="col-lg-1 full-height-column">
-              <!-- left col -->
-              
-            
-            </div>
-          <!-- <div class="left padded form-section" style="flex: 1"> -->
-          <div class="col-lg-5 bg-light-blue" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
+        <div class = "row" style = "padding-left: 2.5%"> <!-- make it so there is space on both sides -->
+          <div class="col-lg-6 bg-light-blue" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
             <div style="height: 100%">
               <form
                 id="getTaskForm"
@@ -69,7 +63,7 @@
               >
                 <div class="mb-3">
                   <label for="getTaskTitle" class="form-label">Title:</label>
-                  <input
+                  <input 
                     type="text"
                     class="form-control"
                     id="getTaskTitle"
@@ -77,7 +71,6 @@
                     required
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskDescription" class="form-label"
                     >Description:</label
@@ -86,10 +79,10 @@
                     class="form-control"
                     id="getTaskDescription"
                     placeholder="Enter your item descriptions and delivery instructions"
+                    style = "max-width: 100%; max-height: 100px";
                     required
                   ></textarea>
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskRestaurant" class="form-label"
                     >Restaurant:</label
@@ -103,7 +96,6 @@
                     onchange="updateMap()"
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getUserLocation" class="form-label"
                     >Your location:</label
@@ -117,7 +109,6 @@
                     onchange="updateMap()"
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskPrice" class="form-label">Price:</label>
                   <input
@@ -127,10 +118,9 @@
                     required
                   />
                 </div>
-
                 <div class="mb-3">
                   <label for="getTaskPaymentMethod" class="form-label"
-                    >Payment Method:</label
+                    >Payment:</label
                   >
                   <select class="form-select" id="getTaskPaymentMethod" required>
                     <option value="PayPal">PayPal</option>
@@ -138,35 +128,34 @@
                     <option value="Face-to-face">Face-to-face</option>
                   </select>
                 </div>
-
-
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                >
-                  Add Task
-                </button>
-                <button type="submit" class="btn btn-secondary">
-                  Schedule Task
-                </button>
               </form>
             </div>
-        </div>
-        <!-- <div class="right padded map-section" style="flex: 1"> -->
-        <div class="col-lg-6 bg-light-blue d-flex justify-content-center align-items-center" 
-              style = "height: 80vh; width: 100vh; border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
-          <div id="floating-panel" class = "transport-options">
-            <b>Mode of Travel:</b>
-            <select id="mode" class="form-select">
-              <option value="DRIVING">Driving</option>
-              <option value="WALKING">Walking</option>
-              <option value="BICYCLING">Bicycling</option>
-              <option value="TRANSIT">Transit</option>
-            </select>
           </div>
-          <div id="map" style="height: 75%; width: 75%; margin-bottom: 120px; border-radius: 50px; border: 1px solid #b4b5b8"></div>
-        </div>
-      </div>
-    </div>
+          <div class="col-lg-6 bg-light-blue d-flex flex-column justify-content-center align-items-center" 
+            style = "height: 100vh; width: 100vh; border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
+
+            <div id="floating-panel" class = "transport-options">
+              <b>Mode of Travel:</b>
+              <select id="mode" class="form-select">
+                <option value="DRIVING">Driving</option>
+                <option value="WALKING">Walking</option>
+                <option value="BICYCLING">Bicycling</option>
+                <option value="TRANSIT">Transit</option>
+              </select>
+            </div>
+            <div id="map"   
+            style="height: 65%; width: 80%; margin-top: -5%; border-radius: 10%; border: 1px solid #b4b5b8"></div>
+           
+            <!-- button for posting order -->
+            <button type="button" class="btn btn-primary custom-btn mt-3" onclick = "addTask('GetAFavor')">
+              POST ORDER
+            </button>
+            <button type="button" class="btn btn-secondary mt-3">
+              SCHEDULE ORDER
+            </button>
+          </div>
+        </div> <!-- division for row -->
+      </div> <!-- division for entire container -->
+    </div> <!-- div for get a favor (initial division) -->
   </body>
 </html>
