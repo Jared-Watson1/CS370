@@ -441,17 +441,21 @@ function addTask(listType) {
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;
     var taskTitle = taskTitleInput.value.trim();
-
+    var taskuserlocinput = document.getElementById("getUserLocation");
+    var taskuserloc = taskuserlocinput.value.trim();
+    
+    var taskdesinput = document.getElementById("getTaskDescription");
+    var taskdes = taskdesinput.value.trim();
     const taskData = {
-               task_name: "Lunch Delivery",
+               task_name: taskTitle,
                category: "food",
-               description: "Deliver lunch from ABC restaurant to XYZ location",
-               date_posted: "2023-10-29",
+               description: taskdes,
+               date_posted: getTodayDate(),
                task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
-               start_loc: "ABC restaurant, Main St, City",
-               end_loc: "XYZ location, Elm St, City",
-               price: "15.99",
-               restaurant: "ABC restaurant"
+               start_loc: taskRestaurant,
+               end_loc: taskuserloc,
+               price: taskPrice,
+               restaurant: taskRestaurant
            };
 
     postTaskToApi(taskData);

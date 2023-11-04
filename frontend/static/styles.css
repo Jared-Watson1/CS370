@@ -251,7 +251,7 @@ h2 {
 }
 
 .transport-options {
-  margin-top: 150px;
+  margin-top: 8%;
 }
 
 #taskList {
@@ -288,22 +288,42 @@ h2 {
 
 #getTaskForm {
   background-color: rgba(0, 0, 0, 0);
-  margin-top: 20px;
+  margin-top: 5%;
+  margin-left: 10%;
 }
 
 #getTaskForm .mb-3 {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
+  justify-content: flex-end;
+  text-align: right;
 }
 
 #getTaskForm .form-label {
-  width: 100px; /* Set a fixed width for the labels */
-  margin-right: 75px; /* Add some spacing between labels and input elements */
+  width: 35%; 
+  margin-right: 5%; /* Add some spacing between labels and input elements */
+  font-weight: bold;
 }
+#getTaskForm .form-select {
+  width: 60%
+}
+
+#GetAFavor #getTaskForm #getTaskDescription {
+  flex: 1;
+  resize: vertical;
+  overflow-y: auto;
+} 
 
 #getTaskForm .form-control {
   flex: 1; /* Allow the input elements to expand and take up remaining space */
+}
+
+#GetAFavor .custom-btn {
+  font-size: 20px;
+  padding: 3% 8%;
+  background-color: #007bff; 
+  border-color: #007bff;
 }
 
 .task-list li {
@@ -382,8 +402,7 @@ button {
 form {
   background-color: #f7f7f7;
   padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
 }
 
 #personalForm {

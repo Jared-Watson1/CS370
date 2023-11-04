@@ -12,6 +12,8 @@
      - [Add a Task](#add-a-task)
      - [Get All Tasks](#get-all-tasks)
    - [Making Requests](#making-requests)
+3. [User Manager API](#user-manager-api)
+   - Endpoints
 
 ---
 
@@ -153,3 +155,99 @@ curl https://task-manager-0-94114aee724a.herokuapp.com/get_tasks
 ```
 
 ---
+
+# User Manager Endpoints
+
+**Add User**
+ - Endpoint: /add_user
+ - Method: POST
+ - Data Format: JSON
+
+**Request Body Example**
+```json
+{
+    "username": "johndoe123",
+    "email": "johndoe@example.com",
+    "phone_number": "123-456-7890",
+    "password": "securePassw0rd",
+    "first_name": "John",
+    "last_name": "Doe"
+}
+```
+**Response Example**
+```json
+{
+    "message": "User added successfully!"
+}
+```
+**Retrieve All Users**
+ - Endpoint: /get_all_users
+ - Method: GET
+
+**Response Example**
+```json
+{
+    "users": [
+        {
+            "user_id": 1,
+            "username": "johndoe123",
+            "email": "johndoe@example.com",
+            "password": "[hashed_password]",
+            "first_name": "John",
+            "last_name": "Doe",
+            "phone_number": "123-456-7890",
+            "rating_sum": 10,
+            "num_reviews": 2
+        }
+        // ... other users
+    ]
+}
+```
+
+**Rate a User**
+ - Endpoint: /rate_user
+ - Method: POST
+ - Data Format: JSON
+
+**Request Body Example**
+```json
+{
+    "user_id": 1,
+    "rating": 5
+}
+```
+**Response:**
+```json
+{
+    "message": "User rated successfully!"
+}
+```
+**Get User Info by User ID**
+ - Endpoint: /get_info_by_user
+ - Method: POST
+ - Data Format: JSON
+**Request Body Example**
+```json
+{
+    "user_id": 1
+}
+```
+**Response**
+```json
+{
+    "user_id": 1,
+    "username": "johndoe123",
+    // ... other user attributes
+}
+```
+**Danger Zone: Clear All Users**
+ - Endpoint: /DANGER_clear_users
+ - Method: POST
+**Response:**
+```json
+{
+    "message": "All users cleared successfully!"
+}
+```
+ - Please note the Danger Zone warning for the endpoint that clears all users
+ - Do not use this endpoint by accident
