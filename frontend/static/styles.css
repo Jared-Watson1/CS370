@@ -393,7 +393,10 @@ form {
   border-radius: 10px;
   margin-left: 20px;
 }
-
+#bottom-section {
+  padding-top: 10pt; /* top padding */
+  font-size: 12pt;   /* font size */
+}
 .form-row {
   display: flex;
   justify-content: space-between;
@@ -406,7 +409,19 @@ form {
   font-size: 14px; /* Adjust the font size as desired */
   margin-left: 4px;
 }
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Positions one button at each end */
+  padding: 0;
+}
 
+.button-left {
+  margin-right: auto; /* Pushes the button to the left */
+}
+
+.button-right {
+  margin-left: auto; /* Pushes the button to the right */
+}
 #signupForm {
   width: 50%;
   max-width: 400px;

@@ -187,14 +187,13 @@ function populateTasks() {
           const owner = {
             user_id: userId,
           };
-          const username = await getUserbyID(owner);
           const li = document.createElement("li");
           li.classList.add("list-group-item", "task-type-2");
       
           li.innerHTML = `
             <div class="ribbonr"></div>
                 <h4>${task.task_name}</h4>
-                <p>${username.first_name} ${username.last_name}</p>
+                <p>${task.task_owner}</p>
                 <div class="task-details" style="display: none;">
                 <p>Restaurant: ${task.start_loc}</p>
                 <p>Destination: ${task.end_loc}</p>
@@ -206,10 +205,21 @@ function populateTasks() {
           li.addEventListener("click", function () {
             // Close all details first
             closeAllTaskDetails();
-            updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
-            
+            var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+            const bottomSection = document.getElementById("bottom-section");
+            bottomSection.textContent = task.description;
+            const pricedes = document.getElementById("detailprice");
+            pricedes.textContent = 'Price: $' + task.price;
             const detailsDiv = this.querySelector(".task-details");
-            detailsDiv.classList.toggle("show");
+            const timeest = document.getElementById("estimatedtime");
+            timeest.textContent = 'Est time: ' + duration;
+            if (detailsDiv.classList.contains("show")) {
+              bottomSection.textContent = "Select a task to view and accept";
+              detailsDiv.classList.remove("show");
+            } else {
+              bottomSection.textContent = task.description;
+              detailsDiv.classList.add("show");
+            }
           });
           
       
@@ -402,8 +412,8 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
       function (response, status) {
         if (status === "OK") {
           directionsRenderer.setDirections(response);
-          var duration = response.routes[0].legs[0].duration.text;
-
+          const duration = response.routes[0].legs[0].duration.text;
+          
           // If an InfoWindow already exists, close it
           if (map.infoWindow) {
             map.infoWindow.close();
@@ -420,6 +430,7 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
         } else {
           alert("Directions request failed due to " + status);
         }
+        
       }
     );
   } else {
