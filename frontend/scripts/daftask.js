@@ -211,8 +211,7 @@ function populateTasks() {
             const pricedes = document.getElementById("detailprice");
             pricedes.textContent = 'Price: $' + task.price;
             const detailsDiv = this.querySelector(".task-details");
-            const timeest = document.getElementById("estimatedtime");
-            timeest.textContent = 'Est time: ' + duration;
+
             if (detailsDiv.classList.contains("show")) {
               bottomSection.textContent = "Select a task to view and accept";
               detailsDiv.classList.remove("show");
