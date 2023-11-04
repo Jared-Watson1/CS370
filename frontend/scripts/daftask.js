@@ -196,8 +196,8 @@ function populateTasks() {
                 <h4>${task.task_name}</h4>
                 <p>${username.first_name} ${username.last_name}</p>
                 <div class="task-details" style="display: none;">
-                <p>Restaurant: McDonalds at North Decatur</p>
-                <p>Destination: MSC building </p>
+                <p>Restaurant: ${task.start_loc}</p>
+                <p>Destination: ${task.end_loc}</p>
                 <!-- Add more details as required -->
                 </div>
                 
@@ -206,17 +206,19 @@ function populateTasks() {
           li.addEventListener("click", function () {
             // Close all details first
             closeAllTaskDetails();
-            updateMap(map, "Chicago, IL", "Los Angeles, CA", "DRIVING");
+            updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+            
             const detailsDiv = this.querySelector(".task-details");
             detailsDiv.classList.toggle("show");
           });
+          
       
           return li; // Return the list item for later appending
         });
-      
+        
         // Wait for all promises to be resolved
         const tasksListItems = await Promise.all(taskPromises);
-      
+        
         // Now append all the list items to the taskUl
         tasksListItems.forEach(li => {
           taskUl.appendChild(li);
@@ -237,6 +239,7 @@ function populateTasks() {
           displayTasks();
         }
       });
+      
       displayTasks();
     })
     .catch((error) => {
@@ -315,15 +318,7 @@ function initAutocompleteAndListeners(targetMap) {
   //     document.getElementById("mode")
   //   )
   // );
-  document.getElementById("mode").addEventListener("change", function () {
-    updateMap(
-      targetMap,
-      autocomplete1,
-      autocomplete2,
-      document.getElementById("mode")
-    );
-    // Ensure that the 'updateMap' function utilizes the newly selected mode of travel.
-  });
+
 }
 function placeMarkers(targetMap) {
   // Example data structure for tasks. This might come from your back-end/API...
@@ -350,6 +345,11 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   // if (targetMap.restaurantMarker) {
   //     targetMap.restaurantMarker.setMap(null);
   // }
+  document.getElementById("mode").addEventListener("change", function () {
+    var selectedMode = this.value; // Get the selected travel mode
+    updateMap(map, userPlace, restaurantPlace, selectedMode);
+  });
+  
   if (
     // Adjusted this condition
     restaurantPlace &&
@@ -358,9 +358,9 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     let userDestination = userPlace;
     directionsService.route(
       {
-        origin: "McDonalds, North Decatur",
-        destination: "math and science center, GA",
-        travelMode: "DRIVING",
+        origin: userPlace,
+        destination: restaurantPlace,
+        travelMode: selectedMode,
       },
       function (response, status) {
         if (status === "OK") {

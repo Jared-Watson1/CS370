@@ -154,7 +154,7 @@
 <div id="scheduleDropdown" style="display: none;">
     <div class="mb-3">
         <label for="scheduleTime" class="form-label">Select Time:</label>
-        <input type="time" class="form-control" id="scheduleTime" required>
+        <input type="time" class="form-control" id="scheduleTime">
     </div>
     <button type="submit" class="btn btn-primary btn">Confirm Schedule</button>
 </div>
@@ -165,6 +165,10 @@
     function toggleScheduleDropdown() {
         var dropdown = document.getElementById("scheduleDropdown");
         dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+        if (document.getElementById('scheduleDropdown').style.display !== 'none') {
+        // If it is visible, set the 'required' attribute on the 'scheduleTime' input
+        document.getElementById('scheduleTime').setAttribute('required', '');
+    }
     }
 </script>
         <!-- <div class="right padded map-section" style="flex: 1"> -->
