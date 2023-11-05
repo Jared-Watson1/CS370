@@ -216,22 +216,31 @@ def rate_user():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/get_info_by_user", methods=["POST"])
+@app.route("/get_info_by_user", methods=["GET"])
 def get_info_by_user():
-    """Get user information based off of user's username."""
-    data = request.get_json()
+    """Get user information based on the user's username."""
+    username = request.args.get("username")
+
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
 
     try:
-        username = data.get("username")
         user_id = get_user_id(username)
+        if user_id is None:
+            return jsonify({"error": "User not found"}), 404
+
         user_info, error_message = getUserInfo(user_id)
 
         if error_message:
-            return jsonify({"error": error_message}), 400
+            return jsonify({"error": error_message}), 500
+
+        if user_info is None:
+            return jsonify({"error": "User not found"}), 404
 
         return jsonify(user_info), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        app.logger.error(f"Error fetching user info: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route("/DANGER_clear_users", methods=["POST"])
