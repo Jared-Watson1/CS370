@@ -4,7 +4,12 @@ import psycopg2
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from task_database import clear_all_tasks, add_food_task, get_all_tasks
+from task_database import (
+    clear_all_tasks,
+    add_food_task,
+    get_all_tasks,
+    add_service_task,
+)
 from user_database import (
     addUser,
     getAllUsers,
@@ -27,50 +32,6 @@ CORS(app)
 
 @app.route("/add_task", methods=["POST"])
 def add_task_endpoint():
-    """Endpoint to add a task to the database. Takes in task specific attributes"""
-    data = request.get_json()
-
-    # Extract task details from the incoming JSON data
-    try:
-        task_name = data.get("task_name")
-        # This will determine the type of task (food or service)
-        category = data.get("category", "").lower()
-        description = data.get("description")
-        date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
-        username = data.get("username")
-        task_owner = get_user_id(username=username)
-    except Exception as e:
-        print("Error: might of missed task attributes: " + str(e))
-
-    try:
-        if category == "food":
-            # add the food task to the database
-            start_loc = data.get("start_loc")
-            end_loc = data.get("end_loc")
-            price = data.get("price")
-            restaurant = data.get("restaurant")
-            add_food_task(
-                task_name,
-                date_posted,
-                task_owner,
-                start_loc,
-                end_loc,
-                price,
-                restaurant,
-                description,
-            )
-        else:
-            # add_task(task_name, description, date_posted, task_owner)
-            print("Other categories not added implemented yet")
-
-        return jsonify({"message": "Task added successfully!"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-
-      @app.route("/add_task", methods=["POST"])
-def add_task_endpoint():
     """Endpoint to add a task to the database. Takes in task specific attributes."""
     data = request.get_json()
 
@@ -80,12 +41,7 @@ def add_task_endpoint():
         description = data.get("description")
         date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
         username = data.get("username")
-        task_owner = get_user_id(username=username)  # Ensure this does not raise an unhandled exception
-
-        # Initialize scheduled_time as None
-        scheduled_time = None
-        if data.get('scheduled_time'):
-            scheduled_time = datetime.strptime(data['scheduled_time'], "%H:%M").time()
+        task_owner = get_user_id(username=username)
 
     except (ValueError, TypeError) as e:
         return jsonify({"error": f"Invalid input: {e}"}), 400
@@ -106,10 +62,23 @@ def add_task_endpoint():
                 price=price,
                 restaurant=restaurant,
                 description=description,
-                scheduled_time=scheduled_time
+            )
+        elif category == "service":
+            # Assume location, price, and description are required for service tasks
+            location = data.get("location")
+            price = float(data.get("price", 0))  # Default price to 0 if not provided
+
+            add_service_task(
+                task_name=task_name,
+                date_posted=date_posted,
+                task_owner=task_owner,
+                location=location,
+                description=description,
+                price=price,
             )
         else:
-            return jsonify({"error": "Category not implemented"}), 400  # Use 400 if no other categories will be added
+            # Return an error if the category is neither food nor service
+            return jsonify({"error": "Category not recognized"}), 400
 
         return jsonify({"message": "Task added successfully!"}), 200
 
@@ -118,6 +87,16 @@ def add_task_endpoint():
         app.logger.error(f"Error adding task to the database: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
+
+@app.route("/get_tasks", methods=["GET"])
+def get_tasks_endpoint():
+    """Endpoint to get all tasks."""
+    try:
+        tasks = get_all_tasks()
+        return jsonify(tasks), 200
+    except Exception as e:
+        app.logger.error(f"Failed to retrieve tasks: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route("/clear_task", methods=["DELETE"])

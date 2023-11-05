@@ -112,6 +112,44 @@ def add_food_task(
         conn.close()
 
 
+def add_service_task(task_name, date_posted, task_owner, location, description, price):
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    # SQL statement to insert a new task into the tasks table
+    insert_task_query = """
+    INSERT INTO tasks (task_name, category, date_posted, task_owner)
+    VALUES (%s, 'Service', %s, %s) RETURNING task_id;
+    """
+
+    # SQL statement to insert details into servicetasks table
+    insert_service_task_query = """
+    INSERT INTO servicetasks (task_id, location, description, price)
+    VALUES (%s, %s, %s, %s);
+    """
+
+    try:
+        # Add entry to tasks table
+        cursor.execute(insert_task_query, (task_name, date_posted, task_owner))
+        # Get the task_id of the just-added task
+        task_id = cursor.fetchone()[0]
+
+        # Add corresponding details to servicetasks table
+        cursor.execute(
+            insert_service_task_query,
+            (task_id, location, description, price),
+        )
+        conn.commit()
+        print("Service task added successfully!")
+    except Exception as err:
+        print(f"Error: {err}")
+        conn.rollback()  # Ensure a rollback on error
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def get_all_tasks():
     """Function to retrieve all tasks from every task table and package tasks into dictionary"""
 
