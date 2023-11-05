@@ -227,6 +227,48 @@ def get_info_by_user():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    plain_password = data.get("password")
+
+    if not username or not plain_password:
+        return jsonify({"error": "Missing username or password"}), 400
+
+    user_id = get_user_id(username)
+    if user_id is None:
+        return jsonify({"error": "Invalid username or password"}), 401
+
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    try:
+        # Fetch the hashed password from the database
+        cursor.execute("SELECT password FROM users WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
+        if result is None:
+            return jsonify({"error": "Invalid username or password"}), 401
+
+        hashed_password = result[0].encode(
+            "utf-8"
+        )  # Make sure to encode the hashed password
+
+        # Check the password
+        if check_password(plain_password, hashed_password):
+            # User authenticated, return success message
+            return jsonify({"message": "Login successful"}), 200
+        else:
+            return jsonify({"error": "Invalid username or password"}), 401
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
 @app.route("/DANGER_clear_users", methods=["POST"])
 def clear_users_endpoint():
     response_message = clearUsers()
