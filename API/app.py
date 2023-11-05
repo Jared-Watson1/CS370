@@ -68,6 +68,62 @@ def add_task_endpoint():
         return jsonify({"error": str(e)}), 500
 
 
+
+      @app.route("/add_task", methods=["POST"])
+def add_task_endpoint():
+    """Endpoint to add a task to the database. Takes in task specific attributes"""
+    data = request.get_json()
+
+    try:
+        task_name = data.get("task_name")
+        category = data.get("category", "").lower()
+        description = data.get("description")
+        date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
+        username = data.get("username")
+        task_owner = get_user_id(username=username)
+        
+        # Initialize scheduled_time as None
+        scheduled_time = None
+        if 'scheduled_time' in data and data['scheduled_time']:
+            try:
+                scheduled_time = datetime.strptime(data['scheduled_time'], "%H:%M").time()
+            except ValueError as ve:
+                # If the scheduled_time is not valid, return a bad request response
+                return jsonify({"error": "Invalid scheduled time format"}), 400
+
+    except Exception as e:
+        print("Error extracting task attributes: " + str(e))
+        return jsonify({"error": str(e)}), 400
+
+    try:
+        if category == "food":
+            start_loc = data.get("start_loc")
+            end_loc = data.get("end_loc")
+            price = data.get("price")
+            restaurant = data.get("restaurant")
+            # Pass scheduled_time to your add_food_task function
+            add_food_task(
+                task_name,
+                date_posted,
+                task_owner,
+                start_loc,
+                end_loc,
+                price,
+                restaurant,
+                description,
+                scheduled_time
+            )
+        else:
+            print("Other categories not implemented yet")
+            return jsonify({"error": "Category not implemented"}), 501
+
+        return jsonify({"message": "Task added successfully!"}), 200
+
+    except Exception as e:
+        print("Error adding task to the database: " + str(e))
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/get_tasks", methods=["GET"])
 def get_tasks_endpoint():
     """End point for getting all tasks"""

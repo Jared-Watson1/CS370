@@ -147,31 +147,83 @@
                   </select>
                 </div>
 
+
+
+                <!-- new -->
+                <form id="taskForm" onsubmit="submitTask(event)"> 
+
                 <div class="text-center">
                   <button type="submit" class="btn btn-primary me-1">Add Task</button>
-                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScheduleDropdown()">Schedule Task</button>
+                  <button type="button1" class="btn btn-secondary btn" onclick="toggleScheduleDropdown()">Schedule Task</button>
                 </div>
-<!-- Schedule Dropdown (Initially Hidden) -->
-<div id="scheduleDropdown" style="display: none;">
-    <div class="mb-3">
-        <label for="scheduleTime" class="form-label">Select Time:</label>
-        <input type="time" class="form-control" id="scheduleTime">
-    </div>
-    <button type="submit" class="btn btn-primary btn">Confirm Schedule</button>
-</div>
-</form>
+
+                <div id="scheduleDropdown" style="display: none;">
+                  <div class="mb-3">
+                    <label for="scheduleTime" class="form-label">Select Time:</label>
+                    <input type="time" class="form-control" id="scheduleTime">
+                  </div>
+                  <input type="hidden" id="isScheduled" name="isScheduled" value="false">
+                  <button type="submit" class="btn btn-primary">Confirm Schedule</button>
+                </div>
+              </form>
 </div>
 <!-- Add JavaScript to Toggle the Dropdown -->
 <script>
     function toggleScheduleDropdown() {
-        var dropdown = document.getElementById("scheduleDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
-        if (document.getElementById('scheduleDropdown').style.display !== 'none') {
-        // If it is visible, set the 'required' attribute on the 'scheduleTime' input
-        document.getElementById('scheduleTime').setAttribute('required', '');
+    var dropdown = document.getElementById("scheduleDropdown");
+    var isScheduledInput = document.getElementById("isScheduled");
+    var addTaskButton = document.querySelector('.btn-primary[type="submit"]');
+
+    if (dropdown.style.display === "none") {
+      dropdown.style.display = "block";
+      addTaskButton.disabled = true;  // Disable the Add Task button
+      isScheduledInput.value = "true"; // Set scheduled to true
+    } else {
+      dropdown.style.display = "none";
+      addTaskButton.disabled = false; // Enable the Add Task button
+      isScheduledInput.value = "false"; // Set scheduled back to false
     }
-    }
+  } 
+// new 
+function submitTask(event) {
+  event.preventDefault();
+
+  // Construct the data object from the form inputs
+  var formData = {
+    task_name: document.getElementById('taskName').value,
+    category: document.getElementById('category').value,
+    description: document.getElementById('description').value,
+    date_posted: document.getElementById('datePosted').value,
+    username: document.getElementById('username').value,
+    start_loc: document.getElementById('startLoc').value,
+    end_loc: document.getElementById('endLoc').value,
+    price: document.getElementById('price').value, // if applicable
+    restaurant: document.getElementById('restaurant').value, // if applicable
+    scheduled_time: document.getElementById('isScheduled').checked ? document.getElementById('scheduleTime').value : null
+  };
+
+  // Make an AJAX request to your server
+  fetch('/add_task', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    // Handle success, perhaps redirect or update UI
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    // Handle errors here, such as showing an error message to the user
+  });
+}
+
 </script>
+
+
         <!-- <div class="right padded map-section" style="flex: 1"> -->
           <div class="col-lg-5 bg-light-blue d-flex justify-content-center align-items-center" 
           style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
