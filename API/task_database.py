@@ -240,38 +240,6 @@ def clear_all_tasks():
         conn.close()
 
 
-def clear_task_by_name(task_name):
-    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
-    cursor = conn.cursor()
-
-    # SQL statement to insert a new task
-    delete_task_query = """
-    DELETE FROM tasks (task_name)
-    VALUES (%s);
-    """
-
-    # console.log('perform send *****');
-
-    # list_task_query="""
-    # SELECT * FROM tasks
-    # """
-
-    # SQL statement to delete a task by task_name
-    # delete_task_query = "DELETE FROM tasks WHERE task_name = %s;"
-
-    try:
-        cursor.execute(delete_task_query, (task_name))
-        # cursor.execute(list_task_query)
-        conn.commit()  # Commit the transaction
-        print("Task removed successfully!")
-    except Exception as err:
-        conn.rollback()
-        print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
-
-
 def delete_tables():
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
