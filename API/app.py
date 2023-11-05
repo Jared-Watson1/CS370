@@ -5,7 +5,6 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from task_database import (
-    clear_all_tasks,
     add_food_task,
     get_all_tasks,
     add_service_task,
@@ -251,9 +250,7 @@ def login():
         if result is None:
             return jsonify({"error": "Invalid username or password"}), 401
 
-        hashed_password = result[0].encode(
-            "utf-8"
-        )  # Make sure to encode the hashed password
+        hashed_password = result[0]
 
         # Check the password
         if check_password(plain_password, hashed_password):
