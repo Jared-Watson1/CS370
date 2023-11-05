@@ -71,7 +71,7 @@ def add_task_endpoint():
 
       @app.route("/add_task", methods=["POST"])
 def add_task_endpoint():
-    """Endpoint to add a task to the database. Takes in task specific attributes"""
+    """Endpoint to add a task to the database. Takes in task specific attributes."""
     data = request.get_json()
 
     try:
@@ -80,64 +80,44 @@ def add_task_endpoint():
         description = data.get("description")
         date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
         username = data.get("username")
-        task_owner = get_user_id(username=username)
-        
+        task_owner = get_user_id(username=username)  # Ensure this does not raise an unhandled exception
+
         # Initialize scheduled_time as None
         scheduled_time = None
-        if 'scheduled_time' in data and data['scheduled_time']:
-            try:
-                scheduled_time = datetime.strptime(data['scheduled_time'], "%H:%M").time()
-            except ValueError as ve:
-                # If the scheduled_time is not valid, return a bad request response
-                return jsonify({"error": "Invalid scheduled time format"}), 400
+        if data.get('scheduled_time'):
+            scheduled_time = datetime.strptime(data['scheduled_time'], "%H:%M").time()
 
-    except Exception as e:
-        print("Error extracting task attributes: " + str(e))
-        return jsonify({"error": str(e)}), 400
+    except (ValueError, TypeError) as e:
+        return jsonify({"error": f"Invalid input: {e}"}), 400
 
     try:
         if category == "food":
             start_loc = data.get("start_loc")
             end_loc = data.get("end_loc")
-            price = data.get("price")
+            price = float(data.get("price", 0))  # Default price to 0 if not provided
             restaurant = data.get("restaurant")
-            # Pass scheduled_time to your add_food_task function
+
             add_food_task(
-                task_name,
-                date_posted,
-                task_owner,
-                start_loc,
-                end_loc,
-                price,
-                restaurant,
-                description,
-                scheduled_time
+                task_name=task_name,
+                date_posted=date_posted,
+                task_owner=task_owner,
+                start_loc=start_loc,
+                end_loc=end_loc,
+                price=price,
+                restaurant=restaurant,
+                description=description,
+                scheduled_time=scheduled_time
             )
         else:
-            print("Other categories not implemented yet")
-            return jsonify({"error": "Category not implemented"}), 501
+            return jsonify({"error": "Category not implemented"}), 400  # Use 400 if no other categories will be added
 
         return jsonify({"message": "Task added successfully!"}), 200
 
     except Exception as e:
-        print("Error adding task to the database: " + str(e))
-        return jsonify({"error": str(e)}), 500
+        # Log the error for server-side debugging
+        app.logger.error(f"Error adding task to the database: {e}")
+        return jsonify({"error": "Internal server error"}), 500
 
-
-@app.route("/get_tasks", methods=["GET"])
-def get_tasks_endpoint():
-    """End point for getting all tasks"""
-    tasks = get_all_tasks()
-    return jsonify({"tasks": tasks})
-
-
-@app.route("/DANGER_clear_tasks", methods=["DELETE"])
-def clear_tasks_endpoint():
-    try:
-        clear_all_tasks()
-        return jsonify({"message": "All tasks cleared successfully!"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/clear_task", methods=["DELETE"])
