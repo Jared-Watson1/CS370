@@ -282,7 +282,6 @@ function populateTasks() {
 
 // Call populateTasks on page load or whenever needed.
 
-populateTasks();
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
