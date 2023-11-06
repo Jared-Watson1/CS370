@@ -38,15 +38,4 @@ function valid_login() {
     });
 }
 
-<<<<<<< HEAD
 
-// When the user hits enter and they're inside of the form, it submits the form.
-document
-  .getElementById("signupForm")
-  .addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      valid_login();
-    }
-  });
-=======
->>>>>>> 6e8683f4a5f579a221a47acf895060b1601e7b06
