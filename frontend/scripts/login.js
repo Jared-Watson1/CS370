@@ -30,11 +30,9 @@ function valid_login() {
 
       return response.json();
     })
-    .then((data) => {
-      console.log("Success:", data); // Log the parsed data
-    })
     .catch((error) => {
       console.error("Error:", error); // Log any error
+      alert("An error occurred while logining in");
     });
 }
 
