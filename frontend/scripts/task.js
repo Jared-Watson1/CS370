@@ -441,17 +441,21 @@ function addTask(listType) {
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;
     var taskTitle = taskTitleInput.value.trim();
-
+    var taskuserlocinput = document.getElementById("getUserLocation");
+    var taskuserloc = taskuserlocinput.value.trim();
+    
+    var taskdesinput = document.getElementById("getTaskDescription");
+    var taskdes = taskdesinput.value.trim();
     const taskData = {
-               task_name: "Lunch Delivery",
+               task_name: taskTitle,
                category: "food",
-               description: "Deliver lunch from ABC restaurant to XYZ location",
-               date_posted: "2023-10-29",
+               description: taskdes,
+               date_posted: getTodayDate(),
                task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
-               start_loc: "ABC restaurant, Main St, City",
-               end_loc: "XYZ location, Elm St, City",
-               price: "15.99",
-               restaurant: "ABC restaurant"
+               start_loc: taskRestaurant,
+               end_loc: taskuserloc,
+               price: taskPrice,
+               restaurant: taskRestaurant
            };
 
     postTaskToApi(taskData);
@@ -489,6 +493,101 @@ function addTask(listType) {
     }
   }
 }
+
+function scheduleTask(listType) {
+  // Reuse the existing logic to collect common task details
+  var taskData = collectTaskData(listType);
+
+  // If it's a scheduled task, collect the scheduled time
+  if (listType === "GetAFavor" || listType === "DoAFavor") {
+    var scheduledTimeInput = document.getElementById("scheduleTime");
+    var scheduledTime = scheduledTimeInput.value.trim();
+
+    if (scheduledTime === "") {
+      alert("Please select a time for the scheduled task.");
+      return;
+    }
+
+    // Add the scheduled time to the task data
+    taskData.scheduled_time = scheduledTime;
+  }
+
+  // The rest of the logic remains the same, post the task to the API
+  if (validateTaskData(taskData, listType)) {
+    postTaskToApi(taskData);
+
+    // Clear all input fields including the scheduled time
+    clearTaskInputs(listType);
+    if (listType === "GetAFavor" || listType === "DoAFavor") {
+      scheduledTimeInput.value = "";
+    }
+  }
+}
+
+function collectTaskData(listType) {
+  // Common task data collection logic (repeated from addTask)
+  var taskTitleInput = document.getElementById(listType === "GetAFavor" ? "getTaskTitle" : "doTaskTitle");
+  var taskDescriptionInput = document.getElementById(listType === "GetAFavor" ? "getTaskDescription" : "doTaskDescription");
+
+  var taskTitle = taskTitleInput.value.trim();
+  var taskDescription = taskDescriptionInput.value.trim();
+
+  var taskData = {
+    task_name: taskTitle,
+    description: taskDescription,
+    date_posted: getTodayDate(),
+    task_owner: "John Doe", // This should be dynamically set based on the logged-in user
+  };
+
+  // Include additional data if it's a "GetAFavor" task
+  if (listType === "GetAFavor") {
+    var taskRestaurantInput = document.getElementById("getTaskRestaurant");
+    var taskPriceInput = document.getElementById("getTaskPrice");
+    var taskPaymentMethodInput = document.getElementById("getTaskPaymentMethod");
+    taskData.restaurant = taskRestaurantInput.value.trim();
+    taskData.price = taskPriceInput.value.trim();
+    taskData.payment_method = taskPaymentMethodInput.value;
+  }
+
+  return taskData;
+}
+
+function validateTaskData(taskData, listType) {
+  // Basic validation of task data
+  if (!taskData.task_name || !taskData.description) {
+    alert("Task title and description are required.");
+    return false;
+  }
+
+  if (listType === "GetAFavor" && (!taskData.restaurant || !taskData.price)) {
+    alert("Restaurant and price details are required for 'Get a Favor' tasks.");
+    return false;
+  }
+
+  // Additional validations can go here
+
+  return true;
+}
+
+function clearTaskInputs(listType) {
+  // Clear input fields logic (repeated from addTask)
+  var taskTitleInput = document.getElementById(listType === "GetAFavor" ? "getTaskTitle" : "doTaskTitle");
+  var taskDescriptionInput = document.getElementById(listType === "GetAFavor" ? "getTaskDescription" : "doTaskDescription");
+
+  taskTitleInput.value = "";
+  taskDescriptionInput.value = "";
+
+  if (listType === "GetAFavor") {
+    var taskRestaurantInput = document.getElementById("getTaskRestaurant");
+    var taskPriceInput = document.getElementById("getTaskPrice");
+    var taskPaymentMethodInput = document.getElementById("getTaskPaymentMethod");
+
+    taskRestaurantInput.value = "";
+    taskPriceInput.value = "";
+    taskPaymentMethodInput.value = "";
+  }
+}
+
 function removeTask(button, listType) {
   var taskList = document.getElementById(
     listType === "GetAFavor" ? "getTaskList" : "doTaskList"

@@ -52,6 +52,7 @@
     <br />
     <!-- Include the content of the Get A Favor section here -->
     <!-- This should include everything from the GetAFavor div -->
+
     <div id="GetAFavor">
       <div class="container-fluid">   
           <div class="row">
@@ -62,12 +63,20 @@
             
             </div>
           <!-- <div class="left padded form-section" style="flex: 1"> -->
-          <div class="col-lg-5 bg-light-blue" style="border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
-            <div style="height: 100%">
-              <form
-                id="getTaskForm"
-                onsubmit="event.preventDefault(); addTask('GetAFavor');"
-              >
+            <div class="col-lg-5 d-flex bg-light-blue" style=" border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
+              <form id="getTaskForm" class="w-100" onsubmit="event.preventDefault(); addTask('GetAFavor');">
+                <div class="centered-nav-container" style="padding-bottom: 20px; ">
+                  <div class="nav-container1">
+                    <ul class="nav nav-pills nav-fill">
+                        <li class="nav-item" id="my-nav">
+                            <a class="nav-link active" aria-current="page" href="#">Food Delivery</a>
+                        </li>
+                        <li class="nav-item" id="my-nav">
+                            <a class="nav-link" href="services.html">Request Services</a>
+                        </li>
+                    </ul>
+                </div>
+              </div>
                 <div class="mb-3">
                   <label for="getTaskTitle" class="form-label">Title:</label>
                   <input
@@ -130,9 +139,7 @@
                 </div>
 
                 <div class="mb-3">
-                  <label for="getTaskPaymentMethod" class="form-label"
-                    >Payment Method:</label
-                  >
+                  <label for="getTaskPaymentMethod" class="form-label">Payment Method:</label>
                   <select class="form-select" id="getTaskPaymentMethod" required>
                     <option value="PayPal">PayPal</option>
                     <option value="Venmo">Venmo</option>
@@ -141,37 +148,86 @@
                 </div>
 
 
-                <button type="submit" class="btn btn-primary btn">Add Task</button>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScheduleDropdown()">Schedule Task</button>
-<!-- Schedule Dropdown (Initially Hidden) -->
-<div id="scheduleDropdown" style="display: none;">
-    <div class="mb-3">
-        <label for="scheduleTime" class="form-label">Select Time:</label>
-        <input type="time" class="form-control" id="scheduleTime" required>
-    </div>
-    <button type="submit" class="btn btn-primary btn">Confirm Schedule</button>
-</div>
 
+                <!-- new -->
+                <form id="taskForm" onsubmit="submitTask(event)"> 
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary me-1">Add Task</button>
+                  <button type="button1" class="btn btn-secondary btn" onclick="toggleScheduleDropdown()">Schedule Task</button>
+                </div>
+
+                <div id="scheduleDropdown" style="display: none;">
+                  <div class="mb-3">
+                    <label for="scheduleTime" class="form-label">Select Time:</label>
+                    <input type="time" class="form-control" id="scheduleTime">
+                  </div>
+                  <input type="hidden" id="isScheduled" name="isScheduled" value="false">
+                  <button type="submit" class="btn btn-primary">Confirm Schedule</button>
+                </div>
+              </form>
+</div>
 <!-- Add JavaScript to Toggle the Dropdown -->
 <script>
     function toggleScheduleDropdown() {
-        var dropdown = document.getElementById("scheduleDropdown");
-        dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    var dropdown = document.getElementById("scheduleDropdown");
+    var isScheduledInput = document.getElementById("isScheduled");
+    var addTaskButton = document.querySelector('.btn-primary[type="submit"]');
+
+    if (dropdown.style.display === "none") {
+      dropdown.style.display = "block";
+      addTaskButton.disabled = true;  // Disable the Add Task button
+      isScheduledInput.value = "true"; // Set scheduled to true
+    } else {
+      dropdown.style.display = "none";
+      addTaskButton.disabled = false; // Enable the Add Task button
+      isScheduledInput.value = "false"; // Set scheduled back to false
     }
+  } 
+// new 
+function submitTask(event) {
+  event.preventDefault();
+
+  // Construct the data object from the form inputs
+  var formData = {
+    task_name: document.getElementById('taskName').value,
+    category: document.getElementById('category').value,
+    description: document.getElementById('description').value,
+    date_posted: document.getElementById('datePosted').value,
+    username: document.getElementById('username').value,
+    start_loc: document.getElementById('startLoc').value,
+    end_loc: document.getElementById('endLoc').value,
+    price: document.getElementById('price').value, // if applicable
+    restaurant: document.getElementById('restaurant').value, // if applicable
+    scheduled_time: document.getElementById('isScheduled').checked ? document.getElementById('scheduleTime').value : null
+  };
+
+  // Make an AJAX request to your server
+  fetch('/add_task', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    // Handle success, perhaps redirect or update UI
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    // Handle errors here, such as showing an error message to the user
+  });
+}
+
 </script>
 
 
-</form>
-</div>
-</div>
-
-              </form>
-            </div>
-        </div>
         <!-- <div class="right padded map-section" style="flex: 1"> -->
-        <div class="col-lg-6 bg-light-blue d-flex justify-content-center align-items-center" 
-              style = "height: 80vh; width: 100vh; border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
-          <div id="floating-panel" class = "transport-options">
+          <div class="col-lg-5 bg-light-blue d-flex justify-content-center align-items-center" 
+          style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
+          <div id="floating-panel" class="transport-options">
             <b>Mode of Travel:</b>
             <select id="mode" class="form-select">
               <option value="DRIVING">Driving</option>
@@ -180,7 +236,7 @@
               <option value="TRANSIT">Transit</option>
             </select>
           </div>
-          <div id="map" style="height: 75%; width: 75%; margin-bottom: 120px; border-radius: 50px; border: 1px solid #b4b5b8"></div>
+          <div id="map" style="height: 90%; width: 95%; border-radius: 50px; border: 1px solid #b4b5b8"></div>
         </div>
       </div>
     </div>

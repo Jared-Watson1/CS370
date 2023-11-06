@@ -67,6 +67,53 @@ app.post("/add_task", async (req, res) => {
   }
 });
 
+app.post("/schedule_task", async (req, res) => {
+  try {
+    const {
+      task_name,
+      category,
+      description,
+      task_owner,
+      start_loc,
+      end_loc,
+      price,
+      restaurant,
+      date_posted,
+      scheduled_time  // Added for scheduling
+    } = req.body;
+
+    // Here, we're assuming that the Flask API endpoint can handle scheduled_time.
+    const response = await axios.post(
+      "https://task-manager-0-94114aee724a.herokuapp.com/add_task",
+      {
+        task_name,
+        category,
+        description,
+        start_loc,
+        task_owner,
+        end_loc,
+        date_posted,
+        price,
+        restaurant,
+        scheduled_time  // Send the scheduled_time to the API
+      }
+    );
+
+    console.log("Tasks scheduled successfully:", response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error scheduling task with Flask API:", error);
+    if (error.response) {
+      // If the API responded with an error, forward that error status and message to the client
+      res.status(error.response.status).send(error.response.data);
+    } else {
+      // If the API did not respond or there was a network error, send a generic server error
+      res.status(500).send("Internal Server Error");
+    }
+  }
+});
+
+
 app.get("/tasks", async (req, res) => {
   const tasks = await getTasksFromFlaskAPI();
 

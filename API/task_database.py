@@ -112,6 +112,44 @@ def add_food_task(
         conn.close()
 
 
+def add_service_task(task_name, date_posted, task_owner, location, description, price):
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    # SQL statement to insert a new task into the tasks table
+    insert_task_query = """
+    INSERT INTO tasks (task_name, category, date_posted, task_owner)
+    VALUES (%s, 'Service', %s, %s) RETURNING task_id;
+    """
+
+    # SQL statement to insert details into servicetasks table
+    insert_service_task_query = """
+    INSERT INTO servicetasks (task_id, location, description, price)
+    VALUES (%s, %s, %s, %s);
+    """
+
+    try:
+        # Add entry to tasks table
+        cursor.execute(insert_task_query, (task_name, date_posted, task_owner))
+        # Get the task_id of the just-added task
+        task_id = cursor.fetchone()[0]
+
+        # Add corresponding details to servicetasks table
+        cursor.execute(
+            insert_service_task_query,
+            (task_id, location, description, price),
+        )
+        conn.commit()
+        print("Service task added successfully!")
+    except Exception as err:
+        print(f"Error: {err}")
+        conn.rollback()  # Ensure a rollback on error
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def get_all_tasks():
     """Function to retrieve all tasks from every task table and package tasks into dictionary"""
 
@@ -176,49 +214,28 @@ def clear_all_tasks():
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
-    # SQL statement to delete all tasks
+    # SQL statements to delete all tasks from the related tables
+    delete_food_tasks_query = "DELETE FROM foodtasks;"
+    delete_service_tasks_query = "DELETE FROM servicetasks;"
     delete_all_tasks_query = "DELETE FROM tasks;"
 
     try:
+        # Since we are deleting all records, we should start with the child tables
+        cursor.execute(delete_food_tasks_query)
+        cursor.execute(delete_service_tasks_query)
+
+        # After the child tables have been cleared, we can clear the main tasks table
         cursor.execute(delete_all_tasks_query)
-        conn.commit()  # Commit the transaction
-        print("Cleared all tasks from database.")
+
+        # Commit the transaction
+        conn.commit()
+        print("Cleared all tasks and related entries from database.")
     except Exception as err:
-        conn.rollback()  # Rollback in case of error
-        print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
-
-
-def clear_task_by_name(task_name):
-    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
-    cursor = conn.cursor()
-
-    # SQL statement to insert a new task
-    delete_task_query = """
-    DELETE FROM tasks (task_name)
-    VALUES (%s);
-    """
-
-    # console.log('perform send *****');
-
-    # list_task_query="""
-    # SELECT * FROM tasks
-    # """
-
-    # SQL statement to delete a task by task_name
-    # delete_task_query = "DELETE FROM tasks WHERE task_name = %s;"
-
-    try:
-        cursor.execute(delete_task_query, (task_name))
-        # cursor.execute(list_task_query)
-        conn.commit()  # Commit the transaction
-        print("Task removed successfully!")
-    except Exception as err:
+        # Rollback in case of error
         conn.rollback()
         print(f"Error: {err}")
     finally:
+        # Close the cursor and connection
         cursor.close()
         conn.close()
 
