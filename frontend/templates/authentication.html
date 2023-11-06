@@ -18,7 +18,7 @@
       <label for="username">Username:</label>
       <input
         type="text"
-        id="username"
+        id="username_auth"
         placeholder="Enter username"
         required
       /><br /><br />
@@ -26,7 +26,7 @@
       <label for="password">Password:</label>
       <input
         type="password"
-        id="password"
+        id="password_auth"
         placeholder="Enter password"
         required
       /><br /><br />
@@ -34,7 +34,7 @@
         <a href="../templates/forgot_password.html">Forgot Password?</a>
       </p>
 
-      <input type="button" value="Login" onclick="login()" />
+      <input type="button" value="Login" onclick="valid_login()" />
       <p id="signupText">
         Don't have an account? <a href="../templates/signup.html">Sign up</a>
       </p>
@@ -42,6 +42,6 @@
 
     <!-- sign up hyperlink that takes you to signup.html -->
 
-    <script src="../scripts/authentication.js"></script>
+    <script src="../scripts/login.js"></script>
   </body>
 </html>

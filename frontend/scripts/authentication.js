@@ -1,3 +1,6 @@
+// Dawit Comment: We no longer need this block of code. 
+
+
 function login() {
   var usernameField = document.getElementById("username");
   var passwordField = document.getElementById("password");
