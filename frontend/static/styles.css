@@ -458,13 +458,14 @@ form {
 }
 
 #underPassword {
-  margin-left: 260px;
-  margin-top: -30px;
+  text-align: right;
+  margin-top: -2%;
   font-size: 12px; 
 }
 
 #signupText {
-  margin-left: 65px;
+  text-align: center;
+  margin-top: 5%;
   font-size: 14px;
 }
 
