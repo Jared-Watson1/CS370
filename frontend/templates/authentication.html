@@ -46,11 +46,12 @@
                       <div class="d-flex flex-row align-items-center mb-0">
                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="last name">Username:</label>
+                          <label class="form-label" for="username">Username:</label>
                           <input
                             type="text"
-                            id="username"
+                            id="username_auth"
                             class="form-control"
+                            required
                           />
                         </div>
                       </div>
@@ -61,8 +62,9 @@
                           <label class="form-label" for="password">Password:</label>
                           <input
                             type="text"
-                            id="password"
+                            id="password_auth"
                             class="form-control"
+                            required
                           />
                         </div>
                       </div>
@@ -74,7 +76,7 @@
                         <button
                           type="button"
                           class="btn btn-primary btn-lg"
-                          onclick="login()"
+                          onclick="valid_login()"
                         >
                           Login
                         </button>
@@ -96,38 +98,6 @@
         </div>
       </div>
     </section>
-
-
-
-
-    <!-- <form id="signupForm">
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username_auth"
-        placeholder="Enter username"
-        required
-      /><br /><br />
-
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password_auth"
-        placeholder="Enter password"
-        required
-      /><br /><br />
-      <p id="underPassword">
-        <a href="../templates/forgot_password.html">Forgot Password?</a>
-      </p>
-
-      <input type="button" value="Login" onclick="valid_login()" />
-      <p id="signupText">
-        Don't have an account? <a href="../templates/signup.html">Sign up</a>
-      </p>
-    </form> -->
-
-    <!-- sign up hyperlink that takes you to signup.html -->
-
     <script src="../scripts/login.js"></script>
   </body>
 </html>
