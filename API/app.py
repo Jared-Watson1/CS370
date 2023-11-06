@@ -5,7 +5,6 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from task_database import (
-    clear_all_tasks,
     add_food_task,
     get_all_tasks,
     add_service_task,
@@ -225,6 +224,46 @@ def get_info_by_user():
     except Exception as e:
         app.logger.error(f"Error fetching user info: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    plain_password = data.get("password")
+
+    if not username or not plain_password:
+        return jsonify({"error": "Missing username or password"}), 400
+
+    user_id = get_user_id(username)
+    if user_id is None:
+        return jsonify({"error": "Invalid username or password"}), 401
+
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    try:
+        # Fetch the hashed password from the database
+        cursor.execute("SELECT password FROM users WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
+        if result is None:
+            return jsonify({"error": "Invalid username or password"}), 401
+
+        hashed_password = result[0]
+
+        # Check the password
+        if check_password(plain_password, hashed_password):
+            # User authenticated, return success message
+            return jsonify({"message": "Login successful"}), 200
+        else:
+            return jsonify({"error": "Invalid username or password"}), 401
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
 
 
 @app.route("/DANGER_clear_users", methods=["POST"])

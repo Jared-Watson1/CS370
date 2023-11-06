@@ -218,7 +218,7 @@ def get_user_id(username):
         print(f"Error: {err}")
     finally:
         cursor.close()
-        conn.close(),
+        conn.close()
 
 
 # Test the functions
