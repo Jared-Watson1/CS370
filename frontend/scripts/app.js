@@ -116,8 +116,9 @@ app.post("/schedule_task", async (req, res) => {
 
 app.get("/tasks", async (req, res) => {
   const tasks = await getTasksFromFlaskAPI();
-
+  console.log(typeof tasks);
   if (!tasks) {
+    console.log("not");
     return res.status(500).json({ error: "Failed to fetch tasks." });
   }
   res.json({ tasks });
@@ -175,7 +176,7 @@ const getTasksFromFlaskAPI = async () => {
       "https://task-manager-0-94114aee724a.herokuapp.com/get_tasks"
     );
 
-    return response.data.tasks;
+    return response.data;
   } catch (error) {
     console.error("Error fetching tasks from Flask API:", error);
     return null;
