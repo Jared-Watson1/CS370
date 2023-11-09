@@ -442,6 +442,11 @@ form {
 .button-right {
   margin-left: auto; /* Pushes the button to the right */
 }
+
+.small-font {
+  font-size: 10px;
+}
+
 #signupForm {
   width: 50%;
   max-width: 400px;
