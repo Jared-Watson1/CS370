@@ -1,20 +1,21 @@
-import { sendMail } from "../../API/gmail-api/app.mjs";
-
 let email;
+document.getElementById("registerButton").addEventListener("click", signup);
+
 
 function signup() {
+  console.log("Signup button clicked!"); // Add this line
   let password_length = 8;
   let usernameField = document.getElementById("username");
   let passwordField = document.getElementById("password");
   let password2Field = document.getElementById("password2");
-  let phone_numberField = document.getElementById("phone number");
+  let phone_numberField = document.getElementById("phone_number");
   let emails = document.getElementById("email");
   email = emails.value; // updates global email var to be used for resendEmail
   let username = usernameField.value;
   let password = passwordField.value;
   let password2 = password2Field.value;
-  let first_name = document.getElementById("first name").value.trim();
-  let last_name = document.getElementById("last name").value.trim();
+  let first_name = document.getElementById("first_name").value.trim();
+  let last_name = document.getElementById("last_name").value.trim();
   let phone_number = phone_numberField.value.trim();
 
   if (password != password2) {
@@ -45,8 +46,7 @@ function signup() {
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
     // console.log("here");
-    sendMail(email);
-    window.location.href = "../templates/emailVerification.html";
+
     const tasData = {
       username: username,
       email: email,
@@ -55,14 +55,11 @@ function signup() {
       first_name: first_name,
       last_name: last_name,
     };
-    // postUserToAp(tasData);
-    // window.location.href = "../templates/task.html";
+    postUserToAp(tasData);
+    window.location.href = "../templates/tasks.html";
   }
 }
 
-function resendEmail() {
-  sendMail(email);
-}
 
 // When the user hits enter and they're inside of the form, it submits the form.
 document

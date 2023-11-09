@@ -25,16 +25,15 @@ function valid_login() {
       }
       else {
         alert('Login successful!');
-        window.location.href = "../templates/task.html"; // take you to main page after success
+        window.location.href = "../templates/tasks.html"; // take you to main page after success
       }
 
       return response.json();
     })
-    .then((data) => {
-      console.log("Success:", data); // Log the parsed data
-    })
     .catch((error) => {
       console.error("Error:", error); // Log any error
+      alert("An error occurred while logining in");
     });
 }
+
 
