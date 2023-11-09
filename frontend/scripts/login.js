@@ -10,7 +10,7 @@ function valid_login() {
   console.log("Sending:", JSON.stringify(requestBody)); // Log the request payload
 
   fetch("/login", {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
@@ -25,7 +25,7 @@ function valid_login() {
       }
       else {
         alert('Login successful!');
-        window.location.href = "../templates/task.html"; // take you to main page after success
+        window.location.href = "../templates/tasks.html"; // take you to main page after success
       }
 
       return response.json();
