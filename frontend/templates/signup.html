@@ -1,9 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Signup</title>
+    <title>DooleyAFavor Signup Page</title>
+
+    <!-- Linking the external CSS file -->
     <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <!-- Bootstrap init -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <!-- Linking the external JS file -->
+    <script src="../scripts/signup.js" type="module"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
   </head>
+
   <body>
     <div class="header-container">
       <h1>
@@ -12,79 +29,142 @@
       </h1>
     </div>
 
-    <h2>Signup</h2>
-    <form id="personalForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="first name">First Name:</label>
-          <input
-            type="text"
-            id="first name"
-            placeholder="Enter first name"
-            required
-          /><br /><br />
-        </div>
-        <div class="form-group">
-          <label for="last name">Last name:</label>
-          <input
-            type="text"
-            id="last name"
-            placeholder="Enter last name"
-            required
-          /><br /><br />
+    <section class="vh-100" style="background-color: #eee">
+      <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-lg-12 col-xl-11">
+            <div class="card text-black" style="border-radius: 25px">
+              <div class="card-body p-md-5 bg-light-blue" style = "border-radius: 25px;">
+                <div class = "row"> <!-- for image to the right of form -->
+
+                  <div class="col-md-6 col-lg-6 col-xl-6 order-2 order-lg-1"> <!-- for the form -->
+                    <!-- <p class="text-center h1 fw-bold mb-4 mx-1 mx-md-4 mt-2"> didn't look sleek
+                      Sign up
+                    </p> -->
+                    <form class="mx-1 mx-md-4" style = "background-color: rgba(0, 0, 0, 0);">
+                      <div class = "row mb-2">
+                        <div class = "col-md-6">
+                          <div class="d-flex flex-row align-items-center mb-0">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                              <label class="form-label" for="first_name">First Name:</label>
+                              <input
+                                type="text"
+                                id="first_name"
+                                class="form-control"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class = "col-md-6">
+                          <div class="d-flex flex-row align-items-center mb-0">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                              <label class="form-label" for="last_name">Last Name:</label>
+                              <input
+                                type="text"
+                                id="last_name"
+                                class="form-control"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>    
+                    
+                      <div class = "row mb-2">
+                        <div class = "col-md-6">
+                          <div class="d-flex flex-row align-items-center mb-0">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                              <label class="form-label" for="phone_number">Phone Number:</label>
+                              <input
+                                type="text"
+                                id="phone_number"
+                                class="form-control"
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class = "col-md-6">
+                          <div class="d-flex flex-row align-items-center mb-0">
+                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                            <div class="form-outline flex-fill mb-0">
+                              <label class="form-label" for="last_name">Username:</label>
+                              <input
+                                type="text"
+                                id="username"
+                                class="form-control"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex flex-row align-items-center mb-0">
+                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <label class="form-label" for="email">Your Email:</label>
+                          <input
+                            type="text"
+                            id="email"
+                            placeholder="Enter Email (emory.edu)"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="d-flex flex-row align-items-center mb-0">
+                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <label class="form-label" for="password">Password:</label>
+                          <input
+                            type="text"
+                            id="password"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="d-flex flex-row align-items-center mb-4">
+                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <label class="form-label" for="password2">Repeat your password:</label>
+                          <input
+                            type="text"
+                            id="password2"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                        <button type="button" class="btn btn-primary btn-lg" id="registerButton">
+                          Register
+                       </button>
+                                          
+                      </div>
+                    </form>
+                  </div> <!-- for the form -->
+                  <div class="col-md-6 col-lg-6 col-xl-6 order-1 order-lg-2 d-flex flex-column align-items-center justify-content-center">
+
+                    <div class="image-container mb-3">
+                      <img src="https://i.etsystatic.com/5514600/r/il/9ca14f/1337364431/il_1588xN.1337364431_3l6j.jpg"
+                      class="img-fluid" alt="Sample image" style = "border-radius: 25px;" />
+                    </div>
+
+                    <div class = "image-citation text-center small-font">
+                      <p>Watts, Dale. Cox Bell Tower, Emory University. Etsy, 
+                        <a href="https://www.etsy.com/se-en/listing/208246755/emory-university-cox-bell-tower-atlanta" target="_blank">Source</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            placeholder="Enter username"
-            required
-          /><br /><br />
-        </div>
-        <div class="form-group">
-          <label for="phone number">Phone Number:</label>
-          <input
-            type="text"
-            id="phone number"
-            placeholder="Enter phone number"
-            required
-          /><br /><br />
-        </div>
-      </div>
-    </form>
-
-    <form id="signupForm">
-      <label for="Email">Email:</label>
-      <input
-        type="text"
-        id="email"
-        placeholder="Enter Email (emory.edu)"
-        required
-      /><br /><br />
-
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        placeholder="Enter password"
-        required
-      /><br /><br />
-
-      <label for="password">Confirm Password:</label>
-      <input
-        type="password"
-        id="password2"
-        placeholder="Enter password"
-        required
-      /><br /><br />
-
-      <input type="button" value="Signup" onclick="signup()" />
-    </form>
-
-    <script src="../scripts/signup.js" type="module"></script>
+    </section>
   </body>
 </html>

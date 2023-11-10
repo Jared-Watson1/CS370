@@ -14,7 +14,7 @@
       crossorigin="anonymous"
     />
     <!-- Linking the external JS file -->
-    <script src="../scripts/signup.js" type="module"></script>
+    <script src="../scripts/login.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
@@ -28,6 +28,7 @@
         ><span class="blue">Favor</span>
       </h1>
     </div>
+
     <section class="vh-100" style="background-color: #eee">
       <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -37,45 +38,65 @@
                 <div class = "row"> <!-- for image to the right of form -->
 
                   <div class="col-md-6 col-lg-6 col-xl-6 order-2 order-lg-1"> <!-- for the form -->
-                    <p class="text-center h1 fw-bold mb-4 mx-1 mx-md-4 mt-2">
-                      Forgot Password
-                    </p>
+                    <!-- <p class="text-center h1 fw-bold mb-4 mx-1 mx-md-4 mt-2">
+                      Login
+                    </p> -->
                     
-                    <form class="mx-1 mx-md-4" style = "background-color: rgba(0, 0, 0, 0);"">
+                    <form class="mx-1 mx-md-4" style = "background-color: rgba(0, 0, 0, 0);">
                       <div class="d-flex flex-row align-items-center mb-0">
-                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                         <div class="form-outline flex-fill mb-0">
-                          <label class="form-label" for="email">Email:</label>
+                          <label class="form-label" for="username_auth">Username:</label>
                           <input
                             type="text"
-                            id="email"
-                            placeholder="Enter Email (emory.edu)"
+                            id="username_auth"
                             class="form-control"
                             required
                           />
                         </div>
                       </div>
-                    
-                      <div class="d-flex justify-content-center mx-4 mt-3 mb-3 mb-lg-4">
+
+                      <div class="d-flex flex-row align-items-center mb-0">
+                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                        <div class="form-outline flex-fill mb-0">
+                          <label class="form-label" for="password_auth">Password:</label>
+                          <input
+                            type="text"
+                            id="password_auth"
+                            class="form-control"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <p id="underPassword">
+                        <a href="../templates/forgot_password.html">Forgot Password?</a>
+                      </p>
+
+                      <div class="d-flex justify-content-center mx-4 mb-2 mb-lg-2">
                         <button
                           type="button"
                           class="btn btn-primary btn-lg"
-                          onclick="forgotPassword()"
+                          onclick="valid_login()"
                         >
-                          Request New Password
+                          Login
                         </button>
                       </div>
+
+                      <p id="signupText">
+                        Don't have an account? <a href="../templates/signup_boot.html">Sign up</a>
+                      </p>
                     </form>
                   </div>
                   <div class="col-md-6 col-lg-6 col-xl-6 order-1 order-lg-2 d-flex flex-column align-items-center justify-content-center">
                     <div class = "image-container mb-3">
-                      <img src="https://ih1.redbubble.net/image.1160294948.0392/st,small,845x845-pad,1000x1000,f8f8f8.u3.jpg"
-                      class="img-fluid" alt="Sample image" style="border-radius: 25px;" />
+                      <img src="https://www.tsw-design.com/wp-content/uploads/2013/09/Emory-University-Freshman-Housing_002-1.jpg"
+                      class="img-fluid" alt="Sample image" style = "border-radius: 25px;"/>
                     </div>
-
+                    
                     <div class = "image-citation small-font text-center">
-                      <p>thuunderbiird. Swoop The Eagle - Emory University Art Board Print. Redbubble,
-                        <a href = "https://www.redbubble.com/i/art-board-print/Swoop-the-Eagle-Emory-University-by-thuunderbiird/47110392.8DB3C" target = "_blank">Source</a>
+                      <p> Emory University Freshman Housing. tsw-design,
+                        <a href = https://www.tsw-design.com/portfolio-items/emory-university-freshman-housing target = "_blank">Source</a>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -85,8 +106,6 @@
         </div>
       </div>
     </section>
-
-    <script src="../scripts/forgot_password.js"></script>
-
+    <script src="../scripts/login.js"></script>
   </body>
 </html>
