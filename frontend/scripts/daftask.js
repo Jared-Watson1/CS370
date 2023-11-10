@@ -6,6 +6,8 @@ var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
 let autocomplete1;
+var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+console.log(username);
 let autocomplete2;
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
