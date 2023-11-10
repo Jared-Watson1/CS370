@@ -404,7 +404,12 @@ form {
   padding: 20px;
 
 }
-
+.nav-item {
+  font-weight: bold !important;
+}
+.nav-link {
+  font-weight: bold !important;
+}
 #personalForm {
   width: 50%;
   max-width: 400px;

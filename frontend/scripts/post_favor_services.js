@@ -2,62 +2,26 @@ var map;
 var doAFavorMap;
 var directionsService;
 var directionsRenderer;
+var autocomplete1, autocomplete2;
 var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
-let autocomplete1;
-let autocomplete2;
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const location = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        callback(null, location);
-      },
-      (error) => {
-        callback(error);
-      }
-    );
+      navigator.geolocation.getCurrentPosition((position) => {
+          const location = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+          };
+          callback(null, location);
+      }, (error) => {
+          callback(error);
+      });
   } else {
-    callback(new Error("Geolocation is not supported by this browser."));
+      callback(new Error("Geolocation is not supported by this browser."));
   }
 }
-function getUserbyID(data) {
-  return new Promise((resolve, reject) => {
-    const requestBody = data;
 
-    fetch("/get_info_by_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          reject("Network response was not ok: " + response.statusText);
-          return;
-        }
-
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          reject("Oops, we haven't got JSON!");
-          return;
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        resolve(data); // We resolve the promise with the data we received
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
 
 function postTaskToApi(data) {
   const requestBody = data;
@@ -130,135 +94,94 @@ window.onload = function () {
   // Make sure to fetch user location and then initialize the map after location is fetched
   getUserLocation((error, location) => {
     if (error) {
-      console.error("Error fetching user location:", error);
+      console.error('Error fetching user location:', error);
       return;
     }
     fetchAddressFromCoordinates(location.lat, location.lng);
+    
 
     userLocation = location;
     console.log(location);
     initMap();
   });
-  populateTasks();
+
   setActiveTab;
-};
-function populateTasks() {
-  fetch("/tasks")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
-      return response.json(); // Parse JSON data
-    })
-    .then((data) => {
-      const taskUl = document.getElementById("taskUl");
-      const nextPageBtn = document.getElementById("nextPage");
-      const prevPageBtn = document.getElementById("prevPage");
-
-      console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
-
-      // Grabbing the taskUl element
-      const tasksPerPage = 6;
-      let currentPage = 1;
-
-      // Iterate through the tasks data and append to the UL
-      function closeAllTaskDetails() {
-        const allDetails = document.querySelectorAll(".task-details");
-        allDetails.forEach((details) => {
-          details.classList.remove("show");
-        });
-      }
-      async function displayTasks() {
-        // Clear existing list items
-        while (taskUl.firstChild) {
-          taskUl.removeChild(taskUl.firstChild);
-        }
-        const foodTasks = data.tasks.filter(task => task.category === 'Food');
-        console.log(foodTasks);
-        // Then calculate the pagination based on the filtered tasks
-        const startIndex = (currentPage - 1) * tasksPerPage;
-        const endIndex = startIndex + tasksPerPage;
-        const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
-
-        // Populate the tasks on the page
-        const taskPromises = tasksToDisplay.map(async (task) => {
-          const userId = task.task_owner;
-          const owner = {
-            user_id: userId,
-          };
-          const li = document.createElement("li");
-          li.classList.add("list-group-item", "task-type-2");
-      
-          li.innerHTML = `
-            <div class="ribbonr"></div>
-                <h4>${task.task_name}</h4>
-                <p>Sample User</p>
-                <div class="task-details" style="display: none;">
-                <p>Restaurant: ${task.start_loc}</p>
-                <p>Destination: ${task.end_loc}</p>
-                <!-- Add more details as required -->
-                </div>
-                
-            `;
-      
-          li.addEventListener("click", function () {
-            // Close all details first
-            autocomplete1 = task.start_loc;
-            autocomplete2 = task.end_loc;
-            closeAllTaskDetails();
-            var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
-            const bottomSection = document.getElementById("bottom-section");
-            bottomSection.textContent = task.description;
-            const pricedes = document.getElementById("detailprice");
-            pricedes.textContent = 'Price: $' + task.price;
-            const detailsDiv = this.querySelector(".task-details");
-
-            if (detailsDiv.classList.contains("show")) {
-              bottomSection.textContent = "Select a task to view and accept";
-              detailsDiv.classList.remove("show");
-            } else {
-              bottomSection.textContent = task.description;
-              detailsDiv.classList.add("show");
-            }
-          });
-          
-      
-          return li; // Return the list item for later appending
-        });
-        
-        // Wait for all promises to be resolved
-        const tasksListItems = await Promise.all(taskPromises);
-        
-        // Now append all the list items to the taskUl
-        tasksListItems.forEach(li => {
-          taskUl.appendChild(li);
-        });
-      }
-      // Handle next page click
-      nextPageBtn.addEventListener("click", function () {
-        if (currentPage * tasksPerPage < data.tasks.length) {
-          currentPage++;
-          displayTasks();
-        }
-      });
-
-      // Handle previous page click
-      prevPageBtn.addEventListener("click", function () {
-        if (currentPage > 1) {
-          currentPage--;
-          displayTasks();
-        }
-      });
-      
-      displayTasks();
-    })
-    .catch((error) => {
-      console.error("Error during fetch operation:", error);
-    });
 }
 
-// Call populateTasks on page load or whenever needed.
+      // Grabbing the taskUl element
+      const taskUl = document.getElementById("taskUl");
 
+      // Iterate through the tasks data and append to the UL
+    //   data.tasks.forEach((task) => {
+    //     // Create li element
+    //     const li = document.createElement("li");
+    //
+    //     // Add task details to li
+    //     li.innerHTML = `
+    //                 <h3>${task.task_name}</h3>
+    //                 <p>${task.description}</p>
+    //                 <p>Date Posted: ${task.date_posted}</p>
+    //                 <p>Task Owner: ${task.task_owner}</p>
+    //             `;
+    //               // Create a button element
+    //               const button = document.createElement('button');
+    //               button.textContent = 'Take Task';
+    //
+    //               // Add an event listener to the button
+    //               button.addEventListener('click', () => {
+    //                 removeTaskFromApi(task.task_name);
+    //                 //clearAllTasks;
+    //               });
+    //
+    //               // Append the button to the li
+    //               li.appendChild(button);
+    //     // Append li to ul
+    //     taskUl.appendChild(li);
+    //   });
+    // })
+    // .catch((error) => {
+    //   console.error("Error during fetch operation:", error);
+    // });
+  setActiveTab;
+
+
+function removeTaskFromApi(taskName) {
+  const apiUrl = `/clear_task?task_name=${taskName}`;
+
+  console.log('Sending DELETE request to:1234', apiUrl);
+
+  requestBody={"task_name": taskName}
+
+  fetch('/clear_task', {
+    method: 'DELETE',
+    //method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  })
+    .then(response => {
+      console.log('Sending DELETE request to:12345***', apiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new TypeError("Oops, we haven't got JSON!");
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      // Handle success, such as removing the task from the UI
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle errors here, such as displaying an error message
+    });
+}
 
 function loadScriptWithApiKey(apiKey) {
   var script = document.createElement("script");
@@ -273,24 +196,23 @@ function loadScriptWithApiKey(apiKey) {
 function fetchAddressFromCoordinates(lat, lon) {
   const apiKey = globalApiKey;
   const endpoint = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`;
-  console.log("asfda");
+  
   fetch(endpoint)
-    .then((response) => response.json())
-    .then((data) => {
+    .then(response => response.json())
+    .then(data => {
       if (data.results && data.results[0]) {
-        document.querySelector(".user-location").textContent =
-          data.results[0].formatted_address;
+        document.getElementById('getUserLocation').value = data.results[0].formatted_address;
+        document.querySelector('.user-location').textContent = data.results[0].formatted_address;
       }
     })
-    .catch((error) => {
-      console.error("Error fetching address:", error);
+    .catch(error => {
+      console.error('Error fetching address:', error);
     });
 }
-
 // Example of how to use the API key in a URL
 function initMap() {
   if (!userLocation) {
-    console.error("User location is not defined yet.");
+    console.error('User location is not defined yet.');
     return;
   }
 
@@ -299,36 +221,51 @@ function initMap() {
     center: userLocation,
     zoom: 14.41,
   });
-
+  initAutocompleteAndListeners(map, "getUserLocation", "getTaskRestaurant");
   marker = new google.maps.Marker({
     position: userLocation,
-    map: map,
+    map: map
   });
-  initAutocompleteAndListeners(map);
+  // Second map initialization...
 }
-function initAutocompleteAndListeners(targetMap) {
+function initAutocompleteAndListeners(targetMap, inputId1, inputId2) {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({ map: targetMap });
 
   // Initialize autocomplete...
-  // Add listeners for place changed event...
-  // autocomplete1.addListener("place_changed", () =>
-  //   updateMap(
-  //     targetMap,
-  //     autocomplete1,
-  //     autocomplete2,
-  //     document.getElementById("mode")
-  //   )
-  // );
-  // autocomplete2.addListener("place_changed", () =>
-  //   updateMap(
-  //     targetMap,
-  //     autocomplete1,
-  //     autocomplete2,
-  //     document.getElementById("mode")
-  //   )
-  // );
+  const autocomplete1 = new google.maps.places.Autocomplete(
+    document.getElementById(inputId1)
+  );
+  const autocomplete2 = new google.maps.places.Autocomplete(
+    document.getElementById(inputId2)
+  );
 
+  // Add listeners for place changed event...
+  autocomplete1.addListener("place_changed", () =>
+    updateMap(
+      targetMap,
+      autocomplete1,
+      autocomplete2,
+      document.getElementById("mode")
+    )
+  );
+  autocomplete2.addListener("place_changed", () =>
+    updateMap(
+      targetMap,
+      autocomplete1,
+      autocomplete2,
+      document.getElementById("mode")
+    )
+  );
+  document.getElementById("mode").addEventListener("change", function () {
+    updateMap(
+      targetMap,
+      autocomplete1,
+      autocomplete2,
+      document.getElementById("mode")
+    );
+    // Ensure that the 'updateMap' function utilizes the newly selected mode of travel.
+  });
 }
 function placeMarkers(targetMap) {
   // Example data structure for tasks. This might come from your back-end/API...
@@ -345,21 +282,9 @@ function placeMarkers(targetMap) {
     });
   });
 }
-document.addEventListener('DOMContentLoaded', function() {
-  var modeElement = document.getElementById("mode");
-  if (modeElement) {
-    modeElement.addEventListener("change", function () {
-      // Ensure autocomplete1 and autocomplete2 are available here
-      updateMap(map, autocomplete1, autocomplete2, this.value);
-    });
-  } else {
-    console.error('Element with ID "mode" was not found.');
-  }
-});
-
 function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
-  var userPlace = autocomplete1;
-  var restaurantPlace = autocomplete2;
+  var userPlace = autocomplete1 ? autocomplete1.getPlace() : null;
+  var restaurantPlace = autocomplete2 ? autocomplete2.getPlace() : null;
 
   // if (targetMap.userMarker) {
   //     targetMap.userMarker.setMap(null);
@@ -367,23 +292,23 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   // if (targetMap.restaurantMarker) {
   //     targetMap.restaurantMarker.setMap(null);
   // }
-  
   if (
-    // Adjusted this condition
+    userLocation &&  // Adjusted this condition
     restaurantPlace &&
-    userPlace
+    restaurantPlace.place_id &&
+    !userPlace
   ) {
-    let userDestination = userPlace;
+    let userDestination = userLocation;
     directionsService.route(
       {
-        origin: userPlace,
-        destination: restaurantPlace,
-        travelMode: selectedMode,
+        origin: { placeId: restaurantPlace.place_id },
+        destination: userDestination,
+        travelMode:
+          google.maps.TravelMode[document.getElementById("mode").value],
       },
       function (response, status) {
         if (status === "OK") {
           directionsRenderer.setDirections(response);
-          console.log(response);
           var duration = response.routes[0].legs[0].duration.text;
 
           // If an InfoWindow already exists, close it
@@ -404,24 +329,25 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
         }
       }
     );
-  } else if (
-    userPlace &&
+  } else if(
+    userPlace &&  
     userPlace.place_id &&
     restaurantPlace &&
     restaurantPlace.place_id
-  ) {
+  ){
+
     directionsService.route(
       {
         origin: { placeId: restaurantPlace.place_id },
-        destination: { placeId: userPlace.place_id },
+        destination: {placeId: userPlace.place_id},
         travelMode:
           google.maps.TravelMode[document.getElementById("mode").value],
       },
       function (response, status) {
         if (status === "OK") {
           directionsRenderer.setDirections(response);
-          const duration = response.routes[0].legs[0].duration.text;
-          
+          var duration = response.routes[0].legs[0].duration.text;
+
           // If an InfoWindow already exists, close it
           if (map.infoWindow) {
             map.infoWindow.close();
@@ -438,10 +364,10 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
         } else {
           alert("Directions request failed due to " + status);
         }
-        
       }
     );
-  } else {
+  
+  }else{
     // Handling when one or none locations are available...
     var location, marker;
 
@@ -467,7 +393,6 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     }
   }
 }
-
 function toggleView(isChecked) {
   if (isChecked) {
     document.getElementById("GetAFavor").style.display = "none";
@@ -506,22 +431,29 @@ function addTask(listType) {
   var taskDescription = taskDescriptionInput.value.trim();
 
   if (listType === "GetAFavor") {
-    var taskRestaurantInput = document.getElementById("getTaskRestaurant");
     var taskPriceInput = document.getElementById("getTaskPrice");
     var taskPaymentMethodInput = document.getElementById(
       "getTaskPaymentMethod"
     );
     var taskTitleInput = document.getElementById("getTaskTitle");
-    var taskRestaurant = taskRestaurantInput.value.trim();
     var taskPrice = taskPriceInput.value.trim();
     var taskPaymentMethod = taskPaymentMethodInput.value;
     var taskTitle = taskTitleInput.value.trim();
+    var taskuserlocinput = document.getElementById("getUserLocation");
+    var taskuserloc = taskuserlocinput.value.trim();
+    
+    var taskdesinput = document.getElementById("getTaskDescription");
+    var taskdes = taskdesinput.value.trim();
     const taskData = {
-      task_name: taskTitle,
-      description: taskRestaurant,
-      date_posted: getTodayDate(),
-      task_owner: "John Doe",
-    };
+               task_name: taskTitle,
+               category: "service",
+               description: taskdes,
+               date_posted: getTodayDate(),
+               task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
+               location: taskuserloc,
+               price: taskPrice,
+           };
+
     postTaskToApi(taskData);
   }
 
@@ -544,9 +476,7 @@ function addTask(listType) {
       });
     }
 
-    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Remove Order</button>`;
-    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Track Order</button>`;
-    taskList.appendChild(taskItem);
+   
 
     // Clear input fields
     taskTitleInput.value = "";
@@ -557,6 +487,100 @@ function addTask(listType) {
       taskPriceInput.value = "";
       taskPaymentMethodInput.value = "";
     }
+  }
+}
+
+function scheduleTask(listType) {
+  // Reuse the existing logic to collect common task details
+  var taskData = collectTaskData(listType);
+
+  // If it's a scheduled task, collect the scheduled time
+  if (listType === "GetAFavor" || listType === "DoAFavor") {
+    var scheduledTimeInput = document.getElementById("scheduleTime");
+    var scheduledTime = scheduledTimeInput.value.trim();
+
+    if (scheduledTime === "") {
+      alert("Please select a time for the scheduled task.");
+      return;
+    }
+
+    // Add the scheduled time to the task data
+    taskData.scheduled_time = scheduledTime;
+  }
+
+  // The rest of the logic remains the same, post the task to the API
+  if (validateTaskData(taskData, listType)) {
+    postTaskToApi(taskData);
+
+    // Clear all input fields including the scheduled time
+    clearTaskInputs(listType);
+    if (listType === "GetAFavor" || listType === "DoAFavor") {
+      scheduledTimeInput.value = "";
+    }
+  }
+}
+
+function collectTaskData(listType) {
+  // Common task data collection logic (repeated from addTask)
+  var taskTitleInput = document.getElementById(listType === "GetAFavor" ? "getTaskTitle" : "doTaskTitle");
+  var taskDescriptionInput = document.getElementById(listType === "GetAFavor" ? "getTaskDescription" : "doTaskDescription");
+
+  var taskTitle = taskTitleInput.value.trim();
+  var taskDescription = taskDescriptionInput.value.trim();
+
+  var taskData = {
+    task_name: taskTitle,
+    description: taskDescription,
+    date_posted: getTodayDate(),
+    task_owner: "John Doe", // This should be dynamically set based on the logged-in user
+  };
+
+  // Include additional data if it's a "GetAFavor" task
+  if (listType === "GetAFavor") {
+    var taskRestaurantInput = document.getElementById("getTaskRestaurant");
+    var taskPriceInput = document.getElementById("getTaskPrice");
+    var taskPaymentMethodInput = document.getElementById("getTaskPaymentMethod");
+    taskData.restaurant = taskRestaurantInput.value.trim();
+    taskData.price = taskPriceInput.value.trim();
+    taskData.payment_method = taskPaymentMethodInput.value;
+  }
+
+  return taskData;
+}
+
+function validateTaskData(taskData, listType) {
+  // Basic validation of task data
+  if (!taskData.task_name || !taskData.description) {
+    alert("Task title and description are required.");
+    return false;
+  }
+
+  if (listType === "GetAFavor" && (!taskData.restaurant || !taskData.price)) {
+    alert("Restaurant and price details are required for 'Get a Favor' tasks.");
+    return false;
+  }
+
+  // Additional validations can go here
+
+  return true;
+}
+
+function clearTaskInputs(listType) {
+  // Clear input fields logic (repeated from addTask)
+  var taskTitleInput = document.getElementById(listType === "GetAFavor" ? "getTaskTitle" : "doTaskTitle");
+  var taskDescriptionInput = document.getElementById(listType === "GetAFavor" ? "getTaskDescription" : "doTaskDescription");
+
+  taskTitleInput.value = "";
+  taskDescriptionInput.value = "";
+
+  if (listType === "GetAFavor") {
+    var taskRestaurantInput = document.getElementById("getTaskRestaurant");
+    var taskPriceInput = document.getElementById("getTaskPrice");
+    var taskPaymentMethodInput = document.getElementById("getTaskPaymentMethod");
+
+    taskRestaurantInput.value = "";
+    taskPriceInput.value = "";
+    taskPaymentMethodInput.value = "";
   }
 }
 
@@ -577,7 +601,6 @@ function removeTask(button, listType) {
     renderSharedTaskList();
   }
 }
-
 function renderSharedTaskList() {
   var sharedList = document.getElementById("sharedTaskList");
   //sharedList.innerHTML = "";
@@ -590,7 +613,6 @@ function renderSharedTaskList() {
     sharedList.appendChild(taskItem);
   }
 }
-
 function takeTask(
   button,
   title,
@@ -637,7 +659,6 @@ function takeTask(
 
   renderSharedTaskList();
 }
-
 function dropTask(title, description, restaurant, price, paymentMethod) {
   var sharedTaskListElement = document.getElementById("sharedTaskList");
   var taskItem = document.createElement("li");
@@ -677,6 +698,9 @@ function dropTask(title, description, restaurant, price, paymentMethod) {
 
   renderSharedTaskList();
 }
+// document.getElementById('profileIcon').addEventListener('click', function() {
+//   window.location.href = "../frontend/templates/profile.html"; 
+// });
 
 // Define a function to set the active tab based on the current page
 function setActiveTab() {
@@ -703,3 +727,4 @@ function setActiveTab() {
 }
 
 // Call the setActiveTab function when the page loads
+

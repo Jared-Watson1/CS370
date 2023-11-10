@@ -173,9 +173,9 @@ function populateTasks() {
         while (taskUl.firstChild) {
           taskUl.removeChild(taskUl.firstChild);
         }
-        const foodTasks = data.tasks.filter(task => task.category === 'Food');
-        console.log(foodTasks);
-        // Then calculate the pagination based on the filtered tasks
+
+        const foodTasks = data.tasks.filter(task => task.attribute === 'service');
+
         const startIndex = (currentPage - 1) * tasksPerPage;
         const endIndex = startIndex + tasksPerPage;
         const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
@@ -190,7 +190,7 @@ function populateTasks() {
           li.classList.add("list-group-item", "task-type-2");
       
           li.innerHTML = `
-            <div class="ribbonr"></div>
+            <div class="ribbonb"></div>
                 <h4>${task.task_name}</h4>
                 <p>Sample User</p>
                 <div class="task-details" style="display: none;">
@@ -203,8 +203,6 @@ function populateTasks() {
       
           li.addEventListener("click", function () {
             // Close all details first
-            autocomplete1 = task.start_loc;
-            autocomplete2 = task.end_loc;
             closeAllTaskDetails();
             var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
             const bottomSection = document.getElementById("bottom-section");
@@ -346,17 +344,16 @@ function placeMarkers(targetMap) {
   });
 }
 document.addEventListener('DOMContentLoaded', function() {
-  var modeElement = document.getElementById("mode");
-  if (modeElement) {
-    modeElement.addEventListener("change", function () {
-      // Ensure autocomplete1 and autocomplete2 are available here
-      updateMap(map, autocomplete1, autocomplete2, this.value);
-    });
-  } else {
-    console.error('Element with ID "mode" was not found.');
-  }
-});
-
+    var modeElement = document.getElementById("mode");
+    if (modeElement) {
+      modeElement.addEventListener("change", function () {
+        // Ensure autocomplete1 and autocomplete2 are available here
+        updateMap(map, autocomplete1, autocomplete2, this.value);
+      });
+    } else {
+      console.error('Element with ID "mode" was not found.');
+    }
+  });
 function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   var userPlace = autocomplete1;
   var restaurantPlace = autocomplete2;
@@ -367,6 +364,7 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   // if (targetMap.restaurantMarker) {
   //     targetMap.restaurantMarker.setMap(null);
   // }
+
   
   if (
     // Adjusted this condition
