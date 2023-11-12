@@ -377,4 +377,4 @@ def clear_users_endpoint():
 port = int(os.environ.get("PORT", 3000))
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port)
-    # print(get_all_tasks())
+    print(get_all_tasks())

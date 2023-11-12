@@ -6,6 +6,8 @@ var autocomplete1, autocomplete2;
 var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
+var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+console.log(username);
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -448,16 +450,16 @@ function addTask(listType) {
     var taskdes = taskdesinput.value.trim();
     const taskData = {
                task_name: taskTitle,
-               category: "food",
+               category: "Food",
                description: taskdes,
                date_posted: getTodayDate(),
-               task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
+               username : username,
                start_loc: taskRestaurant,
                end_loc: taskuserloc,
                price: taskPrice,
                restaurant: taskRestaurant
            };
-
+      console.log(taskData);
     postTaskToApi(taskData);
   }
 
