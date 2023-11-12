@@ -55,7 +55,7 @@ function signup() {
       last_name: last_name,
     };
     postUserToAp(tasData);
-    window.location.href = "../templates/tasks.html";
+    window.location.href = "../templates/login.html";
   }
 }
 

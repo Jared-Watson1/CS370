@@ -60,13 +60,40 @@ app.post("/add_task", async (req, res) => {
       }
     );
     console.log(response.data);
+    console.log("safds");
     res.json(response.data);
   } catch (error) {
     console.error("Error posting task to Flask API:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
 
+  // Add your logic for validating the username and password.
+  // This could involve a database call or an external API request.
+  // For demonstration, let's assume we're making a request to an external API for validation.
+
+  try {
+    const loginResponse = await axios.post('https://task-manager-0-94114aee724a.herokuapp.com/login', {
+      username,
+      password
+    });
+    if (loginResponse.status === 200) {
+      // If the response indicates a successful login
+      console.log('Login successful for:', username);
+      res.status(200).json({ message: "Login successful" });
+    } else {
+      // If the response indicates a failed login
+      console.log('Login failed for:', username);
+      res.status(loginResponse.status).json({ error: "Invalid username or password" });
+    }
+    
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
 app.post("/schedule_task", async (req, res) => {
   try {
     const {

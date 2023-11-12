@@ -25,7 +25,8 @@ function valid_login() {
       }
       else {
         alert('Login successful!');
-        window.location.href = "../templates/tasks.html"; // take you to main page after success
+        document.cookie = "username=" + username;
+        window.location.href = "../templates/tasksfood.html"; // take you to main page after success
       }
 
       return response.json();
