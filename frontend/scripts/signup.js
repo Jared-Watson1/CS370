@@ -45,7 +45,6 @@ function signup() {
     alert(
       "Signup Successful!\nUsername: " + username + "\nPassword: " + password
     );
-    // console.log("here");
 
     const tasData = {
       username: username,
