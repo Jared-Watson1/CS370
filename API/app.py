@@ -98,14 +98,13 @@ def accept_task():
         not data
         or "task_id" not in data
         or "task_owner_id" not in data
-        or "task_acceptor_id" not in data
+        or "task_acceptor_username" not in data
     ):
         return jsonify({"error": "Missing required task information attributes."}), 400
 
     task_id = data.get("task_id")
-    task_owner_username = data.get("task_owner_username")
-    task_acceptor_username = data.get("task_acceptor_usernames")
-    task_owner_id = get_user_id(username=task_owner_username)
+    task_owner_id = data.get("task_owner_id")
+    task_acceptor_username = data.get("task_acceptor_username")
     task_acceptor_id = get_user_id(username=task_acceptor_username)
 
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
@@ -197,18 +196,6 @@ def get_accepted_tasks_by_user():
 
 
 ###   ---              USER ENDPOINTS           ---   ###
-
-
-def hash_password(password: str) -> bytes:
-    """Hashes a password using bcrypt."""
-    salt = bcrypt.gensalt()  # Generate a unique salt
-    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
-    return hashed
-
-
-def check_password(plain_password: str, hashed_password: bytes) -> bool:
-    """Verifies a password against its hashed version."""
-    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
 
 
 @app.route("/add_user", methods=["POST"])
@@ -324,6 +311,18 @@ def get_info_by_user():
         return jsonify({"error": "Internal server error"}), 500
 
 
+def hash_password(password: str) -> bytes:
+    """Hashes a password using bcrypt."""
+    salt = bcrypt.gensalt()  # Generate a unique salt
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed
+
+
+def check_password(plain_password: str, hashed_password: bytes) -> bool:
+    """Verifies a password against its hashed version."""
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
+
+
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -346,11 +345,8 @@ def login():
         if result is None:
             return jsonify({"error": "Invalid username or password"}), 401
 
-        # The password is stored as a string, but needs to be in bytes
+        # The password is stored as a string, convert it back to bytes
         hashed_password = result[0].encode("utf-8")
-
-        # Log the hashed password for debugging (Remove this line in production!)
-        app.logger.debug("Hashed password from db: %s", hashed_password)
 
         # Check the password
         if check_password(plain_password, hashed_password):
@@ -360,7 +356,7 @@ def login():
             return jsonify({"error": "Invalid username or password"}), 401
 
     except Exception as e:
-        # Log the exception for debugging (Remove this line in production!)
+        # Log the exception for debugging
         app.logger.error("Exception in login: %s", str(e))
         return jsonify({"error": str(e)}), 500
     finally:
@@ -380,4 +376,4 @@ def clear_users_endpoint():
 port = int(os.environ.get("PORT", 3000))
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port)
-    # print(get_all_tasks())
+    print(get_all_tasks())
