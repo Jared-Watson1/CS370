@@ -2,6 +2,7 @@ import psycopg2
 import os
 from psycopg2 import errors
 from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
 from datetime import date
 
 
@@ -59,6 +60,38 @@ def create_tables():
         print("Tables created successfully!")
     except errors.DuplicateTable:
         print("Some tables already exist!")
+    except Exception as err:
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def create_accepted_tasks_table():
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    # SQL statement to create the accepted tasks table with the specified attributes
+    create_accepted_tasks_table_query = """
+    CREATE TABLE IF NOT EXISTS accepted_tasks (
+        task_id INT NOT NULL,
+        task_owner_id VARCHAR(255) NOT NULL,
+        task_acceptor_id VARCHAR(255) NOT NULL,
+        date_accepted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (task_id, task_acceptor_id),
+        FOREIGN KEY (task_id) REFERENCES tasks(task_id),
+        FOREIGN KEY (task_owner_id) REFERENCES users(user_id),
+        FOREIGN KEY (task_acceptor_id) REFERENCES users(user_id)
+    );
+    """
+
+    try:
+        cursor.execute(create_accepted_tasks_table_query)
+        conn.commit()
+        print("Accepted tasks table created successfully!")
+    except psycopg2.errors.DuplicateTable:
+        print("The accepted tasks table already exists!")
     except Exception as err:
         print(f"Error: {err}")
     finally:
@@ -150,6 +183,46 @@ def add_service_task(task_name, date_posted, task_owner, location, description, 
         conn.close()
 
 
+def add_accepted_task(task_id, task_owner_id, task_acceptor_id):
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    # SQL statement to insert a new accepted task
+    insert_accepted_task_query = """
+    INSERT INTO accepted_tasks (task_id, task_owner_id, task_acceptor_id, date_accepted)
+    VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
+    RETURNING accepted_task_id;  # Returns the id of the new accepted task
+    """
+
+    try:
+        # Execute the SQL command, passing the data
+        cursor.execute(
+            insert_accepted_task_query, (task_id, task_owner_id, task_acceptor_id)
+        )
+        accepted_task_id = cursor.fetchone()[0]  # Fetch the id of the new accepted task
+        conn.commit()
+        return {
+            "message": "Task accepted successfully!",
+            "accepted_task_id": accepted_task_id,
+        }, 200
+    except psycopg2.IntegrityError as e:
+        conn.rollback()
+        return {
+            "error": "An integrity error occurred. Perhaps the task is already accepted or does not exist.",
+            "details": str(e),
+        }, 400
+    except Exception as e:
+        conn.rollback()
+        return {
+            "error": "An error occurred while accepting the task.",
+            "details": str(e),
+        }, 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def get_all_tasks():
     """Function to retrieve all tasks from every task table and package tasks into dictionary"""
 
@@ -209,6 +282,28 @@ def get_all_tasks():
     return result_tasks
 
 
+def get_user_accepted_tasks(user_id):
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    query = """
+        SELECT * FROM accepted_tasks
+        JOIN tasks ON accepted_tasks.task_id = tasks.task_id
+        WHERE task_acceptor_id = %s;
+    """
+    try:
+        cursor.execute(query, (user_id,))
+        accepted_tasks = cursor.fetchall()
+        return {"accepted_tasks": accepted_tasks}, 200
+    except Exception as e:
+        return {
+            "error": "An error occurred while retrieving accepted tasks.",
+            "details": str(e),
+        }, 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def clear_all_tasks():
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
@@ -263,6 +358,7 @@ def delete_tables():
         conn.close()
 
 
+# create_accepted_tasks_table()
 # Example of retrieving and printing all tasks
 # get_all_tasks()
 # create_tables()
