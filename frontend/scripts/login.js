@@ -24,15 +24,14 @@ function valid_login() {
         throw new Error("Network response was not ok: " + response.statusText);
       } else {
         alert("Login successful!");
-        window.location.href = "../templates/task.html"; // take you to main page after success
+        document.cookie = "username=" + username;
+        window.location.href = "../templates/tasksfood.html"; // take you to main page after success
       }
 
       return response.json();
     })
-    .then((data) => {
-      console.log("Success:", data); // Log the parsed data
-    })
     .catch((error) => {
       console.error("Error:", error); // Log any error
+      alert("An error occurred while logining in");
     });
 }

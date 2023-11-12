@@ -30,5 +30,3 @@ document
       forgotPassword();
     }
   });
-
-// /Users/xingyuzhai/Documents/GitHub/CS370/Backend/server.js
