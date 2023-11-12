@@ -20,7 +20,7 @@ def createUserTable():
     # SQL statement to create the users table
     create_table_query = """
     CREATE TABLE users (
-        user_id VARCHAR(255) PRIMARY KEY,
+        user_id SERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,    
@@ -58,41 +58,26 @@ def addUser(
     first_name: str,
     last_name: str,
 ):
-    """
-    Adds a user to the 'users' table in the database.
-    """
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
-    user_id = hash_username(username)
+    # Convert hashed password to string for storage
+    hashed_password_str = password.decode("utf-8")
 
     # SQL statement to insert the user into the users table
     insert_query = """
-    INSERT INTO users (user_id, username, email, password, first_name, last_name, phone_number)
-    VALUES (%s, %s, %s, %s, %s, %s, %s);
+    INSERT INTO users (username, email, password, first_name, last_name, phone_number)
+    VALUES (%s, %s, %s, %s, %s, %s);
     """
 
     try:
         cursor.execute(
             insert_query,
-            (user_id, username, email, password, first_name, last_name, phone_number),
+            (username, email, hashed_password_str, first_name, last_name, phone_number),
         )
         conn.commit()
         return f"User '{username}' added successfully!"
-    except psycopg2.IntegrityError as e:
-        conn.rollback()
-        if "duplicate key value violates unique constraint" in str(e):
-            if "users_pkey" in str(e):
-                return f"A user already exists with username: {username}"
-            elif "email" in str(e):
-                return f"Email '{email}' is already associated with another user."
-            else:
-                return (
-                    "An error occurred while trying to add the user. Please try again."
-                )
-        else:
-            return "An error occurred while trying to add the user. Please try again."
     except Exception as err:
         return f"Error: {err}"
     finally:
@@ -266,6 +251,9 @@ def clearUsers():
         cursor.execute(delete_query)
         conn.commit()
         return "All users deleted successfully!"
+    except psycopg2.IntegrityError as e:
+        conn.rollback()
+        return f"Cannot delete users due to foreign key constraints: {e}"
     except Exception as err:
         return f"Error: {err}"
     finally:
@@ -275,4 +263,4 @@ def clearUsers():
 
 # delete_users_table()
 # createUserTable()
-# clearUsers()
+# print(clearUsers())

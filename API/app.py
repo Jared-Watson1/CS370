@@ -8,6 +8,8 @@ from task_database import (
     add_food_task,
     get_all_tasks,
     add_service_task,
+    add_accepted_task,
+    get_user_accepted_tasks,
 )
 from user_database import (
     addUser,
@@ -87,6 +89,87 @@ def add_task_endpoint():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route("/accept_task", methods=["POST"])
+def accept_task():
+    data = request.get_json()
+
+    # Basic input validation
+    if (
+        not data
+        or "task_id" not in data
+        or "task_owner_id" not in data
+        or "task_acceptor_username" not in data
+    ):
+        return jsonify({"error": "Missing required task information attributes."}), 400
+
+    task_id = data.get("task_id")
+    task_owner_id = data.get("task_owner_id")
+    task_acceptor_username = data.get("task_acceptor_username")
+    task_acceptor_id = get_user_id(username=task_acceptor_username)
+
+    response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
+    return jsonify(response), status_code
+
+
+# @app.route("schedule_task", methods=["POST"])
+# def schedule_task_endpoint():
+#     # schedule logic
+
+#     data = request.get_json()
+
+#     try:
+#         task_name = data.get("task_name")
+#         category = data.get("category", "").lower()
+#         description = data.get("description")
+#         date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
+#         username = data.get("username")
+#         task_owner = get_user_id(username=username)
+
+#     except (ValueError, TypeError) as e:
+#         return jsonify({"error": f"Invalid input: {e}"}), 400
+
+#     try:
+#         if category == "food":
+#             start_loc = data.get("start_loc")
+#             end_loc = data.get("end_loc")
+#             price = float(data.get("price", 0))  # Default price to 0 if not provided
+#             restaurant = data.get("restaurant")
+
+#             add_food_task(
+#                 task_name=task_name,
+#                 date_posted=date_posted,
+#                 task_owner=task_owner,
+#                 start_loc=start_loc,
+#                 end_loc=end_loc,
+#                 price=price,
+#                 restaurant=restaurant,
+#                 description=description,
+#             )
+#         elif category == "service":
+#             # Assume location, price, and description are required for service tasks
+#             location = data.get("location")
+#             price = float(data.get("price", 0))  # Default price to 0 if not provided
+
+#             add_service_task(
+#                 task_name=task_name,
+#                 date_posted=date_posted,
+#                 task_owner=task_owner,
+#                 location=location,
+#                 description=description,
+#                 price=price,
+#             )
+#         else:
+#             # Return an error if the category is neither food nor service
+#             return jsonify({"error": "Category not recognized"}), 400
+
+#         return jsonify({"message": "Task added successfully!"}), 200
+
+#     except Exception as e:
+#         # Log the error for server-side debugging
+#         app.logger.error(f"Error adding task to the database: {e}")
+#         return jsonify({"error": "Internal server error"}), 500
+
+
 @app.route("/get_tasks", methods=["GET"])
 def get_tasks_endpoint():
     """Endpoint to get all tasks."""
@@ -98,19 +181,21 @@ def get_tasks_endpoint():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route("/get_accepted_tasks_by_user", methods=["GET"])
+def get_accepted_tasks_by_user():
+    username = request.args.get("username")
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
+
+    user_id = get_user_id(username)
+    if not user_id:
+        return jsonify({"error": "User not found"}), 404
+
+    response, status_code = get_user_accepted_tasks(user_id)
+    return jsonify(response), status_code
+
+
 ###   ---              USER ENDPOINTS           ---   ###
-
-
-def hash_password(password: str) -> bytes:
-    """Hashes a password using bcrypt."""
-    salt = bcrypt.gensalt()  # Generate a unique salt
-    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
-    return hashed
-
-
-def check_password(plain_password: str, hashed_password: bytes) -> bool:
-    """Verifies a password against its hashed version."""
-    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
 
 
 @app.route("/add_user", methods=["POST"])
@@ -226,6 +311,18 @@ def get_info_by_user():
         return jsonify({"error": "Internal server error"}), 500
 
 
+def hash_password(password: str) -> bytes:
+    """Hashes a password using bcrypt."""
+    salt = bcrypt.gensalt()  # Generate a unique salt
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed
+
+
+def check_password(plain_password: str, hashed_password: bytes) -> bool:
+    """Verifies a password against its hashed version."""
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
+
+
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -235,9 +332,7 @@ def login():
     if not username or not plain_password:
         return jsonify({"error": "Missing username or password"}), 400
 
-    user_id = get_user_id(username)
-    if user_id is None:
-        return jsonify({"error": "Invalid username or password"}), 401
+    user_id = get_user_id(username=username)
 
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
@@ -250,7 +345,8 @@ def login():
         if result is None:
             return jsonify({"error": "Invalid username or password"}), 401
 
-        hashed_password = result[0]
+        # The password is stored as a string, convert it back to bytes
+        hashed_password = result[0].encode("utf-8")
 
         # Check the password
         if check_password(plain_password, hashed_password):
@@ -260,6 +356,8 @@ def login():
             return jsonify({"error": "Invalid username or password"}), 401
 
     except Exception as e:
+        # Log the exception for debugging
+        app.logger.error("Exception in login: %s", str(e))
         return jsonify({"error": str(e)}), 500
     finally:
         cursor.close()
@@ -278,4 +376,4 @@ def clear_users_endpoint():
 port = int(os.environ.get("PORT", 3000))
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port)
-    # print(get_all_tasks())
+    print(get_all_tasks())

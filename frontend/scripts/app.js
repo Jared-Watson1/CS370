@@ -45,6 +45,7 @@ app.post("/add_task", async (req, res) => {
       restaurant,
       date_posted,
     } = req.body;
+    console.log(req.body);
     const response = await axios.post(
       "https://task-manager-0-94114aee724a.herokuapp.com/add_task",
       {
