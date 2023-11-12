@@ -140,10 +140,13 @@ window.onload = function () {
     userLocation = location;
     console.log(location);
     initMap();
+    initModelMap();
   });
   populateTasks();
   setActiveTab;
 };
+
+
 function populateTasks() {
   fetch("/tasks")
     .then((response) => {
@@ -162,6 +165,19 @@ function populateTasks() {
       // Grabbing the taskUl element
       const tasksPerPage = 6;
       let currentPage = 1;
+
+      // New modal-related code starts here
+      const modal = document.getElementById("taskModal");
+      const modalTaskName = document.getElementById("modalTaskName");
+      const modalTaskDescription = document.getElementById("modalTaskDescription");
+      const modalTaskPrice = document.getElementById("modalTaskPrice");
+      const map = document.getElementById("map"); // Ensure this is your map container
+      const acceptModal = document.getElementById("acceptModal");
+      const span = document.getElementsByClassName("close")[0];
+
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
 
       // Iterate through the tasks data and append to the UL
       function closeAllTaskDetails() {
@@ -204,6 +220,17 @@ function populateTasks() {
             `;
       
           li.addEventListener("click", function () {
+
+            modalTaskName.textContent = task.task_name;
+            modalTaskDescription.textContent = task.description;
+            modalTaskPrice.textContent = 'Price: $' + task.price;
+          
+            // Update the map based on the task's start and end locations
+            updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+          
+            // Show the modal
+            modal.style.display = "block";
+
             // Close all details first
             autocomplete1 = task.start_loc;
             autocomplete2 = task.end_loc;
@@ -222,9 +249,20 @@ function populateTasks() {
               bottomSection.textContent = task.description;
               detailsDiv.classList.add("show");
             }
+
+            modalTaskName.textContent = task.task_name;
+            modalTaskDescription.textContent = task.description;
+            modalTaskPrice.textContent = 'Price: $' + task.price;
+            modal.style.display = "block";
+
+            acceptModal.onclick = function() {
+              console.log("Task accepted:", task.task_name);
+              modal.style.display = "none";
+            };
+
           });
           
-      
+          
           return li; // Return the list item for later appending
         });
         
@@ -308,6 +346,26 @@ function initMap() {
   });
   initAutocompleteAndListeners(map);
 }
+
+function initModelMap() {
+  if (!userLocation) {
+    console.error("User location is not defined yet.");
+    return;
+  }
+
+  // First map initialization...
+  map = new google.maps.Map(document.getElementById("modelMap"), {
+    center: userLocation,
+    zoom: 14.41,
+  });
+
+  marker = new google.maps.Marker({
+    position: userLocation,
+    map: map,
+  });
+  initAutocompleteAndListeners(map);
+}
+
 function initAutocompleteAndListeners(targetMap) {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({ map: targetMap });
