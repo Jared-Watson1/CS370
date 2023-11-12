@@ -25,7 +25,7 @@ def create_tables():
         task_name VARCHAR(255) NOT NULL,
         category VARCHAR(50) NOT NULL CHECK (category IN ('Food', 'Service')),
         date_posted DATE NOT NULL,
-        task_owner VARCHAR(255) NOT NULL,
+        task_owner INT NOT NULL,
         FOREIGN KEY (task_owner) REFERENCES users(user_id)
     );
     """
@@ -52,10 +52,24 @@ def create_tables():
     );
     """
 
+    create_accepted_tasks_table_query = """
+    CREATE TABLE IF NOT EXISTS accepted_tasks (
+        task_id INT NOT NULL,
+        task_owner_id INT NOT NULL,
+        task_acceptor_id INT NOT NULL,
+        date_accepted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (task_id, task_acceptor_id),
+        FOREIGN KEY (task_id) REFERENCES tasks(task_id),
+        FOREIGN KEY (task_owner_id) REFERENCES users(user_id),
+        FOREIGN KEY (task_acceptor_id) REFERENCES users(user_id)
+    );
+    """
+
     try:
         cursor.execute(create_tasks_table_query)
         cursor.execute(create_food_task_table_query)
         cursor.execute(create_service_task_table_query)
+        cursor.execute(create_accepted_tasks_table_query)
         conn.commit()
         print("Tables created successfully!")
     except errors.DuplicateTable:
@@ -341,11 +355,14 @@ def delete_tables():
     cursor = conn.cursor()
 
     # SQL statements to drop the tables
+    drop_accepted_tasks_table_query = "DROP TABLE IF EXISTS accepted_tasks;"
     drop_foodtasks_table_query = "DROP TABLE IF EXISTS foodtasks;"
     drop_servicetasks_table_query = "DROP TABLE IF EXISTS servicetasks;"
-    drop_tasks_table_query = "DROP TABLE IF EXISTS Tasks;"
+    drop_tasks_table_query = "DROP TABLE IF EXISTS tasks;"
 
     try:
+        # Order of execution is important due to foreign key constraints
+        cursor.execute(drop_accepted_tasks_table_query)
         cursor.execute(drop_foodtasks_table_query)
         cursor.execute(drop_servicetasks_table_query)
         cursor.execute(drop_tasks_table_query)
