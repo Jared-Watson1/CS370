@@ -98,14 +98,13 @@ def accept_task():
         not data
         or "task_id" not in data
         or "task_owner_id" not in data
-        or "task_acceptor_id" not in data
+        or "task_acceptor_username" not in data
     ):
         return jsonify({"error": "Missing required task information attributes."}), 400
 
     task_id = data.get("task_id")
-    task_owner_username = data.get("task_owner_username")
-    task_acceptor_username = data.get("task_acceptor_usernames")
-    task_owner_id = get_user_id(username=task_owner_username)
+    task_owner_id = data.get("task_owner_id")
+    task_acceptor_username = data.get("task_acceptor_username")
     task_acceptor_id = get_user_id(username=task_acceptor_username)
 
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
