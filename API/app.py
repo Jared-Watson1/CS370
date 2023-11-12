@@ -199,18 +199,6 @@ def get_accepted_tasks_by_user():
 ###   ---              USER ENDPOINTS           ---   ###
 
 
-def hash_password(password: str) -> bytes:
-    """Hashes a password using bcrypt."""
-    salt = bcrypt.gensalt()  # Generate a unique salt
-    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
-    return hashed
-
-
-def check_password(plain_password: str, hashed_password: bytes) -> bool:
-    """Verifies a password against its hashed version."""
-    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
-
-
 @app.route("/add_user", methods=["POST"])
 def add_user_endpoint():
     """End point to add user to the DB. Takes in all user attributes"""
@@ -324,6 +312,18 @@ def get_info_by_user():
         return jsonify({"error": "Internal server error"}), 500
 
 
+def hash_password(password: str) -> bytes:
+    """Hashes a password using bcrypt."""
+    salt = bcrypt.gensalt()  # Generate a unique salt
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed
+
+
+def check_password(plain_password: str, hashed_password: bytes) -> bool:
+    """Verifies a password against its hashed version."""
+    return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password)
+
+
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -346,11 +346,8 @@ def login():
         if result is None:
             return jsonify({"error": "Invalid username or password"}), 401
 
-        # The password is stored as a string, but needs to be in bytes
+        # The password is stored as a string, convert it back to bytes
         hashed_password = result[0].encode("utf-8")
-
-        # Log the hashed password for debugging (Remove this line in production!)
-        app.logger.debug("Hashed password from db: %s", hashed_password)
 
         # Check the password
         if check_password(plain_password, hashed_password):
@@ -360,7 +357,7 @@ def login():
             return jsonify({"error": "Invalid username or password"}), 401
 
     except Exception as e:
-        # Log the exception for debugging (Remove this line in production!)
+        # Log the exception for debugging
         app.logger.error("Exception in login: %s", str(e))
         return jsonify({"error": str(e)}), 500
     finally:
