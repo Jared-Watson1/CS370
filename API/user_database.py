@@ -20,7 +20,7 @@ def createUserTable():
     # SQL statement to create the users table
     create_table_query = """
     CREATE TABLE users (
-        user_id VARCHAR(255) PRIMARY KEY,
+        user_id SERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,    
@@ -65,18 +65,16 @@ def addUser(
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
-    user_id = hash_username(username)
-
-    # SQL statement to insert the user into the users table
+    # SQL statement to insert the user into the users table without specifying user_id
     insert_query = """
-    INSERT INTO users (user_id, username, email, password, first_name, last_name, phone_number)
-    VALUES (%s, %s, %s, %s, %s, %s, %s);
+    INSERT INTO users (username, email, password, first_name, last_name, phone_number)
+    VALUES (%s, %s, %s, %s, %s, %s);
     """
 
     try:
         cursor.execute(
             insert_query,
-            (user_id, username, email, password, first_name, last_name, phone_number),
+            (username, email, password, first_name, last_name, phone_number),
         )
         conn.commit()
         return f"User '{username}' added successfully!"
@@ -274,5 +272,5 @@ def clearUsers():
 
 
 # delete_users_table()
-# createUserTable()
+createUserTable()
 # clearUsers()
