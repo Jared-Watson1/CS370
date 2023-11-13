@@ -81,38 +81,6 @@ def create_tables():
         conn.close()
 
 
-def create_accepted_tasks_table():
-    # Connect to the PostgreSQL database
-    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
-    cursor = conn.cursor()
-
-    # SQL statement to create the accepted tasks table with the specified attributes
-    create_accepted_tasks_table_query = """
-    CREATE TABLE IF NOT EXISTS accepted_tasks (
-        task_id INT NOT NULL,
-        task_owner_id VARCHAR(255) NOT NULL,
-        task_acceptor_id VARCHAR(255) NOT NULL,
-        date_accepted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (task_id, task_acceptor_id),
-        FOREIGN KEY (task_id) REFERENCES tasks(task_id),
-        FOREIGN KEY (task_owner_id) REFERENCES users(user_id),
-        FOREIGN KEY (task_acceptor_id) REFERENCES users(user_id)
-    );
-    """
-
-    try:
-        cursor.execute(create_accepted_tasks_table_query)
-        conn.commit()
-        print("Accepted tasks table created successfully!")
-    except psycopg2.errors.DuplicateTable:
-        print("The accepted tasks table already exists!")
-    except Exception as err:
-        print(f"Error: {err}")
-    finally:
-        cursor.close()
-        conn.close()
-
-
 def add_food_task(
     task_name,
     date_posted,
@@ -206,7 +174,7 @@ def add_accepted_task(task_id, task_owner_id, task_acceptor_id):
     insert_accepted_task_query = """
     INSERT INTO accepted_tasks (task_id, task_owner_id, task_acceptor_id, date_accepted)
     VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
-    RETURNING accepted_task_id;  # Returns the id of the new accepted task
+    RETURNING accepted_task_id;
     """
 
     try:
