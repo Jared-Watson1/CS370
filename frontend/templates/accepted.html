@@ -14,7 +14,7 @@
       crossorigin="anonymous"
     />
     <!-- Linking the external JS file -->
-    <script src="../scripts/daftask.js"></script>
+    <script src="../scripts/accepted.js"></script>
     <script src="../scripts/fetch.js"></script>
     <script src="../scripts/require.js"></script>
     <link
@@ -39,7 +39,7 @@
       <div class="nav-container">
         <ul class="nav">
           <li class="nav-item" id="my-nav">
-              <a class="nav-link" href="accepted.html">My tasks</a>
+              <a class="nav-link" href="#">My tasks</a>
           </li>
   </a>
       </ul>
@@ -75,10 +75,10 @@
           <div class="nav-container2" style="outline: none !important;">
             <ul class="nav nav-pills nav-fill" style="padding-bottom: 20px; outline: none !important">
                 <li class="nav-item" id="my-nav" style="font-weight: bold;">
-                    <a class="nav-link active" aria-current="page" href="#">Food Delivery</a>
+                    <a class="nav-link active" aria-current="page" href="#">Accepted tasks</a>
                 </li>
                 <li class="nav-item" id="my-nav">
-                    <a class="nav-link" href="tasksservice.html">Service Requests</a>
+                    <a class="nav-link" href="tasksservice.html">Posted tasks</a>
                 </li>
             </ul>
         </div>
@@ -111,6 +111,7 @@
           <div class="modal-content">
             <span class="close">&times;</span>
             <h4 id="modalTaskName"></h4>
+            <h5 id="user_name"> </h5>
             <p id="modalTaskDescription"></p>
             <div id="floating-panel">
               <b>Mode of Travel:</b>
@@ -123,7 +124,10 @@
             </div>
             <div id="modelMap" style="height: 300px; width: 100%"></div> <!-- New map container -->
             <p id="modalTaskPrice"></p>
-            <button id="acceptModal" class="btn btn-primary" href = "accepted.html">Accept Task</button>
+            
+            <p id="modalPhone"></p>
+            <p id="modalEmail"></p>
+            <button id="acceptModal" class="btn btn-primary" href = "accepted.html">End Task</button>
           </div>
         </div>
       </div>
