@@ -571,3 +571,41 @@ li:not(:hover) button[type="button"] {
 .profile-icon-link:hover {
   color: #007bff;          /* Change color on hover (you can choose any other color) */
 }
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* You might want to adjust this based on the size of your map */
+  max-width: 600px; /* Max width for larger screens */
+}
+
+/* Styles for the map container inside the modal */
+#map {
+  height: 300px; /* Adjust height as needed */
+  width: 100%; /* Adjust width as needed */
+  /* Additional styles for the map can go here */
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 600px) {
+  .modal-content {
+    width: 95%; /* Make the modal wider on smaller screens */
+    margin: 10px auto;
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

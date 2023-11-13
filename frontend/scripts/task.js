@@ -6,6 +6,8 @@ var autocomplete1, autocomplete2;
 var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
+var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+console.log(username);
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -448,19 +450,19 @@ function addTask(listType) {
     var taskdes = taskdesinput.value.trim();
     const taskData = {
                task_name: taskTitle,
-               category: "food",
+               category: "Food",
                description: taskdes,
                date_posted: getTodayDate(),
-               task_owner: "bef829ae0ab84be3b25c50f94eafcd963a16bc9480ddeed72f580c7f8444600b",
+               username : username,
                start_loc: taskRestaurant,
                end_loc: taskuserloc,
                price: taskPrice,
                restaurant: taskRestaurant
            };
-
-    postTaskToApi(taskData);
+    //   console.log(taskData);
+    // postTaskToApi(taskData);
+    postTask(taskData, "food");
   }
-
   if (
     taskTitle !== "" &&
     taskDescription !== "" &&
@@ -493,7 +495,52 @@ function addTask(listType) {
     }
   }
 }
-
+function postTask(taskData, taskType) {
+    // Base URL of your API
+    const apiBaseUrl = 'https://task-manager-0-94114aee724a.herokuapp.com';
+  
+    // Add common data for both food and service tasks
+    let requestData = {
+      task_name: taskData.task_name,
+      category: taskType, // 'Food' or 'Service'
+      description: taskData.description,
+      date_posted: new Date().toISOString().split('T')[0], // Assuming current date as the posting date
+      username: username// put username here
+    };
+  
+    // Add specific data for food or service task
+    if (taskType.toLowerCase() === 'food') {
+      requestData = {
+        ...requestData,
+        start_loc: taskData.start_loc,
+        end_loc: taskData.end_loc,
+        price: taskData.price,
+        restaurant: taskData.restaurant
+      };
+    } else if (taskType.toLowerCase() === 'service') {
+      requestData = {
+        ...requestData,
+        location: taskData.location,
+        price: taskData.price
+      };
+    }
+  
+    // Perform the API request
+    fetch(`${apiBaseUrl}/add_task`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Task posted successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error posting task:', error);
+      });
+  }
 function scheduleTask(listType) {
   // Reuse the existing logic to collect common task details
   var taskData = collectTaskData(listType);

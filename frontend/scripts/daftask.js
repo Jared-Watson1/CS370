@@ -7,7 +7,8 @@ let globalApiKey;
 let userLocation;
 let autocomplete1;
 var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-console.log(username);
+let currenttask;
+
 let autocomplete2;
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
@@ -138,12 +139,14 @@ window.onload = function () {
     fetchAddressFromCoordinates(location.lat, location.lng);
 
     userLocation = location;
-    console.log(location);
     initMap();
+    initModelMap();
   });
   populateTasks();
   setActiveTab;
 };
+
+
 function populateTasks() {
   fetch("/tasks")
     .then((response) => {
@@ -162,6 +165,19 @@ function populateTasks() {
       // Grabbing the taskUl element
       const tasksPerPage = 6;
       let currentPage = 1;
+
+      // New modal-related code starts here
+      const modal = document.getElementById("taskModal");
+      const modalTaskName = document.getElementById("modalTaskName");
+      const modalTaskDescription = document.getElementById("modalTaskDescription");
+      const modalTaskPrice = document.getElementById("modalTaskPrice");
+      const map = document.getElementById("map"); // Ensure this is your map container
+      const acceptModal = document.getElementById("acceptModal");
+      const span = document.getElementsByClassName("close")[0];
+
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
 
       // Iterate through the tasks data and append to the UL
       function closeAllTaskDetails() {
@@ -204,10 +220,22 @@ function populateTasks() {
             `;
       
           li.addEventListener("click", function () {
+
+            modalTaskName.textContent = task.task_name;
+            modalTaskDescription.textContent = task.description;
+            modalTaskPrice.textContent = 'Price: $' + task.price;
+          
+            // Update the map based on the task's start and end locations
+            updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+          
+            // Show the modal
+            modal.style.display = "block";
+
             // Close all details first
             autocomplete1 = task.start_loc;
             autocomplete2 = task.end_loc;
             closeAllTaskDetails();
+            currenttask = task;
             var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
             const bottomSection = document.getElementById("bottom-section");
             bottomSection.textContent = task.description;
@@ -222,12 +250,23 @@ function populateTasks() {
               bottomSection.textContent = task.description;
               detailsDiv.classList.add("show");
             }
+
+            modalTaskName.textContent = task.task_name;
+            modalTaskDescription.textContent = task.description;
+            modalTaskPrice.textContent = 'Price: $' + task.price;
+            modal.style.display = "block";
+
+            acceptModal.onclick = function() {
+              console.log("Task accepted:", task.task_name);
+              modal.style.display = "none";
+            };
+
           });
           
-      
+          
           return li; // Return the list item for later appending
         });
-        
+
         // Wait for all promises to be resolved
         const tasksListItems = await Promise.all(taskPromises);
         
@@ -260,6 +299,8 @@ function populateTasks() {
 }
 
 // Call populateTasks on page load or whenever needed.
+
+// Assuming you have a button with id 'accept' in your HTML
 
 
 function loadScriptWithApiKey(apiKey) {
@@ -308,6 +349,26 @@ function initMap() {
   });
   initAutocompleteAndListeners(map);
 }
+
+function initModelMap() {
+  if (!userLocation) {
+    console.error("User location is not defined yet.");
+    return;
+  }
+
+  // First map initialization...
+  map = new google.maps.Map(document.getElementById("modelMap"), {
+    center: userLocation,
+    zoom: 14.41,
+  });
+
+  marker = new google.maps.Marker({
+    position: userLocation,
+    map: map,
+  });
+  initAutocompleteAndListeners(map);
+}
+
 function initAutocompleteAndListeners(targetMap) {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer({ map: targetMap });
@@ -347,7 +408,44 @@ function placeMarkers(targetMap) {
     });
   });
 }
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.getElementById('accept').addEventListener('click', function() {
+     console.log("asf");
+      // Assuming currentTask is accessible and contains the task_id
+      const task_id = currenttask.task_id;
+      const task_owner_id = currenttask.task_owner;
+      const task_acceptor_username = username;
+
+      // Data to be sent in the POST request
+      const postData = {
+          task_id,
+          task_owner_id,
+          task_acceptor_username
+      };
+
+      // Use fetch or axios to send the POST request
+      fetch('/accept_task', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(postData),
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Success:', data);
+          // Handle success here
+      })
+      .catch((error) => {
+          console.error('Error:', error);
+          // Handle error here
+      });
+  });
+});
+
+
 document.addEventListener('DOMContentLoaded', function() {
+  
   var modeElement = document.getElementById("mode");
   if (modeElement) {
     modeElement.addEventListener("change", function () {
@@ -369,7 +467,7 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
   // if (targetMap.restaurantMarker) {
   //     targetMap.restaurantMarker.setMap(null);
   // }
-  
+ 
   if (
     // Adjusted this condition
     restaurantPlace &&
@@ -378,14 +476,13 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     let userDestination = userPlace;
     directionsService.route(
       {
-        origin: userPlace,
-        destination: restaurantPlace,
+        origin: "math and science center, dowman drive",
+        destination: "alabama hall, atlanta GA",
         travelMode: selectedMode,
       },
       function (response, status) {
         if (status === "OK") {
           directionsRenderer.setDirections(response);
-          console.log(response);
           var duration = response.routes[0].legs[0].duration.text;
 
           // If an InfoWindow already exists, close it

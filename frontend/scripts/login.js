@@ -5,7 +5,7 @@ function valid_login() {
   var username = document.getElementById("username_auth").value;
   var passwordField = document.getElementById("password_auth").value;
 
-  requestBody = {"username": username, "password": passwordField}
+  requestBody = { username: username, password: passwordField };
 
   console.log("Sending:", JSON.stringify(requestBody)); // Log the request payload
 
@@ -20,11 +20,10 @@ function valid_login() {
       console.log("Received:", response); // Log the response object for debugging purposes
 
       if (!response.ok) {
-        alert('Login unsuccessful!');
+        alert("Login unsuccessful!");
         throw new Error("Network response was not ok: " + response.statusText);
-      }
-      else {
-        alert('Login successful!');
+      } else {
+        alert("Login successful!");
         document.cookie = "username=" + username;
         localStorage.setItem('Username', username) // locally store username (persistant)
         window.location.href = "../templates/tasksfood.html"; // take you to main page after success
@@ -37,5 +36,3 @@ function valid_login() {
       alert("An error occurred while logining in");
     });
 }
-
-

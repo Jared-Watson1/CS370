@@ -45,6 +45,7 @@ app.post("/add_task", async (req, res) => {
       restaurant,
       date_posted,
     } = req.body;
+    console.log(req.body);
     const response = await axios.post(
       "https://task-manager-0-94114aee724a.herokuapp.com/add_task",
       {
@@ -139,7 +140,29 @@ app.post("/schedule_task", async (req, res) => {
     }
   }
 });
-
+app.post('/accept_task', async (req, res) => {
+  try {
+    const {
+        task_id,
+        task_owner_id,
+        task_acceptor_username
+    } = req.body;
+    console.log(req.body);
+    const response = await axios.post(
+      "https://task-manager-0-94114aee724a.herokuapp.com/accept_task",
+      {
+        task_id,
+        task_owner_id,
+        task_acceptor_username
+      }
+    );
+    console.log(response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error posting task to Flask API:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.get("/tasks", async (req, res) => {
   const tasks = await getTasksFromFlaskAPI();
