@@ -97,7 +97,7 @@
         <div class="right padded" style="flex: 1">
           <div id="floating-panel">
             <b>Mode of Travel:</b>
-            <select id="mode" class="form-select">
+            <select id="mode2" class="form-select">
               <option value="DRIVING">Driving</option>
               <option value="WALKING">Walking</option>
               <option value="BICYCLING">Bicycling</option>
@@ -114,6 +114,26 @@
             <button type="button" id = "accept" class="btn btn-primary button-right"style="padding-right: 20px;">Accept task</button>
 
         </ul>
+        </div>
+        <!-- Modal -->
+        <div id="taskModal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h4 id="modalTaskName"></h4>
+            <p id="modalTaskDescription"></p>
+            <div id="floating-panel">
+              <b>Mode of Travel:</b>
+              <select id="mode" class="form-select">
+                <option value="DRIVING">Driving</option>
+                <option value="WALKING">Walking</option>
+                <option value="BICYCLING">Bicycling</option>
+                <option value="TRANSIT">Transit</option>
+              </select>
+            </div>
+            <div id="modelMap" style="height: 300px; width: 100%"></div> <!-- New map container -->
+            <p id="modalTaskPrice"></p>
+            <button id="acceptModal" class="btn btn-primary">Accept Task</button>
+          </div>
         </div>
       </div>
     </div>
