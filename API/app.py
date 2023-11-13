@@ -288,7 +288,6 @@ def rate_user():
 def get_info_by_user():
     """Get user information based on the user's username."""
     username = request.args.get("username")
-
     if not username:
         return jsonify({"error": "Username is required"}), 400
 
