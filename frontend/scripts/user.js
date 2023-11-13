@@ -8,7 +8,7 @@ async function getUserData() { // function to get user data to fill in profile
   let username = localStorage.getItem('Username');
   console.log(username)
   let requestBody = { username: username }
-  let response = await fetch(`https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user?username=${username}`, {
+  let response = await fetch(`${API_BASE_URL}/get_info_by_user?username=${username}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json'},
   });
@@ -25,7 +25,7 @@ async function getUserData() { // function to get user data to fill in profile
 
 window.onload = function () {
   getUserData(); 
-};
+};  
 const ratingsList = document.querySelector(".ratings-list");
 const ratingMessage = document.getElementById("ratingMessage");
 
