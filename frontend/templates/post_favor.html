@@ -54,118 +54,105 @@
     <!-- This should include everything from the GetAFavor div -->
 
     <div id="GetAFavor">
-      <div class="container-fluid">   
-          <div class="row">
-            <!-- Full-height column on the left -->
-            <div class="col-lg-1 full-height-column">
-              <!-- left col -->
-              
-            
-            </div>
-          <!-- <div class="left padded form-section" style="flex: 1"> -->
-            <div class="col-lg-5 d-flex bg-light-blue" style=" border-top-left-radius: 50px; border-bottom-left-radius: 50px;">
-              <form id="getTaskForm" class="w-100" onsubmit="event.preventDefault(); addTask('GetAFavor');">
-                <div class="centered-nav-container" style="padding-bottom: 20px; ">
-                  <div class="nav-container1">
-                    <ul class="nav nav-pills nav-fill">
-                        <li class="nav-item" id="my-nav">
-                            <a class="nav-link active" aria-current="page" href="#">Food Delivery</a>
-                        </li>
-                        <li class="nav-item" id="my-nav">
-                            <a class="nav-link" href="services.html">Request Services</a>
-                        </li>
-                    </ul>
-                </div>
+      <div class="angled-container">   
+        <div class="left padded bg-light-blue" style= "flex: 1">
+          <form id="getTaskForm" class="w-100" onsubmit="event.preventDefault(); addTask('GetAFavor');">
+            <div class="centered-nav-container" style="padding-bottom: 20px; ">
+              <div class="nav-container1">
+                <ul class="nav nav-pills nav-fill">
+                  <li class="nav-item" id="my-nav">
+                    <a class="nav-link active" aria-current="page" href="#">Food Delivery</a>
+                  </li>
+                  <li class="nav-item" id="my-nav">
+                    <a class="nav-link" href="services.html">Request Services</a>
+                  </li>
+                </ul>
               </div>
-                <div class="mb-3">
-                  <label for="getTaskTitle" class="form-label">Title:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="getTaskTitle"
-                    placeholder="Enter a title for your favor"
-                    required
-                  />
-                </div>
+            </div>
+            <div class="mb-3">
+              <label for="getTaskTitle" class="form-label">Title:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="getTaskTitle"
+                placeholder="Enter a title for your favor"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="getTaskDescription" class="form-label"
+                >Description:</label
+              >
+              <textarea
+                class="form-control"
+                id="getTaskDescription"
+                placeholder="Enter your item descriptions and delivery instructions"
+                required
+              ></textarea>
+            </div>
 
-                <div class="mb-3">
-                  <label for="getTaskDescription" class="form-label"
-                    >Description:</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="getTaskDescription"
-                    placeholder="Enter your item descriptions and delivery instructions"
-                    required
-                  ></textarea>
-                </div>
+            <div class="mb-3">
+              <label for="getTaskRestaurant" class="form-label"
+                >Restaurant:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="getTaskRestaurant"
+                placeholder="Enter a restaurant"
+                required
+                onchange="updateMap()"
+              />
+            </div>
 
-                <div class="mb-3">
-                  <label for="getTaskRestaurant" class="form-label"
-                    >Restaurant:</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="getTaskRestaurant"
-                    placeholder="Enter a restaurant"
-                    required
-                    onchange="updateMap()"
-                  />
-                </div>
+            <div class="mb-3">
+              <label for="getUserLocation" class="form-label"
+                >Your location:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="getUserLocation"
+                placeholder="Enter your location"
+                required
+                onchange="updateMap()"
+              />
+            </div>
 
-                <div class="mb-3">
-                  <label for="getUserLocation" class="form-label"
-                    >Your location:</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="getUserLocation"
-                    placeholder="Enter your location"
-                    required
-                    onchange="updateMap()"
-                  />
-                </div>
+            <div class="mb-3">
+              <label for="getTaskPrice" class="form-label">Price:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="getTaskPrice"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="getTaskPaymentMethod" class="form-label">Payment Method:</label>
+              <select class="form-select" id="getTaskPaymentMethod" required>
+                <option value="PayPal">PayPal</option>
+                <option value="Venmo">Venmo</option>
+                <option value="Face-to-face">Face-to-face</option>
+              </select>
+            </div>
 
-                <div class="mb-3">
-                  <label for="getTaskPrice" class="form-label">Price:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="getTaskPrice"
-                    required
-                  />
-                </div>
-
-                <div class="mb-3">
-                  <label for="getTaskPaymentMethod" class="form-label">Payment Method:</label>
-                  <select class="form-select" id="getTaskPaymentMethod" required>
-                    <option value="PayPal">PayPal</option>
-                    <option value="Venmo">Venmo</option>
-                    <option value="Face-to-face">Face-to-face</option>
-                  </select>
-                </div>
-
-
-
-                <!-- new -->
-                <form id="taskForm" onsubmit="submitTask(event)"> 
-
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary me-1">Add Task</button>
-                  <button type="button1" class="btn btn-secondary btn" onclick="toggleScheduleDropdown()">Schedule Task</button>
-                </div>
-
-                <div id="scheduleDropdown" style="display: none;">
-                  <div class="mb-3">
-                    <label for="scheduleTime" class="form-label">Select Time:</label>
-                    <input type="time" class="form-control" id="scheduleTime">
-                  </div>
-                  <input type="hidden" id="isScheduled" name="isScheduled" value="false">
-                  <button type="submit" class="btn btn-primary">Confirm Schedule</button>
-                </div>
-              </form>
+          <!-- new -->
+          <form id="taskForm" onsubmit="submitTask(event)"> 
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary me-1">Add Task</button>
+            <button type="button1" class="btn btn-secondary btn" onclick="toggleScheduleDropdown()">Schedule Task</button>
+          </div>
+          
+          <div id="scheduleDropdown" style="display: none;">
+            <div class="mb-3">
+              <label for="scheduleTime" class="form-label">Select Time:</label>
+              <input type="time" class="form-control" id="scheduleTime">
+            </div>
+            <input type="hidden" id="isScheduled" name="isScheduled" value="false">
+            <button type="submit" class="btn btn-primary">Confirm Schedule</button>
+          </div>
+        </form>
 </div>
 <!-- Add JavaScript to Toggle the Dropdown -->
 <script>
@@ -222,11 +209,7 @@ function submitTask(event) {
 }
 
 </script>
-
-
-        <!-- <div class="right padded map-section" style="flex: 1"> -->
-          <div class="col-lg-5 bg-light-blue d-flex justify-content-center align-items-center" 
-          style="border-top-right-radius: 50px; border-bottom-right-radius: 50px;">
+        <div class="right padded bg-light-blue" style="flex: 1">
           <div id="floating-panel" class="transport-options">
             <b>Mode of Travel:</b>
             <select id="mode" class="form-select">
