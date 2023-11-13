@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const PORT = process.env.PORT || 3000;
-
 // Verify the API key is being loaded
 app.use(express.json());
 app.use(express.static(__dirname + "/../../frontend"));
@@ -32,6 +31,7 @@ app.get("/api/data", (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 app.post("/add_task", async (req, res) => {
   try {
     const {
@@ -45,7 +45,6 @@ app.post("/add_task", async (req, res) => {
       restaurant,
       date_posted,
     } = req.body;
-    console.log(req.body);
     const response = await axios.post(
       "https://task-manager-0-94114aee724a.herokuapp.com/add_task",
       {
@@ -60,8 +59,6 @@ app.post("/add_task", async (req, res) => {
         restaurant,
       }
     );
-    console.log(response.data);
-    console.log("safds");
     res.json(response.data);
   } catch (error) {
     console.error("Error posting task to Flask API:", error);
@@ -140,6 +137,23 @@ app.post("/schedule_task", async (req, res) => {
     }
   }
 });
+app.get('/get_accepted_tasks_by_user', async (req, res) => {
+  try {
+    const { username } = req.query;
+
+    // Making a GET request with Axios using query parameters
+    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_accepted_tasks_by_user", {
+      params: {
+        username
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error posting task to Flask API:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 app.post('/accept_task', async (req, res) => {
   try {
     const {
@@ -147,7 +161,6 @@ app.post('/accept_task', async (req, res) => {
         task_owner_id,
         task_acceptor_username
     } = req.body;
-    console.log(req.body);
     const response = await axios.post(
       "https://task-manager-0-94114aee724a.herokuapp.com/accept_task",
       {
@@ -156,7 +169,6 @@ app.post('/accept_task', async (req, res) => {
         task_acceptor_username
       }
     );
-    console.log(response.data);
     res.json(response.data);
   } catch (error) {
     console.error("Error posting task to Flask API:", error);
@@ -184,25 +196,23 @@ app.get("/get_all_users", async (req, res) => {
   res.json({ users });
 });
 
-app.post("/get_info_by_user", async (req, res) => {
-  const user_id = req.body.user_id;
 
-  if (!user_id) {
-    return res.status(400).json({ error: "User ID is required." });
-  }
-
+app.get('/get_info_by_user', async (req, res) => {
   try {
-    // Assuming you're communicating with a Flask backend:
-    const flaskServerUrl = "https://task-manager-0-94114aee724a.herokuapp.com"; // Replace with your Flask API's base URL if different
-    const response = await axios.post(`${flaskServerUrl}/get_info_by_user`, {
-      user_id: user_id,
+    const { username } = req.query;
+    console.log(req.query);
+
+    // Making a GET request with Axios using query parameters
+    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user", {
+      params: {
+        username
+      }
     });
 
-    // Forward the response from Flask to the frontend
-    console.log(response);
+    console.log("safdsa");
     res.json(response.data);
   } catch (error) {
-    console.error("Error fetching user info:", error);
+    console.error("Error posting task to Flask API:", error);
     res.status(500).send("Internal Server Error");
   }
 });
