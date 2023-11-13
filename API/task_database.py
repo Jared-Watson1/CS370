@@ -181,8 +181,8 @@ def add_accepted_task(task_id, task_owner_id, task_acceptor_id):
         cursor.execute(
             insert_accepted_task_query, (task_id, task_owner_id, task_acceptor_id)
         )
-        accepted_task_id = cursor.fetchone()[0]  # Fetch the id of the new accepted task
         conn.commit()
+        accepted_task_id = cursor.fetchone()[0]  # Fetch the id of the new accepted task
         return {
             "message": "Task accepted successfully!",
             "accepted_task_id": accepted_task_id,
