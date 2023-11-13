@@ -16,53 +16,15 @@ async function getUserData() { // function to get user data to fill in profile
   if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
   let data = await response.json();
   console.log(data)
+
+  document.querySelector(".fn").textContent = data.first_name;
+  document.querySelector(".ln").textContent = data.last_name;
+  document.querySelector(".em").textContent = data.email;
+  document.querySelector(".pn").textContent = data.phone_number;
 }
 
-// .then(res => {  // see if there is an error with network 
-    //   if (!res.ok) { throw new Error("Network response was not ok " + res.statusText); }
-    //   return res.json()
-    // })
-    // .then(data => console.log(data))
-    // .catch((error) => {console.error("Error during fetch operation:", error);}); // see if there is an error w/ actual fetch operation
-// {
-    // method: 'GET',
-    // headers: {
-    //   'Content-Type': 'application/json'
-    // },
-    // body: JSON.stringify({name: 'User'})
-  // })
-
-function populateTasks() {
-  data = getUserData()
-  console.log(data)
-  fetch('/get_all_users')
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
-      return response.json(); // Parse JSON data
-    })
-    .then((data) => {
-      console.log("Tasks fetched from Node.js Server:", data.users); // Log her
-      var spanElement = document.querySelector(".user-location");
-      spanElement.textContent = "Hi " + data.users[6].first_name + "!";
-      var phone = document.querySelector(".pn");
-
-
-
-      // phone.textContent = data.users[6].phone_number;
-      // document.querySelector(".fn").textContent = data.users[6].first_name;
-      // document.querySelector(".ln").textContent = data.users[6].last_name;
-      // document.querySelector(".em").textContent = data.users[6].email;
-      // ratingsSum = data.users[6].rating_sum;
-      // numRatings = data.users[6].num_reviews;
-    })
-    .catch((error) => {
-      console.error("Error during fetch operation:", error);
-    });
-}
 window.onload = function () {
-  populateTasks();
+  getUserData(); 
 };
 const ratingsList = document.querySelector(".ratings-list");
 const ratingMessage = document.getElementById("ratingMessage");
