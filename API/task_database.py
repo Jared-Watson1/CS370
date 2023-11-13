@@ -174,7 +174,6 @@ def add_accepted_task(task_id, task_owner_id, task_acceptor_id):
     insert_accepted_task_query = """
     INSERT INTO accepted_tasks (task_id, task_owner_id, task_acceptor_id, date_accepted)
     VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
-    RETURNING accepted_task_id;
     """
 
     try:
