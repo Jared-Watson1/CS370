@@ -26,6 +26,7 @@ function valid_login() {
       else {
         alert('Login successful!');
         document.cookie = "username=" + username;
+        localStorage.setItem('Username', username) // locally store username (persistant)
         window.location.href = "../templates/tasksfood.html"; // take you to main page after success
       }
 
