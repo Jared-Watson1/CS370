@@ -15,21 +15,7 @@ const userdata = {
 };
 
 // Use fetch or axios to send the POST request
-fetch(`/get_accepted_tasks_by_user?username=${encodeURIComponent(username)}`, {
-  method: 'GET',
-  headers: {
-      'Content-Type': 'application/json',
-  }
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Success:', data);
-  // Handle success here
-})
-.catch((error) => {
-  console.error('Error:', error);
-  // Handle error here
-});
+
 
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
@@ -498,8 +484,8 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     let userDestination = userPlace;
     directionsService.route(
       {
-        origin: "math and science center, dowman drive",
-        destination: "alabama hall, atlanta GA",
+        origin: autocomplete1,
+        destination: autocomplete2,
         travelMode: selectedMode,
       },
       function (response, status) {

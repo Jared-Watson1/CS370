@@ -169,14 +169,14 @@ window.onload = function () {
   // Call this function with the desired username
   
  async function populateTasks() {
-    fetch("/tasks")
-      .then((response) => {
+    try {
+        const response = await fetch(`/get_accepted_tasks_by_user?username=${encodeURIComponent(username)}`);
         if (!response.ok) {
           throw new Error("Network response was not ok " + response.statusText);
         }
-        return response.json(); // Parse JSON data
-      })
-      .then((data) => {
+        const acceptedTasksData = await response.json();
+        console.log(acceptedTasksData);
+        // Now you have the accepted tasks in acceptedTasksData
         const taskUl = document.getElementById("taskUl");
         const nextPageBtn = document.getElementById("nextPage");
         const prevPageBtn = document.getElementById("prevPage");
@@ -215,11 +215,9 @@ window.onload = function () {
           while (taskUl.firstChild) {
             taskUl.removeChild(taskUl.firstChild);
           }
-          const foodTasks = data.tasks.filter(task => task.category === 'Food');
-          // Then calculate the pagination based on the filtered tasks
           const startIndex = (currentPage - 1) * tasksPerPage;
-          const endIndex = startIndex + tasksPerPage;
-          const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
+        const endIndex = startIndex + tasksPerPage;
+        const tasksToDisplay = acceptedTasksData.accepted_tasks.slice(startIndex, endIndex);
           console.log(tasksToDisplay);
           // Populate the tasks on the page
           
@@ -320,11 +318,11 @@ window.onload = function () {
         });
         
         displayTasks();
-      })
-      .catch((error) => {
-        console.error("Error during fetch operation:", error);
-      });
-  }
+        } catch (error) {
+        console.error("Error fetching accepted tasks:", error);
+      }
+      }
+  
 
 // Call populateTasks on page load or whenever needed.
 
