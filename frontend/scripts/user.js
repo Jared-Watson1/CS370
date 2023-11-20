@@ -1,8 +1,6 @@
 let users;
 let ratingsSum;
 let numRatings;
-let API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com";
-
 
 async function getUserData() { // function to get user data to fill in profile
   let username = localStorage.getItem('Username');

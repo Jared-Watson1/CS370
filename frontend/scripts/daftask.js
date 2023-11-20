@@ -10,6 +10,13 @@ var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*
 let currenttask;
 
 let autocomplete2;
+const userdata = {
+  "username": username
+};
+
+// Use fetch or axios to send the POST request
+
+
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -119,7 +126,7 @@ fetch("/tasks")
     return response.json(); // Parse JSON data
   })
   .then((data) => {
-    console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
+    // console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
 
     // Here you could update your UI with the tasks data...
   })
@@ -160,7 +167,7 @@ function populateTasks() {
       const nextPageBtn = document.getElementById("nextPage");
       const prevPageBtn = document.getElementById("prevPage");
 
-      console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
+      // console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
 
       // Grabbing the taskUl element
       const tasksPerPage = 6;
@@ -192,25 +199,25 @@ function populateTasks() {
           taskUl.removeChild(taskUl.firstChild);
         }
         const foodTasks = data.tasks.filter(task => task.category === 'Food');
-        console.log(foodTasks);
         // Then calculate the pagination based on the filtered tasks
         const startIndex = (currentPage - 1) * tasksPerPage;
         const endIndex = startIndex + tasksPerPage;
         const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
-
+        console.log(tasksToDisplay);
         // Populate the tasks on the page
         const taskPromises = tasksToDisplay.map(async (task) => {
           const userId = task.task_owner;
           const owner = {
             user_id: userId,
           };
+          const own = getUserbyID(owner);
           const li = document.createElement("li");
           li.classList.add("list-group-item", "task-type-2");
       
           li.innerHTML = `
             <div class="ribbonr"></div>
                 <h4>${task.task_name}</h4>
-                <p>Sample User</p>
+                <p>${task.task_owner}</p>
                 <div class="task-details" style="display: none;">
                 <p>Restaurant: ${task.start_loc}</p>
                 <p>Destination: ${task.end_loc}</p>
@@ -237,29 +244,29 @@ function populateTasks() {
             closeAllTaskDetails();
             currenttask = task;
             var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
-            const bottomSection = document.getElementById("bottom-section");
-            bottomSection.textContent = task.description;
-            const pricedes = document.getElementById("detailprice");
-            pricedes.textContent = 'Price: $' + task.price;
+            // const bottomSection = document.getElementById("bottom-section");
+            // bottomSection.textContent = task.description;
+            // const pricedes = document.getElementById("detailprice");
+            // pricedes.textContent = 'Price: $' + task.price;
             const detailsDiv = this.querySelector(".task-details");
 
-            if (detailsDiv.classList.contains("show")) {
-              bottomSection.textContent = "Select a task to view and accept";
-              detailsDiv.classList.remove("show");
-            } else {
-              bottomSection.textContent = task.description;
-              detailsDiv.classList.add("show");
-            }
+            // if (detailsDiv.classList.contains("show")) {
+            //   bottomSection.textContent = "Select a task to view and accept";
+            //   detailsDiv.classList.remove("show");
+            // } else {
+            //   bottomSection.textContent = task.description;
+            //   detailsDiv.classList.add("show");
+            // }
 
             modalTaskName.textContent = task.task_name;
             modalTaskDescription.textContent = task.description;
             modalTaskPrice.textContent = 'Price: $' + task.price;
             modal.style.display = "block";
 
-            acceptModal.onclick = function() {
-              console.log("Task accepted:", task.task_name);
-              modal.style.display = "none";
-            };
+            // acceptModal.onclick = function() {
+            //   console.log("Task accepted:", task.task_name);
+            //   modal.style.display = "none";
+            // };
 
           });
           
@@ -408,8 +415,9 @@ function placeMarkers(targetMap) {
     });
   });
 }
+
 document.addEventListener('DOMContentLoaded', (event) => {
-  document.getElementById('accept').addEventListener('click', function() {
+  document.getElementById('acceptModal').addEventListener('click', function() {
      console.log("asf");
       // Assuming currentTask is accessible and contains the task_id
       const task_id = currenttask.task_id;
@@ -433,13 +441,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(response => response.json())
       .then(data => {
-          console.log('Success:', data);
+          
           // Handle success here
       })
       .catch((error) => {
           console.error('Error:', error);
           // Handle error here
       });
+      
   });
 });
 
@@ -476,8 +485,8 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     let userDestination = userPlace;
     directionsService.route(
       {
-        origin: "math and science center, dowman drive",
-        destination: "alabama hall, atlanta GA",
+        origin: autocomplete1,
+        destination: autocomplete2,
         travelMode: selectedMode,
       },
       function (response, status) {

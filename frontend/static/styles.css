@@ -145,19 +145,20 @@ h1, .user-location {
   margin: 0;
   padding: 0;
 }
+
 #floating-panel {
   position: absolute;
-  top: 30px;
+  top: -7%;
   left: 70%;
   z-index: 5;
   background-color: #fff;
-  padding: 5px;
+  padding: 0.75%;
   border: 1px solid #999;
   text-align: center;
   font-family: "Roboto", "sans-serif";
   line-height: 30px;
-  padding-left: 10px;
 }
+
 .inline-form-element {
     display: inline-block;
     margin-right: 10px; /* or any desired space between the elements */
@@ -288,8 +289,6 @@ h2 {
 
 #getTaskForm {
   background-color: rgba(0, 0, 0, 0);
-  margin-top: 5%;
-  margin-left: 10%;
 }
 
 #getTaskForm .mb-3 {

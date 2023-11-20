@@ -26,7 +26,7 @@ function valid_login() {
         alert("Login successful!");
         document.cookie = "username=" + username;
         localStorage.setItem('Username', username) // locally store username (persistant)
-        window.location.href = "../templates/tasksfood.html"; // take you to main page after success
+        window.location.href = "../templates/post_favor.html"; // take you to main page after success
       }
 
       return response.json();
@@ -36,3 +36,16 @@ function valid_login() {
       alert("An error occurred while logining in");
     });
 }
+
+// document.getElementById("username_auth").addEventListener("keydown", function (event) {
+//   if (event.key === "Enter") {
+//     console.log("here");
+//     valid_login();
+//   }
+// });
+
+// document.getElementById("password_auth").addEventListener("keydown", function(event) {
+//   if (event.key === "Enter") {
+//     valid_login();
+//   }
+// });
