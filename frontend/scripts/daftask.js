@@ -443,15 +443,30 @@ document.addEventListener('DOMContentLoaded', (event) => {
       .then(data => {
           
           // Handle success here
+          document.getElementById('taskModal').style.display = 'none';
+          showCustomModal('successModal', "Task successfully accepted!");
       })
       .catch((error) => {
           console.error('Error:', error);
           // Handle error here
+          document.getElementById('taskModal').style.display = 'none';
+          showCustomModal('errorModal', "Error accepting task: " + error.message);
       });
       
   });
 });
 
+function showCustomModal(modalId, message) {
+  const modal = document.getElementById(modalId);
+  const messageParagraph = modalId === 'successModal' ? document.getElementById('successMessage') : document.getElementById('errorMessage');
+  messageParagraph.textContent = message;
+  modal.style.display = 'block';
+}
+
+function closeCustomModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'none';
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   
