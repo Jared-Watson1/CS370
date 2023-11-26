@@ -1,5 +1,4 @@
 // Define the base URL of the API
-const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
 
 function valid_login() {
   var username = document.getElementById("username_auth").value;
@@ -33,19 +32,13 @@ function valid_login() {
     })
     .catch((error) => {
       console.error("Error:", error); // Log any error
-      alert("An error occurred while logining in");
+      // alert("An error occurred while logining in");
     });
 }
 
-// document.getElementById("username_auth").addEventListener("keydown", function (event) {
-//   if (event.key === "Enter") {
-//     console.log("here");
-//     valid_login();
-//   }
-// });
+document.addEventListener("DOMContentLoaded", function() {
 
-// document.getElementById("password_auth").addEventListener("keydown", function(event) {
-//   if (event.key === "Enter") {
-//     valid_login();
-//   }
-// });
+  loginForm.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { valid_login(); }
+  });
+});
