@@ -3,3 +3,4 @@ psycopg2_binary==2.9.7
 python-dotenv==1.0.0
 bcrypt
 Flask-Cors
+twilio

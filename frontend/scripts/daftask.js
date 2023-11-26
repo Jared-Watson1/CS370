@@ -203,20 +203,21 @@ function populateTasks() {
         const startIndex = (currentPage - 1) * tasksPerPage;
         const endIndex = startIndex + tasksPerPage;
         const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
-
+        console.log(tasksToDisplay);
         // Populate the tasks on the page
         const taskPromises = tasksToDisplay.map(async (task) => {
           const userId = task.task_owner;
           const owner = {
             user_id: userId,
           };
+          const own = getUserbyID(owner);
           const li = document.createElement("li");
           li.classList.add("list-group-item", "task-type-2");
       
           li.innerHTML = `
             <div class="ribbonr"></div>
                 <h4>${task.task_name}</h4>
-                <p>Sample User</p>
+                <p>${task.task_owner}</p>
                 <div class="task-details" style="display: none;">
                 <p>Restaurant: ${task.start_loc}</p>
                 <p>Destination: ${task.end_loc}</p>
@@ -442,15 +443,30 @@ document.addEventListener('DOMContentLoaded', (event) => {
       .then(data => {
           
           // Handle success here
+          document.getElementById('taskModal').style.display = 'none';
+          showCustomModal('successModal', "Task successfully accepted!");
       })
       .catch((error) => {
           console.error('Error:', error);
           // Handle error here
+          document.getElementById('taskModal').style.display = 'none';
+          showCustomModal('errorModal', "Error accepting task: " + error.message);
       });
       
   });
 });
 
+function showCustomModal(modalId, message) {
+  const modal = document.getElementById(modalId);
+  const messageParagraph = modalId === 'successModal' ? document.getElementById('successMessage') : document.getElementById('errorMessage');
+  messageParagraph.textContent = message;
+  modal.style.display = 'block';
+}
+
+function closeCustomModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'none';
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   

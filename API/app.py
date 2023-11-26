@@ -10,6 +10,7 @@ from task_database import (
     add_service_task,
     add_accepted_task,
     get_user_accepted_tasks,
+    delete_task,
 )
 from user_database import (
     addUser,
@@ -108,6 +109,8 @@ def accept_task():
     task_acceptor_id = get_user_id(username=task_acceptor_username)
 
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
+    delete_task(task_id)
+
     return jsonify(response), status_code
 
 

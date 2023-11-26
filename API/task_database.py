@@ -285,6 +285,46 @@ def get_user_accepted_tasks(user_id):
         conn.close()
 
 
+def delete_task(task_id):
+    """Delete task by task_id"""
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    try:
+        # Begin a transaction
+        conn.autocommit = False
+
+        # Determine the category of the task
+        cursor.execute("SELECT category FROM tasks WHERE task_id = %s", (task_id,))
+        category_result = cursor.fetchone()
+        if not category_result:
+            raise Exception("Task not found")
+
+        category = category_result[0].lower()
+
+        # Delete from the specific task table based on category
+        if category == "food":
+            cursor.execute("DELETE FROM foodtasks WHERE task_id = %s", (task_id,))
+        elif category == "service":
+            cursor.execute("DELETE FROM servicetasks WHERE task_id = %s", (task_id,))
+        else:
+            raise Exception("Unknown task category")
+
+        # Delete from the tasks table
+        cursor.execute("DELETE FROM tasks WHERE task_id = %s", (task_id,))
+
+        # Commit the transaction
+        conn.commit()
+        print("Task deleted successfully!")
+    except Exception as err:
+        print(f"Error: {err}")
+        conn.rollback()  # Rollback in case of error
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def clear_all_tasks():
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
@@ -312,6 +352,36 @@ def clear_all_tasks():
         print(f"Error: {err}")
     finally:
         # Close the cursor and connection
+        cursor.close()
+        conn.close()
+
+
+def get_all_accepted_tasks():
+    """Function to retrieve all tasks from the accepted_tasks table"""
+
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    # SQL query to select all tasks from accepted_tasks
+    query = """
+    SELECT *
+    FROM accepted_tasks
+    JOIN tasks ON accepted_tasks.task_id = tasks.task_id;
+    """
+
+    try:
+        cursor.execute(query)
+        accepted_tasks = cursor.fetchall()
+        return {"accepted_tasks": accepted_tasks}, 200
+
+    except Exception as e:
+        return {
+            "error": "An error occurred while retrieving accepted tasks.",
+            "details": str(e),
+        }, 500
+
+    finally:
         cursor.close()
         conn.close()
 
@@ -350,3 +420,4 @@ def delete_tables():
 
 # Example task
 # get_all_tasks_tester
+# print(get_all_accepted_tasks())
