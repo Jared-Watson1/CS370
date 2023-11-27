@@ -11,6 +11,7 @@ from task_database import (
     add_accepted_task,
     get_user_accepted_tasks,
     delete_task,
+    delete_accepted_task,
     get_task_info,
 )
 from user_database import (
@@ -134,6 +135,30 @@ def accept_task():
     delete_task(task_id)
 
     return jsonify(response), status_code
+
+
+@app.route("/completed_task", methods=["DELETE"])
+def completed_task():
+    # Get task_id from request
+    task_id = request.args.get("task_id")
+
+    # Validate task_id
+    if not task_id:
+        return jsonify({"error": "No task_id provided"}), 400
+
+    # Convert task_id to integer
+    try:
+        task_id = int(task_id)
+    except ValueError:
+        return jsonify({"error": "Invalid task_id"}), 400
+
+    # Delete the task
+    result = delete_accepted_task(task_id)
+
+    if result == "Task deleted successfully":
+        return jsonify({"message": result}), 200
+    else:
+        return jsonify({"error": result}), 500
 
 
 @app.route("/get_tasks", methods=["GET"])

@@ -325,6 +325,34 @@ def delete_task(task_id):
         conn.close()
 
 
+import psycopg2
+
+
+def delete_accepted_task(task_id):
+    """Delete an accepted task from the accepted_tasks table."""
+
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect("your_database_connection_string")
+        cursor = conn.cursor()
+
+        # SQL DELETE statement
+        delete_query = "DELETE FROM accepted_tasks WHERE task_id = %s;"
+
+        # Execute the query
+        cursor.execute(delete_query, (task_id,))
+
+        # Commit the changes
+        conn.commit()
+        return "Task deleted successfully"
+
+    except Exception as e:
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def clear_all_tasks():
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
