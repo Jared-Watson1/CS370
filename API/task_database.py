@@ -386,6 +386,72 @@ def get_all_accepted_tasks():
         conn.close()
 
 
+import psycopg2
+
+
+def get_task_info(task_id):
+    """Retrieve information about a task by task_id."""
+
+    # SQL query to join tasks with foodtasks, servicetasks, and accepted_tasks
+    query = """
+    SELECT t.task_id, t.task_name, t.category, t.date_posted, t.task_owner,
+           ft.start_loc, ft.end_loc, ft.price AS food_price, ft.restaurant, ft.description AS food_description,
+           st.location, st.description AS service_description, st.price AS service_price,
+           at.task_acceptor_id, at.date_accepted
+    FROM tasks t
+    LEFT JOIN foodtasks ft ON t.task_id = ft.task_id
+    LEFT JOIN servicetasks st ON t.task_id = st.task_id
+    LEFT JOIN accepted_tasks at ON t.task_id = at.task_id
+    WHERE t.task_id = %s;
+    """
+
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+        cursor = conn.cursor()
+
+        # Execute the query
+        cursor.execute(query, (task_id,))
+        task_info = cursor.fetchone()
+
+        # Construct a dictionary with the task information
+        if task_info:
+            task_details = {
+                "task_id": task_info[0],
+                "task_name": task_info[1],
+                "category": task_info[2],
+                "date_posted": task_info[3],
+                "task_owner": task_info[4],
+                "additional_info": {
+                    "food": {
+                        "start_loc": task_info[5],
+                        "end_loc": task_info[6],
+                        "price": task_info[7],
+                        "restaurant": task_info[8],
+                        "description": task_info[9],
+                    },
+                    "service": {
+                        "location": task_info[10],
+                        "description": task_info[11],
+                        "price": task_info[12],
+                    },
+                    "accepted_task": {
+                        "task_acceptor_id": task_info[13],
+                        "date_accepted": task_info[14],
+                    },
+                },
+            }
+            return task_details
+        else:
+            return "Task not found"
+
+    except Exception as e:
+        return f"Error: {e}"
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def delete_tables():
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
@@ -414,10 +480,11 @@ def delete_tables():
 
 # create_accepted_tasks_table()
 # Example of retrieving and printing all tasks
-# get_all_tasks()
+# print(get_all_tasks())
 # create_tables()
 # delete_tables()
 
 # Example task
 # get_all_tasks_tester
 # print(get_all_accepted_tasks())
+# print(get_task_info(34))

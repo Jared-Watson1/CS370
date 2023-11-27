@@ -11,6 +11,7 @@ from task_database import (
     add_accepted_task,
     get_user_accepted_tasks,
     delete_task,
+    get_task_info,
 )
 from user_database import (
     addUser,
@@ -20,6 +21,7 @@ from user_database import (
     getUserInfo,
     get_user_id,
 )
+from notification import send_email
 from flask_cors import CORS
 
 load_dotenv()
@@ -108,69 +110,30 @@ def accept_task():
     task_acceptor_username = data.get("task_acceptor_username")
     task_acceptor_id = get_user_id(username=task_acceptor_username)
 
+    # Fetch task details
+    task_details = get_task_info(task_id)
+    if task_details == "Task not found":
+        return jsonify({"error": "Task not found"}), 404
+
+    # Fetch user information
+    task_owner_info, _ = getUserInfo(task_owner_id)
+    task_acceptor_info, _ = getUserInfo(task_acceptor_id)
+
+    if not task_owner_info or not task_acceptor_info:
+        return jsonify({"error": "User information not found"}), 404
+
+    # Create email body with task details
+    email_body_owner = f"Your task '{task_details['task_name']}' has been accepted.\n\nTask Details:\n{task_details}"
+    email_body_acceptor = f"You have successfully accepted the task '{task_details['task_name']}'\n\nTask Details:\n{task_details}"
+
+    # Send emails
+    send_email(task_owner_info["email"], "Task Accepted", email_body_owner)
+    send_email(task_acceptor_info["email"], "Accepted a Task", email_body_acceptor)
+
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
     delete_task(task_id)
 
     return jsonify(response), status_code
-
-
-# @app.route("schedule_task", methods=["POST"])
-# def schedule_task_endpoint():
-#     # schedule logic
-
-#     data = request.get_json()
-
-#     try:
-#         task_name = data.get("task_name")
-#         category = data.get("category", "").lower()
-#         description = data.get("description")
-#         date_posted = datetime.strptime(data.get("date_posted"), "%Y-%m-%d").date()
-#         username = data.get("username")
-#         task_owner = get_user_id(username=username)
-
-#     except (ValueError, TypeError) as e:
-#         return jsonify({"error": f"Invalid input: {e}"}), 400
-
-#     try:
-#         if category == "food":
-#             start_loc = data.get("start_loc")
-#             end_loc = data.get("end_loc")
-#             price = float(data.get("price", 0))  # Default price to 0 if not provided
-#             restaurant = data.get("restaurant")
-
-#             add_food_task(
-#                 task_name=task_name,
-#                 date_posted=date_posted,
-#                 task_owner=task_owner,
-#                 start_loc=start_loc,
-#                 end_loc=end_loc,
-#                 price=price,
-#                 restaurant=restaurant,
-#                 description=description,
-#             )
-#         elif category == "service":
-#             # Assume location, price, and description are required for service tasks
-#             location = data.get("location")
-#             price = float(data.get("price", 0))  # Default price to 0 if not provided
-
-#             add_service_task(
-#                 task_name=task_name,
-#                 date_posted=date_posted,
-#                 task_owner=task_owner,
-#                 location=location,
-#                 description=description,
-#                 price=price,
-#             )
-#         else:
-#             # Return an error if the category is neither food nor service
-#             return jsonify({"error": "Category not recognized"}), 400
-
-#         return jsonify({"message": "Task added successfully!"}), 200
-
-#     except Exception as e:
-#         # Log the error for server-side debugging
-#         app.logger.error(f"Error adding task to the database: {e}")
-#         return jsonify({"error": "Internal server error"}), 500
 
 
 @app.route("/get_tasks", methods=["GET"])
