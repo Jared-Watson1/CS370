@@ -23,7 +23,8 @@ async function getUserData() { // function to get user data to fill in profile
 
 window.onload = function () {
   getUserData(); 
-};  
+};
+
 const ratingsList = document.querySelector(".ratings-list");
 const ratingMessage = document.getElementById("ratingMessage");
 

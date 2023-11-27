@@ -3,7 +3,7 @@ document.getElementById("registerButton").addEventListener("click", signup);
 
 
 function signup() {
-  console.log("Signup button clicked!"); // Add this line
+  // console.log("Signup button clicked!"); // Add this line
   let password_length = 8;
   let usernameField = document.getElementById("username");
   let passwordField = document.getElementById("password");
@@ -59,24 +59,6 @@ function signup() {
   }
 }
 
-
-// When the user hits enter and they're inside of the form, it submits the form.
-document
-  .getElementById("signupForm")
-  .addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      signup();
-    }
-  });
-
-document
-  .getElementById("personalForm")
-  .addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      signup();
-    }
-  });
-
 // Define the base URL of the API
 const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
 
@@ -114,3 +96,12 @@ function postUserToAp(data) {
       console.error("Error:", error); // Log any error
     });
 }
+
+// When the user hits enter and they're inside of the form, it submits the form.
+document.addEventListener("DOMContentLoaded", function() {
+  
+  signupForm.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { signup(); }
+  });
+});
+
