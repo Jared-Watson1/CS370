@@ -65,16 +65,16 @@
           </div>
           
           <form id="getTaskForm" class="w-100" onsubmit="event.preventDefault(); addTask('GetAFavor');">
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="getTaskTitle" class="form-label">Title:</label>
               <input
                 type="text"
                 class="form-control"
                 id="getTaskTitle"
-                placeholder="Enter a title for your favor"
+                placeholder=""
                 required
               />
-            </div>
+            </div> -->
             <div class="mb-3">
               <label for="getTaskDescription" class="form-label"
                 >Description:</label
@@ -82,7 +82,7 @@
               <textarea
                 class="form-control"
                 id="getTaskDescription"
-                placeholder="Enter your item descriptions and delivery instructions"
+                placeholder="What do you want delivered?"
                 required
               ></textarea>
             </div>
@@ -94,7 +94,7 @@
                 type="text"
                 class="form-control"
                 id="getTaskRestaurant"
-                placeholder="Enter a restaurant"
+                placeholder=""
                 required
                 onchange="updateMap()"
               />
@@ -113,7 +113,7 @@
               />
             </div>
             <div class="mb-3">
-              <label for="getTaskPrice" class="form-label">Price:</label>
+              <label for="getTaskPrice" class="form-label">Price ($):</label>
               <input
                 type="text"
                 class="form-control"

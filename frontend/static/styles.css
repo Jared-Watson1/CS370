@@ -312,6 +312,7 @@ h2 {
   flex: 1;
   resize: vertical;
   overflow-y: auto;
+  max-height: 25vh;
 } 
 
 #getTaskForm .form-control {
@@ -563,6 +564,12 @@ li:not(:hover) button[type="button"] {
   border: 1px solid #888;
   width: 80%; /* You might want to adjust this based on the size of your map */
   max-width: 600px; /* Max width for larger screens */
+}
+
+.vertical-line {
+  border-left: 1px solid #000;
+  height: 40px;
+  margin: 0 10px;
 }
 
 .modal-content #floating-panel {
