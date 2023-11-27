@@ -25,7 +25,7 @@ function valid_login() {
         alert("Login successful!");
         document.cookie = "username=" + username;
         localStorage.setItem('Username', username) // locally store username (persistant)
-        window.location.href = "../templates/post_favor.html"; // take you to main page after success
+        window.location.href = "../templates/do_or_get.html"; // take you to main page after success
       }
 
       return response.json();
