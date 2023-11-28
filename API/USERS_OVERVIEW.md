@@ -5,15 +5,15 @@ This file is part of a Flask API and is responsible for handling database operat
 ## Table of Contents
 
 - [Imports and Global Variables](#imports-and-global-variables)
-- [Function: `createUserTable`](#function-createUserTable)
+- [Function: `create_user_table`](#function-create_user_table)
 - [Function: `hash_username`](#function-hash_username)
-- [Function: `addUser`](#function-addUser)
-- [Function: `getAllUsers`](#function-getAllUsers)
-- [Function: `rateUserInDB`](#function-rateUserInDB)
-- [Function: `getUserInfo`](#function-getUserInfo)
+- [Function: `add_user`](#function-add_user)
+- [Function: `get_all_users`](#function-get_all_users)
+- [Function: `rate_user_inDB`](#function-rate_user_inDB)
+- [Function: `get_user_info`](#function-get_user_info)
 - [Function: `get_user_id`](#function-get_user_id)
 - [Function: `delete_users_table`](#function-delete_users_table)
-- [Function: `clearUsers`](#function-clearUsers)
+- [Function: `clear_users`](#function-clear_users)
 
 ## Imports and Global Variables
 
@@ -25,7 +25,7 @@ This file is part of a Flask API and is responsible for handling database operat
 
 The `DATABASE_URL` is retrieved from environment variables, used for connecting to the PostgreSQL database.
 
-## Function: `createUserTable`
+## Function: `create_user_table`
 
 - **Purpose**: Creates the `users` table in the PostgreSQL database.
 - **Process**: Executes an SQL statement to create the table.
@@ -37,27 +37,27 @@ The `DATABASE_URL` is retrieved from environment variables, used for connecting 
 - **Parameters**: `username` - The username to hash.
 - **Return**: The SHA256 hash of the username.
 
-## Function: `addUser`
+## Function: `add_user`
 
 - **Purpose**: Adds a new user to the `users` table.
 - **Parameters**: `username`, `email`, `phone_number`, `password`, `first_name`, `last_name`.
 - **Return**: Success message on successful addition or error message in case of failure.
 - **Error Handling**: Logs and returns any exceptions that occur.
 
-## Function: `getAllUsers`
+## Function: `get_all_users`
 
 - **Purpose**: Retrieves all users from the `users` table.
 - **Return**: A list of all users or an empty list if an error occurs.
 - **Error Handling**: Logs and returns any errors.
 
-## Function: `rateUserInDB`
+## Function: `rate_user_inDB`
 
 - **Purpose**: Updates the rating for a given user.
 - **Parameters**: `user_id`, `rating` - The ID of the user and the rating to add.
 - **Return**: Success message on successful rating update or error message in case of failure.
 - **Error Handling**: Logs and returns any errors.
 
-## Function: `getUserInfo`
+## Function: `get_user_info`
 
 - **Purpose**: Retrieves detailed information about a specific user.
 - **Parameters**: `user_id` - The ID of the user.
@@ -76,7 +76,7 @@ The `DATABASE_URL` is retrieved from environment variables, used for connecting 
 - **Purpose**: Deletes the `users` table from the database.
 - **Error Handling**: Logs and returns any errors.
 
-## Function: `clearUsers`
+## Function: `clear_users`
 
 - **Purpose**: Deletes all user records from the `users` table.
 - **Return**: Success message on successful deletion or error message in case of failure.
