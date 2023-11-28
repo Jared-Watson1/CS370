@@ -15,11 +15,11 @@ from task_database import (
     get_task_info,
 )
 from user_database import (
-    addUser,
-    getAllUsers,
-    clearUsers,
-    rateUserInDB,
-    getUserInfo,
+    add_user,
+    get_all_users,
+    clear_users,
+    rate_user_inDB,
+    get_user_info,
     get_user_id,
 )
 from notification import send_email
@@ -117,8 +117,8 @@ def accept_task():
         return jsonify({"error": "Task not found"}), 404
 
     # Fetch user information
-    task_owner_info, _ = getUserInfo(task_owner_id)
-    task_acceptor_info, _ = getUserInfo(task_acceptor_id)
+    task_owner_info, _ = get_user_info(task_owner_id)
+    task_acceptor_info, _ = get_user_info(task_acceptor_id)
 
     if not task_owner_info or not task_acceptor_info:
         return jsonify({"error": "User information not found"}), 404
@@ -213,7 +213,7 @@ def add_user_endpoint():
         return jsonify({"error": "Might have missed user attributes: " + str(e)}), 400
 
     # Use the addUser function to add the user to the database
-    response_message = addUser(
+    response_message = add_user(
         username, email, phone_number, hashed_password, first_name, last_name
     )
 
@@ -228,7 +228,7 @@ def add_user_endpoint():
 def get_all_users_endpoint():
     """Endpoint to get all users in DB"""
     try:
-        users_data = getAllUsers()
+        users_data = get_all_users()
 
         # Format the users data into a list of dictionaries for JSON representation
         users_list = []
@@ -264,7 +264,7 @@ def rate_user():
         if rating < 1 or rating > 5:
             return jsonify({"error": "Rating should be between 1 and 5"}), 400
 
-        response_message = rateUserInDB(user_id, rating)
+        response_message = rate_user_inDB(user_id, rating)
 
         # Check the response to determine the status code
         if "successfully" in response_message:
@@ -287,7 +287,7 @@ def get_info_by_user():
         if user_id is None:
             return jsonify({"error": "User not found"}), 404
 
-        user_info, error_message = getUserInfo(user_id)
+        user_info, error_message = get_user_info(user_id)
 
         if error_message:
             return jsonify({"error": error_message}), 500
@@ -356,7 +356,7 @@ def login():
 
 @app.route("/DANGER_clear_users", methods=["POST"])
 def clear_users_endpoint():
-    response_message = clearUsers()
+    response_message = clear_users()
     if "successfully" in response_message:
         return jsonify({"message": response_message}), 200
     else:

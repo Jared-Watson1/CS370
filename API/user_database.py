@@ -10,7 +10,7 @@ load_dotenv()
 DATABASE_URL = os.getenv("DB_URL")
 
 
-def createUserTable():
+def create_user_table():
     """Creates the 'users' table in the database."""
 
     # Connect to the PostgreSQL database
@@ -50,7 +50,7 @@ def hash_username(username: str) -> str:
     return hashlib.sha256(username.encode()).hexdigest()
 
 
-def addUser(
+def add_user(
     username: str,
     email: str,
     phone_number: str,
@@ -85,10 +85,8 @@ def addUser(
         conn.close()
 
 
-def getAllUsers():
-    """
-    Retrieves all users from the 'users' table in the database.
-    """
+def get_all_users():
+    """Retrieves all users from the 'users' table in the database."""
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
@@ -108,7 +106,7 @@ def getAllUsers():
         conn.close()
 
 
-def rateUserInDB(user_id, rating):
+def rate_user_inDB(user_id, rating):
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
@@ -143,7 +141,7 @@ def rateUserInDB(user_id, rating):
         conn.close()
 
 
-def getUserInfo(user_id):
+def get_user_info(user_id):
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
@@ -236,7 +234,7 @@ def delete_users_table():
         conn.close()
 
 
-def clearUsers():
+def clear_users():
     """
     Deletes all users from the 'users' table in the database.
     """
