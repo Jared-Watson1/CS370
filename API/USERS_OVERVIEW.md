@@ -5,15 +5,15 @@ This file is part of a Flask API and is responsible for handling database operat
 ## Table of Contents
 
 - [Imports and Global Variables](#imports-and-global-variables)
-- [Function: `createUserTable`](#function-create_user_table)
+- [Function: `create_user_table`](#function-create_user_table)
 - [Function: `hash_username`](#function-hash_username)
-- [Function: `addUser`](#function-add_user)
-- [Function: `getAllUsers`](#function-get_all_users)
-- [Function: `rateUserInDB`](#function-rate_user_inDB)
-- [Function: `getUserInfo`](#function-get_user_info)
+- [Function: `add_user`](#function-add_user)
+- [Function: `get_all_users`](#function-get_all_users)
+- [Function: `rate_user_inDB`](#function-rate_user_inDB)
+- [Function: `get_user_info`](#function-get_user_info)
 - [Function: `get_user_id`](#function-get_user_id)
 - [Function: `delete_users_table`](#function-delete_users_table)
-- [Function: `clearUsers`](#function-clear_users)
+- [Function: `clear_users`](#function-clear_users)
 
 ## Imports and Global Variables
 
