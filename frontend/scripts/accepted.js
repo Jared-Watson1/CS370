@@ -228,8 +228,8 @@ window.onload = function () {
             };
             const li = document.createElement("li");
             li.classList.add("list-group-item", "task-type-2");
-        
-            li.innerHTML = `
+            if(task.category == 'Food'){
+              li.innerHTML = `
               <div class="ribbonr"></div>
                   <h4>${task.task_name}</h4>
                   <p>Sample User</p>
@@ -240,6 +240,20 @@ window.onload = function () {
                   </div>
                   
               `;
+            }else{
+              li.innerHTML = `
+              <div class="ribbonb"></div>
+                  <h4>${task.task_name}</h4>
+                  <p>Sample User</p>
+                  <div class="task-details" style="display: none;">
+                  <p>Restaurant: ${task.start_loc}</p>
+                  <p>Destination: ${task.end_loc}</p>
+                  <!-- Add more details as required -->
+                  </div>
+                  
+              `;
+            }
+            
         
             li.addEventListener("click", async function () {
                 userinfo = await fetchUserInfo(username);
@@ -247,7 +261,6 @@ window.onload = function () {
               modalTaskName.textContent = task.task_name;
               modalTaskDescription.textContent = task.description;
               user_name.textContent = userinfo.first_name + " " +userinfo.last_name;
-              modalTaskPrice.textContent = 'Price: $' + task.price;
               modalPhone.textContent = 'Phone number:' + userinfo.phone_number;
               modalEmail.textContent = 'Email:' + userinfo.email;
             
@@ -279,7 +292,7 @@ window.onload = function () {
   
               modalTaskName.textContent = task.task_name;
               modalTaskDescription.textContent = task.description;
-              modalTaskPrice.textContent = 'Price: $' + task.price;
+
               modal.style.display = "block";
   
               acceptModal.onclick = function() {
@@ -303,7 +316,7 @@ window.onload = function () {
         }
         // Handle next page click
         nextPageBtn.addEventListener("click", function () {
-          if (currentPage * tasksPerPage < data.tasks.length) {
+          if (currentPage * tasksPerPage < acceptedTasksData.accepted_tasks.length) {
             currentPage++;
             displayTasks();
           }

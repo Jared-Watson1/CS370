@@ -199,23 +199,21 @@ app.get("/get_all_users", async (req, res) => {
 
 app.get('/get_info_by_user', async (req, res) => {
   try {
-    const { username } = req.query;
-    console.log(req.query);
+    const { Username } = req.query;
 
-    // Making a GET request with Axios using query parameters
-    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user", {
+    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user/Username=Steve10166", {
       params: {
-        username
+        Username
       }
     });
 
-    console.log("safdsa");
     res.json(response.data);
   } catch (error) {
-    console.error("Error posting task to Flask API:", error);
+    console.error("Error fetching data from external API:", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 const getUsersFromFlaskAPI = async () => {
   try {
