@@ -22,6 +22,7 @@ from user_database import (
     rate_user_inDB,
     get_user_info,
     get_user_id,
+    get_username,
 )
 from notification import send_email
 from flask_cors import CORS
@@ -322,6 +323,32 @@ def get_info_by_user():
     except Exception as e:
         app.logger.error(f"Error fetching user info: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route("/get_username", methods=["GET"])
+def get_username_endpoint():
+    # Get user_id from request
+    user_id = request.args.get("user_id")
+
+    # Validate user_id
+    if not user_id:
+        return jsonify({"error": "user_id is required"}), 400
+
+    # Convert user_id to integer if needed
+    try:
+        user_id = int(user_id)
+    except ValueError:
+        return jsonify({"error": "Invalid user_id"}), 400
+
+    # Retrieve the username
+    username = get_username(user_id)
+
+    if username == "User not found":
+        return jsonify({"error": username}), 404
+    elif "Error" in username:
+        return jsonify({"error": username}), 500
+    else:
+        return jsonify({"username": username}), 200
 
 
 def hash_password(password: str) -> bytes:

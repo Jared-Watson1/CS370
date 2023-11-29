@@ -204,6 +204,32 @@ def get_user_id(username):
         conn.close()
 
 
+def get_username(user_id):
+    """Retrieve the username for a given user_id."""
+
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    # SQL statement to fetch the username for the given user_id
+    query = "SELECT username FROM users WHERE user_id = %s;"
+
+    try:
+        # Execute the query
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchone()
+
+        if result:
+            return result[0]  # result[0] is the username
+        else:
+            return "User not found"
+    except Exception as err:
+        return f"Error: {err}"
+    finally:
+        cursor.close()
+        conn.close()
+
+
 # Test the functions
 # addUser('testuser3', 'test2@email.com', '+123456789')
 # print(getAllUsers())

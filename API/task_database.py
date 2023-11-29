@@ -4,6 +4,7 @@ from psycopg2 import errors
 from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
 from datetime import date
+from user_database import get_username
 
 
 load_dotenv()
@@ -235,6 +236,7 @@ def get_all_tasks():
                 "category": task[2],
                 "date_posted": str(task[3]),
                 "task_owner": task[4],
+                # "task_owner_username": get_username(task[4]),
             }
 
             if task[2] == "Food":
@@ -333,7 +335,11 @@ def get_user_accepted_tasks(user_id):
     try:
         cursor.execute(query, (user_id,))
         accepted_tasks = cursor.fetchall()
-        return {"accepted_tasks": accepted_tasks}, 200
+        result = {"accepted_tasks": accepted_tasks}
+        # result["task_owner_username"] = get_username(
+        #     result["accepted_tasks"]["task_owner_id"]
+        # )
+        return result, 200
     except Exception as e:
         return {
             "error": "An error occurred while retrieving accepted tasks.",
@@ -575,3 +581,5 @@ def delete_tables():
 # get_all_tasks_tester
 # print(get_all_accepted_tasks())
 # print(get_task_info(34))
+# print(get_user_accepted_tasks(7))
+# print(get_all_tasks())
