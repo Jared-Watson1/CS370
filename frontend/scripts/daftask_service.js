@@ -16,7 +16,21 @@ const userdata = {
 
 // Use fetch or axios to send the POST request
 
-
+function fetchUsernameByUserID(userID) {
+  return fetch(`/get_username?user_id=${encodeURIComponent(userID)}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      return data; // Contains the username from the external service
+    })
+    .catch(error => {
+      console.error("Error fetching username:", error.message);
+    });
+}
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -207,19 +221,20 @@ function populateTasks() {
         // Populate the tasks on the page
         const taskPromises = tasksToDisplay.map(async (task) => {
           const userId = task.task_owner;
-          const owner = {
-            user_id: userId,
-          };
+            const owner = {
+              user_id: userId,
+            };
+            const usernameData = await fetchUsernameByUserID(userId);
           const li = document.createElement("li");
           li.classList.add("list-group-item", "task-type-2");
-      
+         
           li.innerHTML = `
             <div class="ribbonb"></div>
                 <h4>${task.task_name}</h4>
-                <p>Sample User</p>
+                <p>${usernameData.username}</p>
                 <div class="task-details" style="display: none;">
-                <p>Restaurant:</p>
-                <p>Destination:</p>
+                <p>Restaurant: ${task.start_loc}</p>
+                <p>Destination: ${task.end_loc}</p>
                 <!-- Add more details as required -->
                 </div>
                 

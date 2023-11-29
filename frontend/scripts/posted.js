@@ -8,7 +8,7 @@ let userLocation;
 let autocomplete1;
 var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 let currenttask;
-
+let userinfo;
 let autocomplete2;
 const userdata = {
   "username": username
@@ -16,21 +16,19 @@ const userdata = {
 
 // Use fetch or axios to send the POST request
 
-function fetchUsernameByUserID(userID) {
-  return fetch(`/get_username?user_id=${encodeURIComponent(userID)}`)
-    .then(response => {
+async function fetchUserInfo(username) {
+    try {
+      const response = await fetch(`/get_info_by_user?username=${encodeURIComponent(username)}`);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.json();
-    })
-    .then(data => {
-      return data; // Contains the username from the external service
-    })
-    .catch(error => {
-      console.error("Error fetching username:", error.message);
-    });
-}
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  }
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
@@ -165,156 +163,177 @@ window.onload = function () {
   });
   populateTasks();
   setActiveTab;
+  
 };
 
-
-function populateTasks() {
-  fetch("/tasks")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
-      return response.json(); // Parse JSON data
-    })
-    .then((data) => {
-      const taskUl = document.getElementById("taskUl");
-      const nextPageBtn = document.getElementById("nextPage");
-      const prevPageBtn = document.getElementById("prevPage");
-
-      // console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
-
-      // Grabbing the taskUl element
-      const tasksPerPage = 6;
-      let currentPage = 1;
-
-      // New modal-related code starts here
-      const modal = document.getElementById("taskModal");
-      const modalTaskName = document.getElementById("modalTaskName");
-      const modalTaskDescription = document.getElementById("modalTaskDescription");
-      const modalTaskPrice = document.getElementById("modalTaskPrice");
-      const map = document.getElementById("map"); // Ensure this is your map container
-      const acceptModal = document.getElementById("acceptModal");
-      const span = document.getElementsByClassName("close")[0];
-
-      span.onclick = function() {
-        modal.style.display = "none";
-      }
-
-      // Iterate through the tasks data and append to the UL
-      function closeAllTaskDetails() {
-        const allDetails = document.querySelectorAll(".task-details");
-        allDetails.forEach((details) => {
-          details.classList.remove("show");
-        });
-      }
-      async function displayTasks() {
-        // Clear existing list items
-        while (taskUl.firstChild) {
-          taskUl.removeChild(taskUl.firstChild);
+  // Call this function with the desired username
+  
+ async function populateTasks() {
+    try {
+        const response = await fetch(`/get_user_posted_tasks?username=${encodeURIComponent(username)}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
         }
-        const foodTasks = data.tasks.filter(task => task.category === 'Food');
-        // Then calculate the pagination based on the filtered tasks
-        const startIndex = (currentPage - 1) * tasksPerPage;
+        const acceptedTasksData = await response.json();
+        console.log(acceptedTasksData);
+        // Now you have the accepted tasks in acceptedTasksData
+        const taskUl = document.getElementById("taskUl");
+        const nextPageBtn = document.getElementById("nextPage");
+        const prevPageBtn = document.getElementById("prevPage");
+  
+        // console.log("Tasks fetched from Node.js Server:", data.tasks); // Log here
+  
+        // Grabbing the taskUl element
+        const tasksPerPage = 6;
+        let currentPage = 1;
+  
+        // New modal-related code starts here
+        const modal = document.getElementById("taskModal");
+        const modalTaskName = document.getElementById("modalTaskName");
+        const modalTaskDescription = document.getElementById("modalTaskDescription");
+        const modalTaskPrice = document.getElementById("modalTaskPrice");
+        const modalPhone = document.getElementById("modalPhone");
+        const modalEmail = document.getElementById("modalEmail");
+        const user_name = document.getElementById("user_name");
+        const map = document.getElementById("map"); // Ensure this is your map container
+        const acceptModal = document.getElementById("acceptModal");
+        const span = document.getElementsByClassName("close")[0];
+  
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+  
+        // Iterate through the tasks data and append to the UL
+        function closeAllTaskDetails() {
+          const allDetails = document.querySelectorAll(".task-details");
+          allDetails.forEach((details) => {
+            details.classList.remove("show");
+          });
+        }
+        async function displayTasks() {
+          // Clear existing list items
+          while (taskUl.firstChild) {
+            taskUl.removeChild(taskUl.firstChild);
+          }
+          const startIndex = (currentPage - 1) * tasksPerPage;
         const endIndex = startIndex + tasksPerPage;
-        const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
-        console.log(tasksToDisplay);
-        // Populate the tasks on the page
-        const taskPromises = tasksToDisplay.map(async (task) => {
-          const userId = task.task_owner;
+        const tasksToDisplay = acceptedTasksData.tasks.slice(startIndex, endIndex);
+          console.log(tasksToDisplay);
+          // Populate the tasks on the page
+          
+          const taskPromises = tasksToDisplay.map(async (task) => {
+            const userId = task.task_owner;
             const owner = {
               user_id: userId,
             };
-            const usernameData = await fetchUsernameByUserID(userId);
-          const li = document.createElement("li");
-          li.classList.add("list-group-item", "task-type-2");
-         
-          li.innerHTML = `
-            <div class="ribbonr"></div>
-                <h4>${task.task_name}</h4>
-                <p>${usernameData.username}</p>
-                <div class="task-details" style="display: none;">
-                <p>Restaurant: ${task.start_loc}</p>
-                <p>Destination: ${task.end_loc}</p>
-                <!-- Add more details as required -->
-                </div>
-                
-            `;
-      
-          li.addEventListener("click", function () {
-
-            modalTaskName.textContent = task.task_name;
-            modalTaskDescription.textContent = task.description;
-            modalTaskPrice.textContent = 'Price: $' + task.price;
-          
-            // Update the map based on the task's start and end locations
-            updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
-          
-            // Show the modal
-            modal.style.display = "block";
-
-            // Close all details first
-            autocomplete1 = task.start_loc;
-            autocomplete2 = task.end_loc;
-            closeAllTaskDetails();
-            currenttask = task;
-            var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
-            // const bottomSection = document.getElementById("bottom-section");
-            // bottomSection.textContent = task.description;
-            // const pricedes = document.getElementById("detailprice");
-            // pricedes.textContent = 'Price: $' + task.price;
-            const detailsDiv = this.querySelector(".task-details");
-
-            // if (detailsDiv.classList.contains("show")) {
-            //   bottomSection.textContent = "Select a task to view and accept";
-            //   detailsDiv.classList.remove("show");
-            // } else {
-            //   bottomSection.textContent = task.description;
-            //   detailsDiv.classList.add("show");
-            // }
-
-            modalTaskName.textContent = task.task_name;
-            modalTaskDescription.textContent = task.description;
-            modalTaskPrice.textContent = 'Price: $' + task.price;
-            modal.style.display = "block";
-
+            const li = document.createElement("li");
+            li.classList.add("list-group-item", "task-type-2");
+            if(task.category == 'Food'){
+              li.innerHTML = `
+              <div class="ribbonr"></div>
+                  <h4>${task.task_name}</h4>
+                  <div class="task-details" style="display: none;">
+                  <p>Restaurant: ${task.start_loc}</p>
+                  <p>Destination: ${task.end_loc}</p>
+                  <!-- Add more details as required -->
+                  </div>
+                  
+              `;
+            }else{
+              li.innerHTML = `
+              <div class="ribbonb"></div>
+                  <h4>${task.task_name}</h4>
+                  <div class="task-details" style="display: none;">
+                  <p>Restaurant: ${task.start_loc}</p>
+                  <p>Destination: ${task.end_loc}</p>
+                  <!-- Add more details as required -->
+                  </div>
+                  
+              `;
+            }
             
-
-          });
-          
-          
-          return li; // Return the list item for later appending
-        });
-
-        // Wait for all promises to be resolved
-        const tasksListItems = await Promise.all(taskPromises);
         
-        // Now append all the list items to the taskUl
-        tasksListItems.forEach(li => {
-          taskUl.appendChild(li);
-        });
-      }
-      // Handle next page click
-      nextPageBtn.addEventListener("click", function () {
-        if (currentPage * tasksPerPage < data.tasks.length) {
-          currentPage++;
-          displayTasks();
-        }
-      });
+            li.addEventListener("click", async function () {
+                userinfo = await fetchUserInfo(username);
+                console.log(userinfo);
+              modalTaskName.textContent = task.task_name;
+              modalTaskDescription.textContent = task.description;
+              user_name.textContent = userinfo.first_name + " " +userinfo.last_name;
+              modalPhone.textContent = 'Phone number:' + userinfo.phone_number;
+              modalEmail.textContent = 'Email:' + userinfo.email;
+            
+              // Update the map based on the task's start and end locations
+              updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+            
+              // Show the modal
+              modal.style.display = "block";
+  
+              // Close all details first
+              autocomplete1 = task.start_loc;
+              autocomplete2 = task.end_loc;
+              closeAllTaskDetails();
+              currenttask = task;
+              var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+              // const bottomSection = document.getElementById("bottom-section");
+              // bottomSection.textContent = task.description;
+              // const pricedes = document.getElementById("detailprice");
+              // pricedes.textContent = 'Price: $' + task.price;
+              const detailsDiv = this.querySelector(".task-details");
+  
+              // if (detailsDiv.classList.contains("show")) {
+              //   bottomSection.textContent = "Select a task to view and accept";
+              //   detailsDiv.classList.remove("show");
+              // } else {
+              //   bottomSection.textContent = task.description;
+              //   detailsDiv.classList.add("show");
+              // }
+  
+              modalTaskName.textContent = task.task_name;
+              modalTaskDescription.textContent = task.description;
 
-      // Handle previous page click
-      prevPageBtn.addEventListener("click", function () {
-        if (currentPage > 1) {
-          currentPage--;
-          displayTasks();
+              modal.style.display = "block";
+  
+              acceptModal.onclick = function() {
+                console.log("Task accepted:", task.task_name);
+                modal.style.display = "none";
+              };
+  
+            });
+            
+            
+            return li; // Return the list item for later appending
+          });
+  
+          // Wait for all promises to be resolved
+          const tasksListItems = await Promise.all(taskPromises);
+          
+          // Now append all the list items to the taskUl
+          tasksListItems.forEach(li => {
+            taskUl.appendChild(li);
+          });
         }
-      });
-      
-      displayTasks();
-    })
-    .catch((error) => {
-      console.error("Error during fetch operation:", error);
-    });
-}
+        // Handle next page click
+        nextPageBtn.addEventListener("click", function () {
+          if (currentPage * tasksPerPage < acceptedTasksData.tasks.length) {
+            currentPage++;
+            displayTasks();
+          }
+        });
+  
+        // Handle previous page click
+        prevPageBtn.addEventListener("click", function () {
+          if (currentPage > 1) {
+            currentPage--;
+            displayTasks();
+          }
+        });
+        
+        displayTasks();
+        } catch (error) {
+        console.error("Error fetching accepted tasks:", error);
+      }
+      }
+  
 
 // Call populateTasks on page load or whenever needed.
 
@@ -426,13 +445,8 @@ function placeMarkers(targetMap) {
     });
   });
 }
-
 document.addEventListener('DOMContentLoaded', (event) => {
-  acceptModal.onclick = function() {
-    
-  };
   document.getElementById('acceptModal').addEventListener('click', function() {
-     console.log("asf");
       // Assuming currentTask is accessible and contains the task_id
       const task_id = currenttask.task_id;
       const task_owner_id = currenttask.task_owner;
@@ -455,33 +469,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(response => response.json())
       .then(data => {
-        showCustomModal('Success!', "Task accepted successfully!");
-        modal.style.display = "none";
+          console.log('Success:', data);
           // Handle success here
-          document.getElementById('taskModal').style.display = 'none';
-          showCustomModal('successModal', "Task successfully accepted!");
       })
       .catch((error) => {
           console.error('Error:', error);
           // Handle error here
-          document.getElementById('taskModal').style.display = 'none';
-          // 
       });
       
   });
 });
 
-function showCustomModal(modalId, message) {
-  const modal = document.getElementById(modalId);
-  const messageParagraph = modalId === 'successModal' ? document.getElementById('successMessage') : document.getElementById('errorMessage');
-  messageParagraph.textContent = message;
-  modal.style.display = 'block';
-}
-
-function closeCustomModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.style.display = 'none';
-}
 
 document.addEventListener('DOMContentLoaded', function() {
   
@@ -515,8 +513,8 @@ function updateMap(targetMap, autocomplete1, autocomplete2, selectedMode) {
     let userDestination = userPlace;
     directionsService.route(
       {
-        origin: autocomplete1,
-        destination: autocomplete2,
+        origin: "math and science center, dowman drive",
+        destination: "alabama hall, atlanta GA",
         travelMode: selectedMode,
       },
       function (response, status) {
@@ -629,105 +627,8 @@ function getTodayDate() {
 
   return yyyy + "-" + mm + "-" + dd;
 }
-function addTask(listType) {
-  var taskTitleInput = document.getElementById(
-    listType === "GetAFavor" ? "getTaskTitle" : "doTaskTitle"
-  );
-  var taskDescriptionInput = document.getElementById(
-    listType === "GetAFavor" ? "getTaskDescription" : "doTaskDescription"
-  );
-  var taskList = document.getElementById(
-    listType === "GetAFavor" ? "getTaskList" : "doTaskList"
-  );
 
-  var taskTitle = taskTitleInput.value.trim();
-  var taskDescription = taskDescriptionInput.value.trim();
 
-  if (listType === "GetAFavor") {
-    var taskRestaurantInput = document.getElementById("getTaskRestaurant");
-    var taskPriceInput = document.getElementById("getTaskPrice");
-    var taskPaymentMethodInput = document.getElementById(
-      "getTaskPaymentMethod"
-    );
-    var taskTitleInput = document.getElementById("getTaskTitle");
-    var taskRestaurant = taskRestaurantInput.value.trim();
-    var taskPrice = taskPriceInput.value.trim();
-    var taskPaymentMethod = taskPaymentMethodInput.value;
-    var taskTitle = taskTitleInput.value.trim();
-    const taskData = {
-      task_name: taskTitle,
-      description: taskRestaurant,
-      date_posted: getTodayDate(),
-      task_owner: "John Doe",
-    };
-    postTaskToApi(taskData);
-  }
-
-  if (
-    taskTitle !== "" &&
-    taskDescription !== "" &&
-    (listType === "DoAFavor" || (taskRestaurant !== "" && taskPrice !== ""))
-  ) {
-    var taskItem = document.createElement("li");
-    taskItem.innerHTML = `<strong>${taskTitle}</strong>: ${taskDescription}`;
-
-    if (listType === "GetAFavor") {
-      taskItem.innerHTML += ` <br> Restaurant: ${taskRestaurant} <br> Price: ${taskPrice} <br> Payment Method: ${taskPaymentMethod}`;
-      sharedTaskList.push({
-        title: taskTitle,
-        description: taskDescription,
-        Restaurant: taskRestaurant,
-        Price: taskPrice,
-        Payment_Method: taskPaymentMethod,
-      });
-    }
-
-    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Remove Order</button>`;
-    taskItem.innerHTML += ` <button onclick="removeTask(this, '${listType}')">Track Order</button>`;
-    taskList.appendChild(taskItem);
-
-    // Clear input fields
-    taskTitleInput.value = "";
-    taskDescriptionInput.value = "";
-
-    if (listType === "GetAFavor") {
-      taskRestaurantInput.value = "";
-      taskPriceInput.value = "";
-      taskPaymentMethodInput.value = "";
-    }
-  }
-}
-
-function removeTask(button, listType) {
-  var taskList = document.getElementById(
-    listType === "GetAFavor" ? "getTaskList" : "doTaskList"
-  );
-  var taskItem = button.parentNode;
-  taskList.removeChild(taskItem);
-
-  if (listType === "GetAFavor") {
-    // Remove the task from the sharedTaskList
-    var taskText = taskItem.textContent.split(":");
-    var taskTitle = taskText[0].trim();
-    sharedTaskList = sharedTaskList.filter((task) => task.title !== taskTitle);
-
-    // Update the availableList
-    renderSharedTaskList();
-  }
-}
-
-function renderSharedTaskList() {
-  var sharedList = document.getElementById("sharedTaskList");
-  //sharedList.innerHTML = "";
-
-  for (var i = 0; i < sharedTaskList.length; i++) {
-    var taskItem = document.createElement("li");
-    taskItem.innerHTML = `<strong>${sharedTaskList[i].title}</strong>: ${sharedTaskList[i].description}`;
-    taskItem.innerHTML += ` <br> Restaurant: ${sharedTaskList[i].Restaurant} <br> Price: ${sharedTaskList[i].Price} <br> Payment Method: ${sharedTaskList[i].Payment_Method}`;
-    taskItem.innerHTML += ` <button onclick="takeTask(this, '${sharedTaskList[i].title}', '${sharedTaskList[i].description}', '${sharedTaskList[i].Restaurant}', '${sharedTaskList[i].Price}', '${sharedTaskList[i].Payment_Method}')">Take Task</button>`;
-    sharedList.appendChild(taskItem);
-  }
-}
 
 function takeTask(
   button,
