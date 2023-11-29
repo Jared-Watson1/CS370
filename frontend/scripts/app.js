@@ -141,7 +141,58 @@ app.post("/schedule_task", async (req, res) => {
     }
   }
 });
-app.get("/get_accepted_tasks_by_user", async (req, res) => {
+app.get('/get_user_posted_tasks', async (req, res) => {
+  try {
+    const { username } = req.query;
+
+    // Making a GET request with Axios using query parameters
+    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_user_posted_tasks", {
+      params: {
+        username
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error posting task to Flask API:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.delete('/completed_task', async (req, res) => {
+  try {
+    const { task_id } = req.query;
+
+    // Making a GET request with Axios using query parameters
+    const response = await axios.delete("https://task-manager-0-94114aee724a.herokuapp.com/completed_task", {
+      params: {
+        task_id
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error posting task to Flask API:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.get('/get_username', async (req, res) => {
+  try {
+    const { user_id } = req.query;
+
+    // Making a GET request with Axios using query parameters
+    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_username", {
+      params: {
+        user_id
+      }
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error posting task to Flask API:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.get('/get_accepted_tasks_by_user', async (req, res) => {
   try {
     const { username } = req.query;
 
@@ -201,20 +252,20 @@ app.get("/get_all_users", async (req, res) => {
 
 app.get("/get_info_by_user", async (req, res) => {
   try {
-    const { Username } = req.query;
+    const { username } = req.query;
+    console.log(req.query);
 
-    const response = await axios.get(
-      "https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user/Username=Steve10166",
-      {
-        params: {
-          Username,
-        },
+    // Making a GET request with Axios using query parameters
+    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user", {
+      params: {
+        username
       }
     );
 
+    console.log("safdsa");
     res.json(response.data);
   } catch (error) {
-    console.error("Error fetching data from external API:", error);
+    console.error("Error posting task to Flask API:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -295,3 +346,4 @@ app.delete("/clear_task", async (req, res) => {
     res.status(500).send("Error forwarding DELETE request");
   }
 });
+

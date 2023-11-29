@@ -15,6 +15,22 @@ const userdata = {
 };
 
 // Use fetch or axios to send the POST request
+function fetchUsernameByUserID(userID) {
+  return fetch(`/get_username?user_id=${encodeURIComponent(userID)}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      return data; // Contains the username from the external service
+    })
+    .catch(error => {
+      console.error("Error fetching username:", error.message);
+    });
+}
+console.log(fetchUsernameByUserID(7));
 
 async function fetchUserInfo(username) {
     try {
@@ -147,6 +163,25 @@ fetch("/tasks")
   });
 
 // Fetch tasks every 1 second (1000 milliseconds)
+function deleteTask(taskID) {
+  return fetch(`/completed_task?task_id=${encodeURIComponent(taskID)}`, {
+      method: 'DELETE'
+  })
+  .then(response => {
+      if (!response.ok) {
+          return response.json().then(json => {
+              throw new Error(json.error || 'Server error');
+          });
+      }
+      return response.json();
+  })
+  .then(data => {
+      return data.message; // Contains the success message from the server
+  })
+  .catch(error => {
+      console.error("Error deleting task:", error.message);
+  });
+}
 
 window.onload = function () {
   // Make sure to fetch user location and then initialize the map after location is fetched
@@ -226,13 +261,14 @@ window.onload = function () {
             const owner = {
               user_id: userId,
             };
+            const usernameData = await fetchUsernameByUserID(userId);
             const li = document.createElement("li");
             li.classList.add("list-group-item", "task-type-2");
             if(task.category == 'Food'){
               li.innerHTML = `
               <div class="ribbonr"></div>
                   <h4>${task.task_name}</h4>
-                  <p>Sample User</p>
+                  <p>${usernameData.username}</p>
                   <div class="task-details" style="display: none;">
                   <p>Restaurant: ${task.start_loc}</p>
                   <p>Destination: ${task.end_loc}</p>
@@ -449,37 +485,27 @@ function placeMarkers(targetMap) {
 }
 document.addEventListener('DOMContentLoaded', (event) => {
   document.getElementById('acceptModal').addEventListener('click', function() {
-      // Assuming currentTask is accessible and contains the task_id
-      const task_id = currenttask.task_id;
-      const task_owner_id = currenttask.task_owner;
-      const task_acceptor_username = username;
+    console.log("End Task Clicked");
 
-      // Data to be sent in the POST request
-      const postData = {
-          task_id,
-          task_owner_id,
-          task_acceptor_username
-      };
+    // Assuming currentTask is accessible and contains the task_id
+    const task_id = currenttask.task_id;
 
-      // Use fetch or axios to send the POST request
-      fetch('/accept_task', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(postData),
-      })
-      .then(response => response.json())
-      .then(data => {
-          console.log('Success:', data);
-          // Handle success here
-      })
-      .catch((error) => {
-          console.error('Error:', error);
-          // Handle error here
-      });
-      
-  });
+    // Call the deleteTask function with the task ID
+    deleteTask(task_id)
+        .then(message => {
+            if (message) {
+                console.log("Task deleted successfully:", message);
+                // Update UI accordingly, e.g., hide modal, show success message, etc.
+                // ...
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting task:", error);
+            // Handle error in UI, e.g., show error message
+            // ...
+        });
+});
+
 });
 
 
