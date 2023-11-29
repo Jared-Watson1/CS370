@@ -65,7 +65,7 @@ app.post("/add_task", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.post('/login', async (req, res) => {
+app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   // Add your logic for validating the username and password.
@@ -73,22 +73,26 @@ app.post('/login', async (req, res) => {
   // For demonstration, let's assume we're making a request to an external API for validation.
 
   try {
-    const loginResponse = await axios.post('https://task-manager-0-94114aee724a.herokuapp.com/login', {
-      username,
-      password
-    });
+    const loginResponse = await axios.post(
+      "https://task-manager-0-94114aee724a.herokuapp.com/login",
+      {
+        username,
+        password,
+      }
+    );
     if (loginResponse.status === 200) {
       // If the response indicates a successful login
-      console.log('Login successful for:', username);
+      console.log("Login successful for:", username);
       res.status(200).json({ message: "Login successful" });
     } else {
       // If the response indicates a failed login
-      console.log('Login failed for:', username);
-      res.status(loginResponse.status).json({ error: "Invalid username or password" });
+      console.log("Login failed for:", username);
+      res
+        .status(loginResponse.status)
+        .json({ error: "Invalid username or password" });
     }
-    
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error("Error during login:", error);
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
@@ -104,7 +108,7 @@ app.post("/schedule_task", async (req, res) => {
       price,
       restaurant,
       date_posted,
-      scheduled_time  // Added for scheduling
+      scheduled_time, // Added for scheduling
     } = req.body;
 
     // Here, we're assuming that the Flask API endpoint can handle scheduled_time.
@@ -120,7 +124,7 @@ app.post("/schedule_task", async (req, res) => {
         date_posted,
         price,
         restaurant,
-        scheduled_time  // Send the scheduled_time to the API
+        scheduled_time, // Send the scheduled_time to the API
       }
     );
 
@@ -137,16 +141,19 @@ app.post("/schedule_task", async (req, res) => {
     }
   }
 });
-app.get('/get_accepted_tasks_by_user', async (req, res) => {
+app.get("/get_accepted_tasks_by_user", async (req, res) => {
   try {
     const { username } = req.query;
 
     // Making a GET request with Axios using query parameters
-    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_accepted_tasks_by_user", {
-      params: {
-        username
+    const response = await axios.get(
+      "https://task-manager-0-94114aee724a.herokuapp.com/get_accepted_tasks_by_user",
+      {
+        params: {
+          username,
+        },
       }
-    });
+    );
 
     res.json(response.data);
   } catch (error) {
@@ -154,19 +161,15 @@ app.get('/get_accepted_tasks_by_user', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.post('/accept_task', async (req, res) => {
+app.post("/accept_task", async (req, res) => {
   try {
-    const {
-        task_id,
-        task_owner_id,
-        task_acceptor_username
-    } = req.body;
+    const { task_id, task_owner_id, task_acceptor_username } = req.body;
     const response = await axios.post(
       "https://task-manager-0-94114aee724a.herokuapp.com/accept_task",
       {
         task_id,
         task_owner_id,
-        task_acceptor_username
+        task_acceptor_username,
       }
     );
     res.json(response.data);
@@ -196,16 +199,18 @@ app.get("/get_all_users", async (req, res) => {
   res.json({ users });
 });
 
-
-app.get('/get_info_by_user', async (req, res) => {
+app.get("/get_info_by_user", async (req, res) => {
   try {
     const { Username } = req.query;
 
-    const response = await axios.get("https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user/Username=Steve10166", {
-      params: {
-        Username
+    const response = await axios.get(
+      "https://task-manager-0-94114aee724a.herokuapp.com/get_info_by_user/Username=Steve10166",
+      {
+        params: {
+          Username,
+        },
       }
-    });
+    );
 
     res.json(response.data);
   } catch (error) {
@@ -213,7 +218,6 @@ app.get('/get_info_by_user', async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 const getUsersFromFlaskAPI = async () => {
   try {
