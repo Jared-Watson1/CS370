@@ -13,6 +13,7 @@ from task_database import (
     delete_task,
     delete_accepted_task,
     get_task_info,
+    get_tasks_posted_by_user,
 )
 from user_database import (
     add_user,
@@ -170,6 +171,28 @@ def get_tasks_endpoint():
     except Exception as e:
         app.logger.error(f"Failed to retrieve tasks: {e}")
         return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route("/get_user_posted_tasks", methods=["GET"])
+def get_user_posted_tasks():
+    """Endpoint to get all tasks posted by a user."""
+    username = request.args.get("username")
+
+    # Validate username
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
+
+    # Get user_id from username
+    user_id = get_user_id(username)
+    if not user_id:
+        return jsonify({"error": "User not found"}), 404
+
+    # Get tasks posted by the user
+    tasks = get_tasks_posted_by_user(user_id)
+    if tasks is None:
+        return jsonify({"error": "Error fetching tasks"}), 500
+
+    return jsonify({"tasks": tasks}), 200
 
 
 @app.route("/get_accepted_tasks_by_user", methods=["GET"])

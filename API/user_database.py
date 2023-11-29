@@ -259,6 +259,7 @@ def clear_users():
         conn.close()
 
 
+# print(get_all_users())
 # delete_users_table()
 # createUserTable()
 # print(clearUsers())

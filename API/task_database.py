@@ -263,6 +263,65 @@ def get_all_tasks():
     return result_tasks
 
 
+def get_tasks_posted_by_user(user_id):
+    """Retrieve all tasks posted by a specific user."""
+
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    cursor = conn.cursor()
+
+    # SQL query to fetch tasks based on task_owner
+    query = """
+    SELECT 
+        t.task_id, t.task_name, t.category, t.date_posted, t.task_owner,
+        f.start_loc, f.end_loc, f.price AS food_price, f.restaurant, f.description AS food_description,
+        s.location, s.description AS service_description, s.price AS service_price
+    FROM tasks t
+    LEFT JOIN foodtasks f ON t.task_id = f.task_id
+    LEFT JOIN servicetasks s ON t.task_id = s.task_id
+    WHERE t.task_owner = %s;
+    """
+
+    try:
+        # Execute the query
+        cursor.execute(query, (user_id,))
+        tasks = cursor.fetchall()
+
+        # Format and return the task data
+        result_tasks = []
+        for task in tasks:
+            task_data = {
+                "task_id": task[0],
+                "task_name": task[1],
+                "category": task[2],
+                "date_posted": task[3],
+                "task_owner": task[4],
+                "additional_info": {
+                    "food": {
+                        "start_loc": task[5],
+                        "end_loc": task[6],
+                        "price": task[7],
+                        "restaurant": task[8],
+                        "description": task[9],
+                    },
+                    "service": {
+                        "location": task[10],
+                        "description": task[11],
+                        "price": task[12],
+                    },
+                },
+            }
+            result_tasks.append(task_data)
+
+        return result_tasks
+    except Exception as e:
+        print(f"Error: {e}")
+        return None
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def get_user_accepted_tasks(user_id):
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor(cursor_factory=RealDictCursor)
