@@ -206,14 +206,10 @@ function populateTasks() {
         console.log(tasksToDisplay);
         // Populate the tasks on the page
         const taskPromises = tasksToDisplay.map(async (task) => {
-          const userId = task.task_owner;
-          const owner = {
-            user_id: userId,
-          };
-          const own = getUserbyID(owner);
+
           const li = document.createElement("li");
           li.classList.add("list-group-item", "task-type-2");
-      
+         
           li.innerHTML = `
             <div class="ribbonr"></div>
                 <h4>${task.task_name}</h4>
@@ -263,10 +259,10 @@ function populateTasks() {
             modalTaskPrice.textContent = 'Price: $' + task.price;
             modal.style.display = "block";
 
-            // acceptModal.onclick = function() {
-            //   console.log("Task accepted:", task.task_name);
-            //   modal.style.display = "none";
-            // };
+            acceptModal.onclick = function() {
+              console.log("Task accepted:", task.task_name);
+              modal.style.display = "none";
+            };
 
           });
           
@@ -450,7 +446,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           console.error('Error:', error);
           // Handle error here
           document.getElementById('taskModal').style.display = 'none';
-          showCustomModal('errorModal', "Error accepting task: " + error.message);
+          // showCustomModal('errorModal', "Error accepting task: " + error.message);
       });
       
   });
