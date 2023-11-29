@@ -247,7 +247,6 @@ window.onload = function () {
               modalTaskName.textContent = task.task_name;
               modalTaskDescription.textContent = task.description;
               user_name.textContent = userinfo.first_name + " " +userinfo.last_name;
-              modalTaskPrice.textContent = 'Price: $' + task.price;
               modalPhone.textContent = 'Phone number:' + userinfo.phone_number;
               modalEmail.textContent = 'Email:' + userinfo.email;
             
@@ -279,7 +278,6 @@ window.onload = function () {
   
               modalTaskName.textContent = task.task_name;
               modalTaskDescription.textContent = task.description;
-              modalTaskPrice.textContent = 'Price: $' + task.price;
               modal.style.display = "block";
   
               acceptModal.onclick = function() {

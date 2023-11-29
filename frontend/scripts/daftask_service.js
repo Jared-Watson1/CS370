@@ -203,7 +203,7 @@ function populateTasks() {
         const startIndex = (currentPage - 1) * tasksPerPage;
         const endIndex = startIndex + tasksPerPage;
         const tasksToDisplay = foodTasks.slice(startIndex, endIndex);
-
+        console.log(tasksToDisplay);
         // Populate the tasks on the page
         const taskPromises = tasksToDisplay.map(async (task) => {
           const userId = task.task_owner;
@@ -218,8 +218,8 @@ function populateTasks() {
                 <h4>${task.task_name}</h4>
                 <p>Sample User</p>
                 <div class="task-details" style="display: none;">
-                <p>Restaurant: ${task.start_loc}</p>
-                <p>Destination: ${task.end_loc}</p>
+                <p>Restaurant:</p>
+                <p>Destination:</p>
                 <!-- Add more details as required -->
                 </div>
                 
@@ -230,9 +230,10 @@ function populateTasks() {
             modalTaskName.textContent = task.task_name;
             modalTaskDescription.textContent = task.description;
             modalTaskPrice.textContent = 'Price: $' + task.price;
-          
+            console.log(userLocation);
             // Update the map based on the task's start and end locations
-            updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
+            updateMap(map, userLocation, task.location, document.getElementById("mode").value);
+
           
             // Show the modal
             modal.style.display = "block";
@@ -242,7 +243,6 @@ function populateTasks() {
             autocomplete2 = task.end_loc;
             closeAllTaskDetails();
             currenttask = task;
-            var time = updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
             // const bottomSection = document.getElementById("bottom-section");
             // bottomSection.textContent = task.description;
             // const pricedes = document.getElementById("detailprice");
@@ -357,6 +357,7 @@ function initMap() {
 }
 
 function initModelMap() {
+
   if (!userLocation) {
     console.error("User location is not defined yet.");
     return;
