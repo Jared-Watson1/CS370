@@ -38,9 +38,9 @@
       </div>
       <div class="nav-container">
         <ul class="nav">
-          <li class="nav-item" id="my-nav">
+          <!-- <li class="nav-item" id="my-nav">
               <a class="nav-link" href="#">My tasks</a>
-          </li>
+          </li> -->
   </a>
       </ul>
         <ul class="nav">
@@ -54,31 +54,25 @@
         <div class="nav-container1">
           <ul class="nav nav-pills nav-fill">
             <li class="nav-item" id="my-nav">
-              <a class="nav-link" aria-current="page" href="post_favor.html"
-                >Get A Favor</a
-              >
-            </li>
-            <li class="nav-item" id="my-nav">
-              <a class="nav-link active" href="tasksfood.html">Do A Favor</a>
+              <a class="nav-link" href="tasksfood.html">Back to Do A Favor</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <br />
+    <!-- <br /> -->
 
     <!-- Content for the "Do A Favor" side -->
     <div id="DoAFavor">
-      <div class="angled-container">
-        
-        <div class="left padded" style="flex: 1">
+      <div class="angled-container"> 
+        <div class="left padded bg-light-blue" style="flex: 1">
           <div class="nav-container2" style="outline: none !important;">
             <ul class="nav nav-pills nav-fill" style="padding-bottom: 20px; outline: none !important">
                 <li class="nav-item" id="my-nav" style="font-weight: bold;">
-                    <a class="nav-link" aria-current="page" href="accepted.html">Accepted tasks</a>
+                    <a class="nav-link" aria-current="page" href="accepted.html">My Accepted Tasks</a>
                 </li>
                 <li class="nav-item" id="my-nav">
-                    <a class="nav-link active" href="posted.html">Posted tasks</a>
+                    <a class="nav-link active" href="posted.html">My Posted Tasks</a>
                 </li>
             </ul>
         </div>
@@ -94,8 +88,8 @@
             </div>
           </div>
         </div>
-        <div class="right padded" style="flex: 1">
-          <div id="floating-panel">
+        <div class="right padded bg-light-blue" style="flex: 1">
+          <div id="floating-panel" class = "transport-options">
             <b>Mode of Travel:</b>
             <select id="mode2" class="form-select">
               <option value="DRIVING">Driving</option>
@@ -104,7 +98,7 @@
               <option value="TRANSIT">Transit</option>
             </select>
           </div>
-          <div id="map" style="height: 100%; width: 100%"></div>
+          <div id="map" style="height: 100%; width: 95%; border-radius: 50px; border: 1px solid #b4b5b8"></div>
           
         <!-- Modal -->
         <div id="taskModal" class="modal" style="display:none;">

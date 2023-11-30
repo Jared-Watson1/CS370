@@ -194,6 +194,10 @@ h2 {
 .bg-light-blue {
   background-color: #e0e4ed; /* Use your preferred shade of light blue */
 }
+.bg-green {
+  background-color: #E1EDE4; /* Use your preferred shade of green */
+}
+
 
 .blue {
   color: rgba(23, 80, 157);
