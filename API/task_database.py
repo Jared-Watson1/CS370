@@ -398,7 +398,7 @@ def delete_accepted_task(task_id):
 
     try:
         # Connect to the PostgreSQL database
-        conn = psycopg2.connect("your_database_connection_string")
+        conn = psycopg2.connect(DATABASE_URL, sslmode="require")
         cursor = conn.cursor()
 
         # SQL DELETE statement
