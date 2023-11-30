@@ -10,7 +10,8 @@ from task_database import (
     add_service_task,
     add_accepted_task,
     get_user_accepted_tasks,
-    delete_task,
+    delete_task1,
+    delete_task2,
     delete_accepted_task,
     get_task_info,
     get_tasks_posted_by_user,
@@ -107,7 +108,7 @@ def delete_task_route():
     except ValueError:
         return jsonify({"error": "Invalid Task ID"}), 400
 
-    result = delete_task(task_id)
+    result = delete_task2(task_id)
     if result == "Task deleted successfully":
         return jsonify({"message": result}), 200
     else:
@@ -153,7 +154,7 @@ def accept_task():
     send_email(task_acceptor_info["email"], "Accepted a Task", email_body_acceptor)
 
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
-    delete_task(task_id)
+    delete_task1(task_id)
 
     return jsonify(response), status_code
 
