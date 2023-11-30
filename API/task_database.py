@@ -390,7 +390,7 @@ def delete_task1(task_id):
         conn.close()
 
 
-def delete_task(task_id):
+def delete_task2(task_id):
     """Delete a task from the database."""
 
     # Connect to the PostgreSQL database
