@@ -497,6 +497,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 console.log("Task deleted successfully:", message);
                 // Update UI accordingly, e.g., hide modal, show success message, etc.
                 // ...
+                location.reload();
             }
         })
         .catch(error => {
