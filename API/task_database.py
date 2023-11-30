@@ -351,46 +351,30 @@ def get_user_accepted_tasks(user_id):
 
 
 def delete_task(task_id):
-    """Delete task by task_id"""
+    """Delete a task from the database."""
+
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
     try:
-        # Begin a transaction
-        conn.autocommit = False
+        # Delete task from related tables first
+        cursor.execute("DELETE FROM accepted_tasks WHERE task_id = %s;", (task_id,))
+        cursor.execute("DELETE FROM foodtasks WHERE task_id = %s;", (task_id,))
+        cursor.execute("DELETE FROM servicetasks WHERE task_id = %s;", (task_id,))
 
-        # Determine the category of the task
-        cursor.execute("SELECT category FROM tasks WHERE task_id = %s", (task_id,))
-        category_result = cursor.fetchone()
-        if not category_result:
-            raise Exception("Task not found")
+        # Finally, delete the task from the tasks table
+        cursor.execute("DELETE FROM tasks WHERE task_id = %s;", (task_id,))
 
-        category = category_result[0].lower()
-
-        # Delete from the specific task table based on category
-        if category == "food":
-            cursor.execute("DELETE FROM foodtasks WHERE task_id = %s", (task_id,))
-        elif category == "service":
-            cursor.execute("DELETE FROM servicetasks WHERE task_id = %s", (task_id,))
-        else:
-            raise Exception("Unknown task category")
-
-        # Delete from the tasks table
-        cursor.execute("DELETE FROM tasks WHERE task_id = %s", (task_id,))
-
-        # Commit the transaction
         conn.commit()
-        print("Task deleted successfully!")
-    except Exception as err:
-        print(f"Error: {err}")
-        conn.rollback()  # Rollback in case of error
+        return "Task deleted successfully"
+
+    except Exception as e:
+        conn.rollback()
+        return f"Error: {e}"
     finally:
         cursor.close()
         conn.close()
-
-
-import psycopg2
 
 
 def delete_accepted_task(task_id):

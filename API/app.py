@@ -95,6 +95,25 @@ def add_task_endpoint():
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.route("/delete_task", methods=["DELETE"])
+def delete_task_route():
+    task_id = request.args.get("task_id")
+
+    if not task_id:
+        return jsonify({"error": "Task ID is required"}), 400
+
+    try:
+        task_id = int(task_id)
+    except ValueError:
+        return jsonify({"error": "Invalid Task ID"}), 400
+
+    result = delete_task(task_id)
+    if result == "Task deleted successfully":
+        return jsonify({"message": result}), 200
+    else:
+        return jsonify({"error": result}), 500
+
+
 @app.route("/accept_task", methods=["POST"])
 def accept_task():
     data = request.get_json()
