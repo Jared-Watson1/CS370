@@ -168,7 +168,24 @@ app.delete('/completed_task', async (req, res) => {
         task_id
       }
     });
+    console.log(response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error posting task to Flask API:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.delete('/delete_task', async (req, res) => {
+  try {
+    const { task_id } = req.query;
 
+    // Making a GET request with Axios using query parameters
+    const response = await axios.delete("https://task-manager-0-94114aee724a.herokuapp.com/delete_task", {
+      params: {
+        task_id
+      }
+    });
+    console.log(response.data);
     res.json(response.data);
   } catch (error) {
     console.error("Error posting task to Flask API:", error);

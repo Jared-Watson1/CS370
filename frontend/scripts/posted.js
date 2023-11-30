@@ -15,7 +15,25 @@ const userdata = {
 };
 
 // Use fetch or axios to send the POST request
-
+function deleteTask(taskID) {
+    return fetch(`/delete_task?task_id=${encodeURIComponent(taskID)}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(json => {
+                throw new Error(json.error || 'Server error');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        return data.message; // Contains the success message from the server
+    })
+    .catch(error => {
+        console.error("Error deleting task:", error.message);
+    });
+  }
 async function fetchUserInfo(username) {
     try {
       const response = await fetch(`/get_info_by_user?username=${encodeURIComponent(username)}`);
@@ -295,6 +313,21 @@ window.onload = function () {
   
               acceptModal.onclick = function() {
                 console.log("Task accepted:", task.task_name);
+                console.log(task.task_id);
+                deleteTask(task.task_id)
+                    .then(message => {
+                        if (message) {
+                            console.log("Task deleted successfully:", message);
+                            // Update UI accordingly, e.g., hide modal, show success message, etc.
+                            // ...
+                            //location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error deleting task:", error);
+                        // Handle error in UI, e.g., show error message
+                        // ...
+                    });
                 modal.style.display = "none";
               };
   
@@ -446,40 +479,31 @@ function placeMarkers(targetMap) {
   });
 }
 document.addEventListener('DOMContentLoaded', (event) => {
-  document.getElementById('acceptModal').addEventListener('click', function() {
+    document.getElementById('acceptModal').addEventListener('click', function() {
+      console.log("End Task Clicked");
+  
       // Assuming currentTask is accessible and contains the task_id
       const task_id = currenttask.task_id;
-      const task_owner_id = currenttask.task_owner;
-      const task_acceptor_username = username;
-
-      // Data to be sent in the POST request
-      const postData = {
-          task_id,
-          task_owner_id,
-          task_acceptor_username
-      };
-
-      // Use fetch or axios to send the POST request
-      fetch('/accept_task', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(postData),
-      })
-      .then(response => response.json())
-      .then(data => {
-          console.log('Success:', data);
-          // Handle success here
-      })
-      .catch((error) => {
-          console.error('Error:', error);
-          // Handle error here
-      });
-      
+  
+      // Call the deleteTask function with the task ID
+      deleteTask(task_id)
+          .then(message => {
+              if (message) {
+                  console.log("Task deleted successfully:", message);
+                  // Update UI accordingly, e.g., hide modal, show success message, etc.
+                  // ...
+                  location.reload();
+              }
+          })
+          .catch(error => {
+              console.error("Error deleting task:", error);
+              // Handle error in UI, e.g., show error message
+              // ...
+          });
   });
-});
-
+  
+  });
+  
 
 document.addEventListener('DOMContentLoaded', function() {
   
