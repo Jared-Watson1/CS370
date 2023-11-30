@@ -433,38 +433,47 @@ function placeMarkers(targetMap) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
   document.getElementById('acceptModal').addEventListener('click', function() {
-     console.log("asf");
-      // Assuming currentTask is accessible and contains the task_id
-      const task_id = currenttask.task_id;
-      const task_owner_id = currenttask.task_owner;
-      const task_acceptor_username = username;
+    console.log("asf");
+     // Assuming currentTask is accessible and contains the task_id
+     const task_id = currenttask.task_id;
+     const task_owner_id = currenttask.task_owner;
+     const task_acceptor_username = username;
 
-      // Data to be sent in the POST request
-      const postData = {
-          task_id,
-          task_owner_id,
-          task_acceptor_username
-      };
-
-      // Use fetch or axios to send the POST request
-      fetch('/accept_task', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(postData),
-      })
-      .then(response => response.json())
-      .then(data => {
-          
-          // Handle success here
-      })
-      .catch((error) => {
-          console.error('Error:', error);
-          // Handle error here
-      });
-      
-  });
+     // Data to be sent in the POST request
+     const postData = {
+         task_id,
+         task_owner_id,
+         task_acceptor_username
+     };
+     showCustomModal('successModal', "Task successfully accepted!");
+     
+     // Use fetch or axios to send the POST request
+     fetch('/accept_task', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(postData),
+         
+     })
+     .then(response => response.json())
+     .then(data => {
+       showCustomModal('Success!', "Task accepted successfully!");
+       modal.style.display = "none";
+         // Handle success here
+         document.getElementById('taskModal').style.display = 'none';
+         showCustomModal('successModal', "Task successfully accepted!");
+         
+     })
+     .catch((error) => {
+         console.error('Error:', error);
+         // Handle error here
+         document.getElementById('taskModal').style.display = 'none';
+         location.reload();
+         // 
+     });
+     
+ });
 });
 
 

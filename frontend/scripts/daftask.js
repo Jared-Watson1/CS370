@@ -444,7 +444,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
           task_owner_id,
           task_acceptor_username
       };
-
+      showCustomModal('successModal', "Task successfully accepted!");
+      
       // Use fetch or axios to send the POST request
       fetch('/accept_task', {
           method: 'POST',
@@ -452,6 +453,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
               'Content-Type': 'application/json',
           },
           body: JSON.stringify(postData),
+          
       })
       .then(response => response.json())
       .then(data => {
@@ -460,11 +462,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
           // Handle success here
           document.getElementById('taskModal').style.display = 'none';
           showCustomModal('successModal', "Task successfully accepted!");
+          
       })
       .catch((error) => {
           console.error('Error:', error);
           // Handle error here
           document.getElementById('taskModal').style.display = 'none';
+          location.reload();
           // 
       });
       

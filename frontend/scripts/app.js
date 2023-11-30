@@ -260,7 +260,7 @@ app.get("/get_info_by_user", async (req, res) => {
       params: {
         username
       }
-    );
+  });
 
     console.log("safdsa");
     res.json(response.data);
