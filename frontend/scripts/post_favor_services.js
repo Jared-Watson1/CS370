@@ -52,6 +52,7 @@ function postTaskToApi(data) {
       return response.json();
     })
     .then((data) => {
+      location.reload();
       console.log("Success:", data); // Log the parsed data
     })
     .catch((error) => {
@@ -501,6 +502,7 @@ function postTask(taskData, taskType) {
     })
       .then(response => response.json())
       .then(data => {
+      location.reload();
         console.log('Task posted successfully:', data);
       })
       .catch(error => {
