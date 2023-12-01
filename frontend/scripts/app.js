@@ -13,7 +13,11 @@ app.use(cors());
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+const path = require('path');
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/templates/login.html'));
+});
 const axios = require("axios");
 app.get("/api/link", (req, res) => {
   try {
