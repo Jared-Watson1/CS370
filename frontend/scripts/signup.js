@@ -43,7 +43,7 @@ function signup() {
     phone_numberField.focus();
   } else {
     alert(
-      "Signup Successful!\nUsername: " + username + "\nPassword: " + password
+      "Signup Successful!"
     );
 
     const tasData = {
@@ -55,7 +55,9 @@ function signup() {
       last_name: last_name,
     };
     postUserToAp(tasData);
-    window.location.href = "../templates/login.html";
+    document.cookie = "username=" + username;
+      localStorage.setItem('Username', username)
+    window.location.href = "../templates/do_or_get.html";
   }
 }
 

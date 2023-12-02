@@ -476,7 +476,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
  });
 });
 
+function showCustomModal(modalId, message) {
+  const modal = document.getElementById(modalId);
+  const messageParagraph = modalId === 'successModal' ? document.getElementById('successMessage') : document.getElementById('errorMessage');
+  messageParagraph.textContent = message;
+  modal.style.display = 'block';
+}
 
+function closeCustomModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'none';
+}
 document.addEventListener('DOMContentLoaded', function() {
   
   var modeElement = document.getElementById("mode");
