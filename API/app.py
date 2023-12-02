@@ -154,8 +154,8 @@ def accept_task():
 
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
     # if successful delete task from the tasks tables
-    if status_code == 200:
-        delete_task1(task_id)
+    # if status_code == 200:
+    #     delete_task1(task_id)
 
     return jsonify(response), status_code
 
