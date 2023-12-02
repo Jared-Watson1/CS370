@@ -25,7 +25,7 @@ from user_database import (
     get_user_id,
     get_username,
 )
-from notification import send_email
+from notification import send_email, send_accept_notification
 from flask_cors import CORS
 
 load_dotenv()
@@ -132,6 +132,9 @@ def accept_task():
     task_owner_id = data.get("task_owner_id")
     task_acceptor_username = data.get("task_acceptor_username")
     task_acceptor_id = get_user_id(username=task_acceptor_username)
+    # Check if task owner is trying to accept their own task
+    if task_owner_id == task_acceptor_id:
+        return jsonify({"error": "Task owner cannot accept their own task"}), 403
 
     # Fetch task details
     task_details = get_task_info(task_id)
@@ -145,13 +148,9 @@ def accept_task():
     if not task_owner_info or not task_acceptor_info:
         return jsonify({"error": "User information not found"}), 404
 
-    # Create email body with task details
-    email_body_owner = f"Your task '{task_details['task_name']}' has been accepted.\n\nTask Details:\n{task_details}"
-    email_body_acceptor = f"You have successfully accepted the task '{task_details['task_name']}'\n\nTask Details:\n{task_details}"
-
-    # Send emails
-    send_email(task_owner_info["email"], "Task Accepted", email_body_owner)
-    send_email(task_acceptor_info["email"], "Accepted a Task", email_body_acceptor)
+    send_accept_notification(
+        task_owner_id=task_owner_id, task_acceptor_id=task_acceptor_id, task_id=task_id
+    )
 
     response, status_code = add_accepted_task(task_id, task_owner_id, task_acceptor_id)
     delete_task1(task_id)

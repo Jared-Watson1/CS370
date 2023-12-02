@@ -451,22 +451,24 @@ def clear_all_tasks():
     delete_food_tasks_query = "DELETE FROM foodtasks;"
     delete_service_tasks_query = "DELETE FROM servicetasks;"
     delete_all_tasks_query = "DELETE FROM tasks;"
+    delete_all_accepted_tasks_query = "DELETE FROM accepted_tasks;"
 
     try:
         # Since we are deleting all records, we should start with the child tables
         cursor.execute(delete_food_tasks_query)
         cursor.execute(delete_service_tasks_query)
+        cursor.execute(delete_all_accepted_tasks_query)
 
         # After the child tables have been cleared, we can clear the main tasks table
         cursor.execute(delete_all_tasks_query)
 
         # Commit the transaction
         conn.commit()
-        print("Cleared all tasks and related entries from database.")
+        return "Cleared all tasks and related entries from database."
     except Exception as err:
         # Rollback in case of error
         conn.rollback()
-        print(f"Error: {err}")
+        return f"Error: {err}"
     finally:
         # Close the cursor and connection
         cursor.close()
@@ -607,3 +609,4 @@ def delete_tables():
 # print(get_task_info(34))
 # print(get_user_accepted_tasks(7))
 # print(get_all_tasks())
+# print(clear_all_tasks())
