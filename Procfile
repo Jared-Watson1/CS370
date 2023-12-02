@@ -1,1 +1,1 @@
-web: node frontend/scripts/app.js
+web: python API/app.py
