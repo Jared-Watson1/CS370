@@ -18,24 +18,16 @@ print(EMAIL_APP_PASS)
 
 
 def send_email(
-    recipient_email,
-    subject,
-    message,
-    sender_email="emorydooleyafavor@gmail.com",
-    is_html=False,
+    recipient_email, subject, html_message, sender_email="emorydooleyafavor@gmail.com"
 ):
     try:
-        GMAIL_APP_PASSWORD = EMAIL_APP_PASS
         msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
         msg["To"] = recipient_email
         msg["From"] = sender_email
 
-        # Attach the message in the correct format (HTML or plain text)
-        if is_html:
-            part = MIMEText(message, "html")
-        else:
-            part = MIMEText(message, "plain")
+        # Attach HTML content
+        part = MIMEText(html_message, "html")
         msg.attach(part)
 
         smtp_server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
