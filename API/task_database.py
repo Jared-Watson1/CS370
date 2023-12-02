@@ -376,7 +376,7 @@ def delete_task1(task_id):
         else:
             raise Exception("Unknown task category")
 
-        # Delete from the tasks table
+        # After deleting from specific task table, delete from the tasks table
         cursor.execute("DELETE FROM tasks WHERE task_id = %s", (task_id,))
 
         # Commit the transaction
@@ -597,6 +597,7 @@ def delete_tables():
         conn.close()
 
 
+jaredID = 9
 # create_accepted_tasks_table()
 # Example of retrieving and printing all tasks
 # print(get_all_tasks())
@@ -607,6 +608,6 @@ def delete_tables():
 # get_all_tasks_tester
 # print(get_all_accepted_tasks())
 # print(get_task_info(34))
-# print(get_user_accepted_tasks(7))
+# print(get_user_accepted_tasks(jaredID))
 # print(get_all_tasks())
 # print(clear_all_tasks())
