@@ -2,8 +2,8 @@ from twilio.rest import Client
 from dotenv import load_dotenv
 import os
 import smtplib
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from user_database import get_user_info
 from task_database import get_task_info
 
@@ -22,19 +22,27 @@ def send_email(
     subject,
     message,
     sender_email="emorydooleyafavor@gmail.com",
+    is_html=False,
 ):
     try:
         GMAIL_APP_PASSWORD = EMAIL_APP_PASS
-        msg = MIMEText(message)
+        msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
         msg["To"] = recipient_email
         msg["From"] = sender_email
+
+        # Attach the message in the correct format (HTML or plain text)
+        if is_html:
+            part = MIMEText(message, "html")
+        else:
+            part = MIMEText(message, "plain")
+        msg.attach(part)
 
         smtp_server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         smtp_server.login("emorydooleyafavor", EMAIL_APP_PASS)
         smtp_server.sendmail(msg["From"], recipient_email, msg.as_string())
         smtp_server.quit()
-        return f"Email sent successfully"
+        return "Email sent successfully"
     except Exception as e:
         return f"Error sending email: {e}"
 
