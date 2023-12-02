@@ -72,12 +72,13 @@ def send_accept_notification(task_owner_id, task_acceptor_id, task_id):
     # Email content for the task owner
     email_body_owner = f"""
     <html>
-    <body>
-    <h1>Your task '{task_details['task_name']}' has been accepted</h1>
+    <body style="font-family: Arial, sans-serif;">
+    <h1 style="color: #4CAF50;">Your task '{task_details['task_name']}' has been accepted</h1>
     <p><strong>Accepted by:</strong> {task_acceptor_info['username']}</p>
-    <p><strong>Contact Email:</strong> {task_acceptor_info['email']}</p>
-    <p><strong>Contact Phone:</strong> {task_acceptor_info['phone_number']}</p>
+    <p><strong>Contact Email:</strong> <a href="mailto:{task_acceptor_info['email']}">{task_acceptor_info['email']}</a></p>
+    <p><strong>Contact Phone:</strong> <a href="tel:{task_acceptor_info['phone_number']}">{task_acceptor_info['phone_number']}</a></p>
     {task_details_html}
+    <p><a href="https://dooley-8c253088e812.herokuapp.com/templates/posted.html">View your posted tasks</a></p>
     </body>
     </html>
     """
@@ -85,28 +86,23 @@ def send_accept_notification(task_owner_id, task_acceptor_id, task_id):
     # Email content for the task acceptor
     email_body_acceptor = f"""
     <html>
-    <body>
-    <h1>You have successfully accepted the task '{task_details['task_name']}'</h1>
+    <body style="font-family: Arial, sans-serif;">
+    <h1 style="color: #4CAF50;">You have successfully accepted the task '{task_details['task_name']}'</h1>
     <p><strong>Task Owner:</strong> {task_owner_info['username']}</p>
-    <p><strong>Contact Email:</strong> {task_owner_info['email']}</p>
-    <p><strong>Contact Phone:</strong> {task_owner_info['phone_number']}</p>
+    <p><strong>Contact Email:</strong> <a href="mailto:{task_owner_info['email']}">{task_owner_info['email']}</a></p>
+    <p><strong>Contact Phone:</strong> <a href="tel:{task_owner_info['phone_number']}">{task_owner_info['phone_number']}</a></p>
     {task_details_html}
+    <p><a href="https://dooley-8c253088e812.herokuapp.com/templates/accepted.html">View your accepted tasks</a></p>
     </body>
     </html>
     """
 
     # Send emails using the modified send_email function to handle HTML content
     send_result_owner = send_email(
-        task_owner_info["email"],
-        "Your Task Has Been Accepted",
-        email_body_owner,
-        is_html=True,
+        task_owner_info["email"], "Your Task Has Been Accepted", email_body_owner
     )
     send_result_acceptor = send_email(
-        task_acceptor_info["email"],
-        "You Accepted a Task",
-        email_body_acceptor,
-        is_html=True,
+        task_acceptor_info["email"], "You Accepted a Task", email_body_acceptor
     )
 
     return f"Notifications sent: {send_result_owner}, {send_result_acceptor}"
@@ -129,7 +125,7 @@ def format_task_details_html(task_details):
             f"<p><strong>Start Location:</strong> {food_info['start_loc']}</p>"
         )
         html_content += f"<p><strong>End Location:</strong> {food_info['end_loc']}</p>"
-        html_content += f"<p><strong>Price:</strong> {food_info['price']}</p>"
+        html_content += f"<p><strong>Price:</strong> ${food_info['price']}</p>"
         html_content += f"<p><strong>Restaurant:</strong> {food_info['restaurant']}</p>"
         html_content += (
             f"<p><strong>Description:</strong> {food_info['description']}</p>"
@@ -141,6 +137,6 @@ def format_task_details_html(task_details):
         html_content += (
             f"<p><strong>Description:</strong> {service_info['description']}</p>"
         )
-        html_content += f"<p><strong>Price:</strong> {service_info['price']}</p>"
+        html_content += f"<p><strong>Price:</strong> ${service_info['price']}</p>"
 
     return html_content
