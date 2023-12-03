@@ -2,7 +2,7 @@
 
 DooleyAFavor is a web application that allows Emory students to post and complete tasks for each other. Students can post tasks for any type of help they need, such as academic assistance, running errands, picking up food, or getting help with a project. Other students can then accept these tasks to earn money.
 
-To use DooleyAFavor visit our [site](https://dooley-8c253088e812.herokuapp.com/) and log in or create an account to start benefiting from the Emory community!
+To use DooleyAFavor visit our [site](https://dooley-8c253088e812.herokuapp.com/) and login or create an account to start benefiting from the Emory community!
 
 ## File Structure
 
