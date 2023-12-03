@@ -2,7 +2,7 @@ import bcrypt
 from flask import Flask, request, jsonify
 import psycopg2
 from datetime import datetime
-import os
+import os, random
 from dotenv import load_dotenv
 from task_database import (
     add_food_task,
@@ -376,14 +376,14 @@ def get_username_endpoint():
 def verify_email():
     data = request.get_json()
     email = data.get("email")
-    auth_code = data.get("auth_code")
+    auth_code = random.randint(100000, 999999)
 
     if not email or not auth_code:
         return jsonify({"error": "Missing email or authentication code"}), 400
 
     try:
         send_result = send_auth_email(email, auth_code)
-        return jsonify({"message": send_result}), 200
+        return jsonify({"auth_code": auth_code, "message": send_result}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

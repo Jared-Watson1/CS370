@@ -595,19 +595,3 @@ def delete_tables():
     finally:
         cursor.close()
         conn.close()
-
-
-jaredID = 9
-# create_accepted_tasks_table()
-# Example of retrieving and printing all tasks
-# print(get_all_tasks())
-# create_tables()
-# delete_tables()
-
-# Example task
-# get_all_tasks_tester
-# print(get_all_accepted_tasks())
-# print(get_task_info(34))
-# print(get_user_accepted_tasks(jaredID))
-# print(get_all_tasks())
-# print(clear_all_tasks())

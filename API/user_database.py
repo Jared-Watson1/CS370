@@ -283,9 +283,3 @@ def clear_users():
     finally:
         cursor.close()
         conn.close()
-
-
-# print(get_all_users())
-# delete_users_table()
-# createUserTable()
-# print(clearUsers())
