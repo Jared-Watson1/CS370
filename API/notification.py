@@ -58,36 +58,79 @@ def send_accept_notification(task_owner_id, task_acceptor_id, task_id):
     if not task_owner_info or not task_acceptor_info or not task_details:
         return "User or Task information not found"
 
+    # Enhanced styling
+    header_color = "#0056b3"  # Example: Blue
+    body_color = "#f8f9fa"  # Example: Light grey
+    accent_color = "#ffc107"  # Example: Yellow
+    font_family = (
+        "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"  # Example: Modern font
+    )
+
     # Format the task details into HTML
     task_details_html = format_task_details_html(task_details)
 
-    # Email content for the task owner
-    email_body_owner = f"""
+    # Constructing email content with enhanced styling
+    email_template = f"""
     <html>
-    <body style="font-family: Arial, sans-serif;">
-    <h1 style="color: #4CAF50;">Your task '{task_details['task_name']}' has been accepted</h1>
-    <p><strong>Accepted by:</strong> {task_acceptor_info['username']}</p>
-    <p><strong>Contact Email:</strong> <a href="mailto:{task_acceptor_info['email']}">{task_acceptor_info['email']}</a></p>
-    <p><strong>Contact Phone:</strong> <a href="tel:{task_acceptor_info['phone_number']}">{task_acceptor_info['phone_number']}</a></p>
-    {task_details_html}
-    <p><a href="https://dooley-8c253088e812.herokuapp.com/templates/posted.html">View your posted tasks</a></p>
+    <head>
+        <style>
+            body {{
+                font-family: {font_family};
+                background-color: {body_color};
+                color: #333;
+                line-height: 1.6;
+            }}
+            .header {{
+                background-color: {header_color};
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+            }}
+            .content {{
+                padding: 20px;
+            }}
+            .footer {{
+                background-color: {accent_color};
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+            }}
+            a {{
+                color: {header_color};
+            }}
+            .task-details {{
+                margin-top: 20px;
+                border-top: 2px solid {accent_color};
+                padding-top: 10px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>DooleyAFavor Task Notification</h1>
+        </div>
+        <div class="content">
+            <h2>{'Your task has been accepted!' if task_owner_id == task_id else 'You have accepted a task!'}</h2>
+            <p><strong>{'Accepted by:' if task_owner_id == task_id else 'Task Owner:'}</strong> {task_acceptor_info['username'] if task_owner_id == task_id else task_owner_info['username']}</p>
+            <p><strong>Contact Email:</strong> <a href="mailto:{task_acceptor_info['email'] if task_owner_id == task_id else task_owner_info['email']}">{task_acceptor_info['email'] if task_owner_id == task_id else task_owner_info['email']}</a></p>
+            <p><strong>Contact Phone:</strong> <a href="tel:{task_acceptor_info['phone_number'] if task_owner_id == task_id else task_owner_info['phone_number']}">{task_acceptor_info['phone_number'] if task_owner_id == task_id else task_owner_info['phone_number']}</a></p>
+            <div class="task-details">
+                {task_details_html}
+            </div>
+            <p><a href="{'https://dooley-8c253088e812.herokuapp.com/templates/posted.html' if task_owner_id == task_id else 'https://dooley-8c253088e812.herokuapp.com/templates/accepted.html'}">View your {'posted' if task_owner_id == task_id else 'accepted'} tasks</a></p>
+        </div>
+        <div class="footer">
+            <p>Thank you for using DooleyAFavor!</p>
+        </div>
     </body>
     </html>
     """
 
+    # Email content for the task owner
+    email_body_owner = email_template.format(task_id=task_owner_id, **locals())
+
     # Email content for the task acceptor
-    email_body_acceptor = f"""
-    <html>
-    <body style="font-family: Arial, sans-serif;">
-    <h1 style="color: #4CAF50;">You have successfully accepted the task '{task_details['task_name']}'</h1>
-    <p><strong>Task Owner:</strong> {task_owner_info['username']}</p>
-    <p><strong>Contact Email:</strong> <a href="mailto:{task_owner_info['email']}">{task_owner_info['email']}</a></p>
-    <p><strong>Contact Phone:</strong> <a href="tel:{task_owner_info['phone_number']}">{task_owner_info['phone_number']}</a></p>
-    {task_details_html}
-    <p><a href="https://dooley-8c253088e812.herokuapp.com/templates/accepted.html">View your accepted tasks</a></p>
-    </body>
-    </html>
-    """
+    email_body_acceptor = email_template.format(task_id=task_acceptor_id, **locals())
 
     # Send emails using the modified send_email function to handle HTML content
     send_result_owner = send_email(
