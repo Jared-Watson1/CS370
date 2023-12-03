@@ -11,10 +11,9 @@ load_dotenv()
 # connecting URL for database
 DATABASE_URL = os.getenv("DB_URL")
 
-# Create table for tasks
-
 
 def create_tables():
+    """Create tables for tasks"""
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
@@ -206,21 +205,23 @@ def add_accepted_task(task_id, task_owner_id, task_acceptor_id):
 
 
 def get_all_tasks():
-    """Function to retrieve all tasks from every task table and package tasks into dictionary"""
+    """Function to retrieve all tasks that have not been accepted."""
 
     # Connect to the PostgreSQL database
     conn = psycopg2.connect(DATABASE_URL, sslmode="require")
     cursor = conn.cursor()
 
-    # SQL statement to retrieve tasks along with details from foodtasks and servicetasks
+    # SQL statement to retrieve tasks that are not in the accepted_tasks table
     select_all_tasks_query = """
     SELECT 
-        tasks.task_id, tasks.task_name, tasks.category, tasks.date_posted, tasks.task_owner,
-        food.start_loc, food.end_loc, food.price AS food_price, food.restaurant, food.description AS food_description,
-        service.location, service.description AS service_description, service.price AS service_price
-    FROM tasks
-    LEFT JOIN foodtasks as food ON tasks.task_id = food.task_id
-    LEFT JOIN servicetasks as service ON tasks.task_id = service.task_id;
+        t.task_id, t.task_name, t.category, t.date_posted, t.task_owner,
+        f.start_loc, f.end_loc, f.price AS food_price, f.restaurant, f.description AS food_description,
+        s.location, s.description AS service_description, s.price AS service_price
+    FROM tasks t
+    LEFT JOIN foodtasks f ON t.task_id = f.task_id
+    LEFT JOIN servicetasks s ON t.task_id = s.task_id
+    LEFT JOIN accepted_tasks a ON t.task_id = a.task_id
+    WHERE a.task_id IS NULL;
     """
 
     result_tasks = []
@@ -236,7 +237,6 @@ def get_all_tasks():
                 "category": task[2],
                 "date_posted": str(task[3]),
                 "task_owner": task[4],
-                # "task_owner_username": get_username(task[4]),
             }
 
             if task[2] == "Food":
@@ -376,7 +376,7 @@ def delete_task1(task_id):
         else:
             raise Exception("Unknown task category")
 
-        # Delete from the tasks table
+        # After deleting from specific task table, delete from the tasks table
         cursor.execute("DELETE FROM tasks WHERE task_id = %s", (task_id,))
 
         # Commit the transaction
@@ -595,18 +595,3 @@ def delete_tables():
     finally:
         cursor.close()
         conn.close()
-
-
-# create_accepted_tasks_table()
-# Example of retrieving and printing all tasks
-# print(get_all_tasks())
-# create_tables()
-# delete_tables()
-
-# Example task
-# get_all_tasks_tester
-# print(get_all_accepted_tasks())
-# print(get_task_info(34))
-# print(get_user_accepted_tasks(7))
-# print(get_all_tasks())
-# print(clear_all_tasks())
