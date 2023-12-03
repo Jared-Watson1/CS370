@@ -132,3 +132,66 @@ def format_task_details_html(task_details):
         html_content += f"<p><strong>Price:</strong> ${service_info['price']}</p>"
 
     return html_content
+
+
+def send_auth_email(recipient_email, auth_code):
+    # Email subject
+    subject = "Your DooleyAFavor Email Verification Code"
+
+    # Enhanced styling for the email
+    header_color = "#0056b3"  # Blue color for header
+    body_color = "#f8f9fa"  # Light grey for the email body
+    accent_color = "#ffc107"  # Yellow for accent
+    font_family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+
+    # HTML content of the email
+    html_message = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: {font_family};
+                background-color: {body_color};
+                color: #333;
+                line-height: 1.6;
+            }}
+            .header {{
+                background-color: {header_color};
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+            }}
+            .content {{
+                padding: 20px;
+            }}
+            .code {{
+                font-size: 24px;
+                color: {accent_color};
+            }}
+            .footer {{
+                background-color: {header_color};
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Email Verification</h1>
+        </div>
+        <div class="content">
+            <p>Hello,</p>
+            <p>Please use the following code to verify your email address:</p>
+            <p class="code">{auth_code}</p>
+            <p>If you did not request this code, please ignore this email.</p>
+        </div>
+        <div class="footer">
+            <p>Thank you for using DooleyAFavor!</p>
+        </div>
+    </body>
+    </html>
+    """
+
+    # Send the email
+    return send_email(recipient_email, subject, html_message)

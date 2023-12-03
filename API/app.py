@@ -25,7 +25,7 @@ from user_database import (
     get_user_id,
     get_username,
 )
-from notification import send_email, send_accept_notification
+from notification import send_email, send_accept_notification, send_auth_email
 from flask_cors import CORS
 
 load_dotenv()
@@ -370,6 +370,22 @@ def get_username_endpoint():
         return jsonify({"error": username}), 500
     else:
         return jsonify({"username": username}), 200
+
+
+@app.route("/verify_email", methods=["POST"])
+def verify_email():
+    data = request.get_json()
+    email = data.get("email")
+    auth_code = data.get("auth_code")
+
+    if not email or not auth_code:
+        return jsonify({"error": "Missing email or authentication code"}), 400
+
+    try:
+        send_result = send_auth_email(email, auth_code)
+        return jsonify({"message": send_result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 def hash_password(password: str) -> bytes:
