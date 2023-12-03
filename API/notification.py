@@ -70,7 +70,7 @@ def send_accept_notification(task_owner_id, task_acceptor_id, task_id):
     task_details_html = format_task_details_html(task_details)
 
     # Constructing email content with enhanced styling
-    email_template = f"""
+    email_template = """
     <html>
     <head>
         <style>
