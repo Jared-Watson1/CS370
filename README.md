@@ -1,9 +1,8 @@
-
-DooleyAFavor README.md
-
 ## Overview
 
-DooleyAFavor is a web application that allows Emory students to post and complete tasks for each other. Students can post tasks for any type of help they need, such as academic assistance, running errands, or getting help with a project. Other students can then accept these tasks to earn money.
+DooleyAFavor is a web application that allows Emory students to post and complete tasks for each other. Students can post tasks for any type of help they need, such as academic assistance, running errands, picking up food, or getting help with a project. Other students can then accept these tasks to earn money.
+
+To use DooleyAFavor visit our [site](https://dooley-8c253088e812.herokuapp.com/) and log in or create an account to start benefiting from the Emory community!
 
 ## File Structure
 
@@ -29,13 +28,7 @@ The Frontend folder contains all files pertaining to the DooleyAFavor website. T
 
 ## Getting Started
 
-To get started with DooleyAFavor, please follow these steps:
+To get started developing with DooleyAFavor, please follow these steps:
 
 Clone the DooleyAFavor repository from GitHub.
 Install the required dependencies for the API and Frontend folders.
-Interact with API according to API documentation (Heroku).
-Create an account on the DooleyAFavor website.
-Post or accept tasks to start earning money!
-## Help
-
-If you have any questions or need help getting started, please feel free to create an issue on the DooleyAFavor GitHub repository.
