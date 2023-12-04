@@ -172,7 +172,12 @@ The script fetches the API key and tasks from the server using fetch requests to
 13. Task Scheduling: scheduleTask is called to post scheduled tasks.
 14. Task Taking and Dropping: takeTask and dropTask functions handle the process of taking and dropping tasks, updating respective lists.
 15. Rendering Shared Task List:renderSharedTaskList updates the shared task list on the UI.
-16. UI Initialization: setActiveTab is likely intended to set the active tab based on the current page.
+16. UI Initialization: setActiveTab is intended to set the active tab based on the current page.
 
 ### Script 14: user.js
 This code defines variables for user data, including the user profile, ratings sum, and the number of ratings. The getUserData function is asynchronous and uses the Fetch API to retrieve user information based on their username stored in the local storage. Once the data is fetched, it populates the corresponding elements in the HTML document with the user's first name, last name, email, and phone number. The script also contains a function displayStars to dynamically generate HTML for displaying star ratings based on the average rating calculated. Finally, there is a conditional check to determine whether there are enough ratings to display a meaningful average. If the number of ratings is less than three, a message is displayed indicating that there are too few reviews to show a rating; otherwise, the average rating is calculated and displayed using the displayStars function. Note that there is a potential typo in the conditional statement at the end, where ratingSum should be corrected to ratingsSum.
+
+
+## Note: 
+Under of profile page the functionality of "edit profile" and display profile picture were features we didn't have time to 
+add but would in future iterations. 
