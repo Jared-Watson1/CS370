@@ -4,7 +4,7 @@ const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/"
 async function verifyEmail(enteredCode) {
     let authCode = localStorage.getItem('code');
     let tempData = {
-      username:     localStorage.getItem('username'),
+      username:     localStorage.getItem('Username'),
       email:        localStorage.getItem('email'),
       phone_number: localStorage.getItem('phone_number'),
       password:     localStorage.getItem('password'),
@@ -17,7 +17,7 @@ async function verifyEmail(enteredCode) {
       // remove all sensitive items from localstorage
       localStorage.removeItem('code')
       
-      localStorage.removeItem('username')
+      // localStorage.removeItem('username') // don't remove username (for smooth redirect and localstorage)
       localStorage.removeItem('email')
       localStorage.removeItem('phone_number')
       localStorage.removeItem('password')

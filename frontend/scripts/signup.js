@@ -64,7 +64,7 @@ async function signup() {
     localStorage.setItem('code', authCode);
 
     document.cookie = "username=" + username;
-    localStorage.setItem('username'    , username);
+    localStorage.setItem('Username'    , username);
     localStorage.setItem('email'       , email);
     localStorage.setItem('phone_number', phone_number);
     localStorage.setItem('password'    , password);
