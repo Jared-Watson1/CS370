@@ -15,18 +15,19 @@ async function getUserData() { // function to get user data to fill in profile
   
   if (!response.ok) { throw new Error(`HTTP error! Status: ${response.status}`); }
   let data = await response.json();
-  // console.log(data)
+  console.log(data);
 
-  document.querySelector("fn").textContent = data.first_name;
-  document.querySelector("ln").textContent = data.last_name;
-  document.querySelector("em").textContent = data.email;
-  document.querySelector("pn").textContent = data.phone_number;
+  document.querySelector(".fn").textContent = data.first_name;
+  document.querySelector(".ln").textContent = data.last_name;
+  document.querySelector(".em").textContent = data.email;
+  document.querySelector(".pn").textContent = data.phone_number;
 }
 
 window.onload = function () {
   fetch("/api/data")
   .then((response) => response.json())
   .then((data) => {
+    console.log(data);
     if (data && data.url) {
       API_BASE_URL = data.url;// Load the Google Maps script using the API key
       console.log(API_BASE_URL);
