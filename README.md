@@ -17,6 +17,12 @@ Imagine this: you've got a million things to do and just not enough time. Enter 
 - Check out our `frontend` folder for our website code.
 - Check out our `API` folder for our API backend code.
 
+## Documentation
+- [API Documentation](API/README.md)
+- [Task management](API/TASKS_OVERVIEW.md)
+- [User management](API/USERS_OVERVIEW.md)
+- [Code overview](doc/README.md)
+
 ## See It in Action!
 
 Check out [our website](https://dooley-8c253088e812.herokuapp.com/) and take it for a spin.
