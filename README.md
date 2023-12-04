@@ -4,7 +4,7 @@ Hey there, Emory students! We're super excited to introduce you to **DooleyAFavo
 
 ## What's DooleyAFavor All About?
 
-Imagine this: you've got a million things to do and just not enough time. Enter DooleyAFavor. This cool little app lets Emory students post tasks they need help with. And the best part? Other students can pick up these tasks and earn some money while helping out. It's all about students helping students!
+Imagine this: you've got a million things to do and just not enough time. Enter DooleyAFavor. Our app lets Emory students post tasks they need help with. Other students can pick up these tasks and earn some money while helping out. It's all about connecting students with those who want to help!
 
 ## Our Tech Stack
 
