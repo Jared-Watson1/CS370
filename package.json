@@ -9,7 +9,8 @@
     "googleapis": "^128.0.0",
     "node.js": "^0.0.1-security",
     "nodemailer": "^6.9.7",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "serve-favicon": "^2.5.0"
   },
   "name": "cs370",
   "description": "",
@@ -18,7 +19,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node frontend/scripts/app.js"
-
   },
   "keywords": [],
   "author": "",

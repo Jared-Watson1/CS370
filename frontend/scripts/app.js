@@ -2,8 +2,12 @@ require("dotenv").config({ path: "../../.env" });
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const path = require("path");
+const favicon = require("serve-favicon");
 const PORT = process.env.PORT || 3000;
 // Verify the API key is being loaded
+app.use(favicon(path.join(__dirname, '../../frontend/templates', 'favicon.ico')));
+
 app.use(express.json());
 app.use(express.static(__dirname + "/../../frontend"));
 app.use("/static", express.static(__dirname + "/../../frontend/static")); // For static files
@@ -13,7 +17,7 @@ app.use(cors());
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-const path = require('path');
+
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/templates/login.html'));
