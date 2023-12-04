@@ -20,7 +20,7 @@ DooleyAFavor
 ```
 ## API Folder
 
-The API folder contains a Flask API that handles all operations with the database. This includes task management, task retrieval, user management, and user information retrieval. For more information on how to interact with the API, please see the README file within the API directory.
+The API folder contains a Flask API that handles all operations with the database. This includes task management, task retrieval, user management, and user information retrieval. For more information on how to interact with the API, please see the [README file](../API/README.md) within the API directory.
 
 ## Frontend Folder
 
