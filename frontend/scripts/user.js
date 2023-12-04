@@ -1,11 +1,13 @@
 let users;
 let ratingsSum;
 let numRatings;
+let API_BASE_URL;
 
 async function getUserData() { // function to get user data to fill in profile
   let username = localStorage.getItem('Username');
   // console.log(username)
-
+  // const API_BASE_URL = 'https://task-manager-0-94114aee724a.herokuapp.com';
+  console.log(API_BASE_URL);
   let response = await fetch(`${API_BASE_URL}/get_info_by_user?username=${username}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json'},
@@ -22,7 +24,21 @@ async function getUserData() { // function to get user data to fill in profile
 }
 
 window.onload = function () {
-  getUserData(); 
+  fetch("/api/data")
+  .then((response) => response.json())
+  .then((data) => {
+    if (data && data.url) {
+      API_BASE_URL = data.url;// Load the Google Maps script using the API key
+      console.log(API_BASE_URL);
+      getUserData(); 
+    } else {
+      console.error("Error loading API key: Key not found in response.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
+  
 };
 
 const ratingsList = document.querySelector(".ratings-list");

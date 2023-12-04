@@ -33,7 +33,10 @@ app.get("/api/link", (req, res) => {
 });
 app.get("/api/data", (req, res) => {
   try {
-    res.json({ apiKey: process.env.API_KEY });
+    res.json({ 
+      apiKey: process.env.API_KEY,
+      url: process.env.API_BASE_URL
+    });
   } catch (error) {
     console.error("Error sending API key:", error);
     res.status(500).send("Internal Server Error");
