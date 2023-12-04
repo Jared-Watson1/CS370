@@ -30,7 +30,7 @@ function fetchUsernameByUserID(userID) {
       console.error("Error fetching username:", error.message);
     });
 }
-console.log(fetchUsernameByUserID(7));
+
 
 async function fetchUserInfo(username) {
     try {
@@ -262,13 +262,15 @@ window.onload = function () {
               user_id: userId,
             };
             const usernameData = await fetchUsernameByUserID(userId);
+            const userdata = await fetchUserInfo(usernameData.username);
+            console.log(userdata);
             const li = document.createElement("li");
             li.classList.add("list-group-item", "task-type-2");
             if(task.category == 'Food'){
               li.innerHTML = `
               <div class="ribbonr"></div>
                   <h4>${task.task_name}</h4>
-                  <p>${usernameData.username}</p>
+                  <p>${userdata.first_name}</p>
                   <div class="task-details" style="display: none;">
                   <p>Restaurant: ${task.start_loc}</p>
                   <p>Destination: ${task.end_loc}</p>
@@ -280,7 +282,7 @@ window.onload = function () {
               li.innerHTML = `
               <div class="ribbonb"></div>
                   <h4>${task.task_name}</h4>
-                  <p>Sample User</p>
+                  <p>${userdata.first_name}</p>
                   <div class="task-details" style="display: none;">
                   <p>Restaurant: ${task.start_loc}</p>
                   <p>Destination: ${task.end_loc}</p>
@@ -292,13 +294,15 @@ window.onload = function () {
             
         
             li.addEventListener("click", async function () {
-                userinfo = await fetchUserInfo(username);
-                console.log(userinfo);
+               const usernamethis = await fetchUsernameByUserID(task.task_owner);
+               console.log(usernameData);
+                const userinfomodal = await fetchUserInfo(usernamethis.username);
+                console.log(userinfomodal);
               modalTaskName.textContent = task.task_name;
               modalTaskDescription.textContent = task.description;
-              user_name.textContent = userinfo.first_name + " " +userinfo.last_name;
-              modalPhone.textContent = 'Phone number:' + userinfo.phone_number;
-              modalEmail.textContent = 'Email:' + userinfo.email;
+              user_name.textContent = userinfomodal.first_name + " " +userinfomodal.last_name;
+              modalPhone.textContent = 'Phone number:' + userinfomodal.phone_number;
+              modalEmail.textContent = 'Email:' + userinfomodal.email;
             
               // Update the map based on the task's start and end locations
               updateMap(map, task.start_loc, task.end_loc, document.getElementById("mode").value);
