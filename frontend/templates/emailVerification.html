@@ -1,9 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>DooleyAFavor Login Page</title>
+    <title>DooleyAFavor Signup Page</title>
+
+    <!-- Linking the external CSS file -->
     <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <!-- Bootstrap init -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <!-- Linking the external JS file -->
+    <script src="../scripts/signup.js" type="module"></script>
+    <script src="../scripts/emailVerification.js" type="module"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
   </head>
+
   <body>
     <div class="header-container">
       <h1>
@@ -11,18 +30,37 @@
         ><span class="blue">Favor</span>
       </h1>
     </div>
-    <h2>A verification link has been sent to your email address!</h2>
+    <div class="angled-container" style="display: flex; align-items: center; justify-content: center;">
+      <div class="left padded bg-light-blue" style="align-items: center; flex-direction: column; justify-content: center;">
+        <h2 style="margin-bottom: -1%;">A verification code has been sent!</h2>
+        
+        <form class="mx-1 mx-md-4" id = "verificationForm" style = "background-color: rgba(0, 0, 0, 0); text-align: center;">
+          <div class="form-outline flex-fill">
+            <input
+              type="text"
+              id="verificationCode"
+              class="form-control"
+              style="text-align: center;"
+              pattern="\d*"
+              maxlength="6"
+              placeholder="Enter verification code"
+              required
+            />
+          </div>
+        </form>
 
-    <div class="email-verification">
-      <p class="verification-message">
-        Please click on the link that was just sent to your email account to
-        verify your email account and proceed with the onboarding process.
-      </p>
-      <button class="resend-button" onclick="resendEmail()">
-        Didn't receive an email?
-      </button>
+        <p style="font-size: 12px; margin-bottom: 2%; text-align: center; margin-top: -2%">
+          *Please enter the six-digit code that was just sent to your email account
+          to verify your email account and proceed with the onboarding process
+        </p>
+
+        <ul class="nav nav-pills" style="outline: none !important; width: 20%">
+          <li class="nav-item" id="my-nav" style="font-weight: bold; width: 100%; text-align: center;">
+            <a id = "verifyEmailCode" class="nav-link active" aria-current="page">Verify Email</a>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <script src="../scripts/signup.js" type="module"></script>
   </body>
 </html>

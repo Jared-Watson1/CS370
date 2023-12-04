@@ -1,8 +1,11 @@
+// give me isVerified from emailVerification.js
+const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/"
+
 let email;
 document.getElementById("registerButton").addEventListener("click", signup);
 
 
-function signup() {
+async function signup() {
   // console.log("Signup button clicked!"); // Add this line
   let password_length = 8;
   let usernameField = document.getElementById("username");
@@ -17,6 +20,7 @@ function signup() {
   let first_name = document.getElementById("first_name").value.trim();
   let last_name = document.getElementById("last_name").value.trim();
   let phone_number = phone_numberField.value.trim();
+  let isEmailValid = false;
 
   if (password != password2) {
     alert("Passwords do not match. Please re-enter your passwords");
@@ -54,49 +58,49 @@ function signup() {
       first_name: first_name,
       last_name: last_name,
     };
-    postUserToAp(tasData);
+    
+    
+    let authCode = await sendEmailToUser(tasData);
+    localStorage.setItem('code', authCode);
+
     document.cookie = "username=" + username;
-      localStorage.setItem('Username', username)
-    window.location.href = "../templates/do_or_get.html";
+    localStorage.setItem('username'    , username);
+    localStorage.setItem('email'       , email);
+    localStorage.setItem('phone_number', phone_number);
+    localStorage.setItem('password'    , password);
+    localStorage.setItem('first_name'  , first_name);
+    localStorage.setItem('last_name'   , last_name);
+    window.location.href = "../templates/emailVerification.html";
   }
 }
 
-// Define the base URL of the API
-const API_BASE_URL = process.env.API_BASE_URL;
-
-// Function to add a user
-function postUserToAp(data) {
-  const requestBody = data;
-
-  console.log("Sending:", JSON.stringify(requestBody)); // Log the request payload
-
-  fetch("/add_user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  })
-    .then((response) => {
-      console.log("Received:", response); // Log the response object for debugging purposes
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok: " + response.statusText);
-      }
-
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new TypeError("Oops, we haven't got JSON!");
-      }
-
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Success:", data); // Log the parsed data
-    })
-    .catch((error) => {
-      console.error("Error:", error); // Log any error
+// Function to send a verification email
+async function sendEmailToUser(data) {
+  let authCode;
+  // send the variable authCode to emailVerification.js
+  
+  try {
+    let response = await fetch(`${API_BASE_URL}/verify_email`, { // send email
+      method: 'POST',
+      headers: { 
+          "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({ email: email }),
+      body: JSON.stringify(data),
     });
+  
+    if (response.ok) {
+      let responseData = await response.json();
+      authCode = responseData.auth_code;
+      return authCode
+    } else { 
+      console.error('Error sending email:', response.status); 
+      return null;
+    }
+  } catch (error) {
+    console.log("error parsing JSON:", error);
+    return null;
+  }
 }
 
 // When the user hits enter and they're inside of the form, it submits the form.
