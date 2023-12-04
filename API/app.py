@@ -376,10 +376,11 @@ def get_username_endpoint():
 def verify_email():
     data = request.get_json()
     email = data.get("email")
-    auth_code = random.randint(100000, 999999)
 
-    if not email or not auth_code:
+    if not email:
         return jsonify({"error": "Missing email or authentication code"}), 400
+
+    auth_code = random.randint(100000, 999999)
 
     try:
         send_result = send_auth_email(email, auth_code)
