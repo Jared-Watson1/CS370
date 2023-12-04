@@ -147,16 +147,14 @@ This JavaScript code defines various variables and functions related to a web ap
 
 ### Script 11: require.js
 
-### Script 12: ScheduleTask.js
-
-### Script 13: signup.js
+### Script 12: signup.js
 When a user attempts to sign up multiple criterions must be met for them to become a user of our platform. 
 The most important is that the person attempting to create an account has an emory email (in other words they
 are an emory student). If all the conditions are passed we had the user to our database to record them and store 
 the username as a incripted cookie so that future actions by the user can be tracked on the platform (such as posting 
 accepting tasks)
 
-### Script 14: task.js
+### Script 13: task.js
 1. getUserLocation function uses the Geolocation API to obtain the user's location coordinates.
 2. API Interaction: postTaskToApi function sends a POST request to the server with task data.
 The script fetches the API key and tasks from the server using fetch requests to /api/data and /tasks.
@@ -175,5 +173,5 @@ The script fetches the API key and tasks from the server using fetch requests to
 15. Rendering Shared Task List:renderSharedTaskList updates the shared task list on the UI.
 16. UI Initialization: setActiveTab is likely intended to set the active tab based on the current page.
 
-### Script 15: user.js
+### Script 14: user.js
 This code defines variables for user data, including the user profile, ratings sum, and the number of ratings. The getUserData function is asynchronous and uses the Fetch API to retrieve user information based on their username stored in the local storage. Once the data is fetched, it populates the corresponding elements in the HTML document with the user's first name, last name, email, and phone number. The script also contains a function displayStars to dynamically generate HTML for displaying star ratings based on the average rating calculated. Finally, there is a conditional check to determine whether there are enough ratings to display a meaningful average. If the number of ratings is less than three, a message is displayed indicating that there are too few reviews to show a rating; otherwise, the average rating is calculated and displayed using the displayStars function. Note that there is a potential typo in the conditional statement at the end, where ratingSum should be corrected to ratingsSum.
