@@ -15,10 +15,10 @@ async function getUserData() { // function to get user data to fill in profile
   let data = await response.json();
   // console.log(data)
 
-  document.querySelector(".fn").textContent = data.first_name;
-  document.querySelector(".ln").textContent = data.last_name;
-  document.querySelector(".em").textContent = data.email;
-  document.querySelector(".pn").textContent = data.phone_number;
+  document.querySelector("fn").textContent = data.first_name;
+  document.querySelector("ln").textContent = data.last_name;
+  document.querySelector("em").textContent = data.email;
+  document.querySelector("pn").textContent = data.phone_number;
 }
 
 window.onload = function () {
