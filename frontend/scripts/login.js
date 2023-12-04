@@ -22,7 +22,7 @@ function valid_login() {
         alert("Login unsuccessful!");
         throw new Error("Network response was not ok: " + response.statusText);
       } else {
-        alert("Login successful!");
+
         document.cookie = "username=" + username;
         localStorage.setItem('Username', username) // locally store username (persistant)
         window.location.href = "../templates/do_or_get.html"; // take you to main page after success
