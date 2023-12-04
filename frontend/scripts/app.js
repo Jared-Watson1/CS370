@@ -63,6 +63,7 @@ app.post("/add_task", async (req, res) => {
         restaurant,
       }
     );
+    console.log(response.data);
     res.json(response.data);
   } catch (error) {
     console.error("Error posting task to Flask API:", error);

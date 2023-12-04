@@ -497,7 +497,7 @@ function addTask(listType) {
 }
 function postTask(taskData, taskType) {
     // Base URL of your API
-    const apiBaseUrl = process.env.API_BASE_URL;
+    const apiBaseUrl = 'https://task-manager-0-94114aee724a.herokuapp.com';
   
     // Add common data for both food and service tasks
     let requestData = {
