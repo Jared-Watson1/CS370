@@ -93,19 +93,23 @@ Functions:
 8. populateTasks(): Fetches tasks from the server and populates them in the UI.
 9. loadScriptWithApiKey(apiKey): Dynamically loads the Google Maps API script with the provided API key.
 10. updateMap(targetMap, autocomplete1, autocomplete2, selectedMode): Updates the map based on user input.
+
 Event Listeners:
-1. Listens for the page load event (window.onload) and initializes the map, fetches user location, and populates tasks.
+1. Event Listeners: Listens for the page load event (window.onload) and initializes the map, fetches user location, and populates tasks.
 2. Listens for changes in the transportation mode dropdown (modeElement).
 3. Listens for clicks on the "Accept" button (acceptModal) and sends a POST request to accept a task.
+
 Modal Handling:
 1. Contains modal-related code for displaying and hiding modals.
 2. Displays task details in a modal when a task is clicked.
 3. Task List Handling:
 4. Functions to add, remove, and display tasks in different task lists (GetAFavor, DoAFavor).
 5. Pagination functionality for displaying tasks.
+
 Task Interaction:
 1. Allows users to take, drop, and track tasks.
 2. Displays shared tasks and allows users to take or remove them.
+
 Tab Activation:
 1. setActiveTab(): Sets the active tab in the navigation based on the current URL path.
 2. Automatically called on page load.
