@@ -62,7 +62,7 @@ function signup() {
 }
 
 // Define the base URL of the API
-const API_BASE_URL = "https://task-manager-0-94114aee724a.herokuapp.com/";
+const API_BASE_URL = process.env.API_BASE_URL;
 
 // Function to add a user
 function postUserToAp(data) {
