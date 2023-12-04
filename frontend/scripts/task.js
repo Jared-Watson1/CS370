@@ -7,6 +7,7 @@ var sharedTaskList = [];
 let globalApiKey;
 let userLocation;
 var username = document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+let apiBaseUrl;
 console.log(username);
 function getUserLocation(callback) {
   if ("geolocation" in navigator) {
@@ -106,7 +107,19 @@ window.onload = function () {
     console.log(location);
     initMap();
   });
-
+  fetch("/api/data")
+  .then((response) => response.json())
+  .then((data) => {
+    if (data && data.url) {
+      apiBaseUrl = data.url;// Load the Google Maps script using the API key
+      console.log(apiBaseUrl);
+    } else {
+      console.error("Error loading API key: Key not found in response.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
   setActiveTab;
 }
 
@@ -497,7 +510,7 @@ function addTask(listType) {
 }
 function postTask(taskData, taskType) {
     // Base URL of your API
-    const apiBaseUrl = 'https://task-manager-0-94114aee724a.herokuapp.com';
+
   
     // Add common data for both food and service tasks
     let requestData = {
