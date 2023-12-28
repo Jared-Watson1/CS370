@@ -34,3 +34,4 @@ Check out [our website](https://dooley-8c253088e812.herokuapp.com/) and take it 
 - **Marcus Cheema**
 - **Dawit Dean**
 - **Bozhou Zhao**
+- **John Zhai**
